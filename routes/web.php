@@ -1,0 +1,110 @@
+<?php
+
+use App\Http\Controllers\Auth\ChangePasswordController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LivewireController;
+use App\Http\Controllers\MenuApiController;
+use App\Http\Controllers\Auth\LoginController;
+
+use App\Http\Controllers\UserController;
+use App\Http\Livewire\Expanse\ExpanseCreateManager;
+use App\Http\Livewire\Expanse\ExpanseManager;
+use App\Http\Livewire\Masters\CustomersCreateManager;
+use App\Http\Livewire\Masters\CustomersManager;
+use App\Http\Livewire\Masters\ProductsManager;
+use App\Http\Livewire\Masters\ProfileCompanyManager;
+use App\Http\Livewire\Masters\RolesManager as MastersRolesManager;
+use App\Http\Livewire\Masters\SuppliersCreateManager;
+use App\Http\Livewire\Masters\SuppliersManager;
+use App\Http\Livewire\Masters\UserCreateManager;
+use App\Http\Livewire\MenuManager\MenuManager;
+use App\Http\Livewire\Pengaturan\ProfileManager;
+use App\Http\Livewire\Pengaturan\UsersManager;
+use App\Http\Livewire\Pengaturan\RolesManager;
+use App\Http\Livewire\Masters\UserManager;
+use App\Http\Livewire\Purchase\PurchaseCreateManager;
+use App\Http\Livewire\Purchase\PurchaseManager;
+use App\Http\Livewire\Sales\SalesCreateManager;
+use App\Http\Livewire\Sales\SalesManager;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+// Auth
+Route::get('/login', [LoginController::class, 'index'])->middleware('guest')->name('login');
+Route::post('/login', [LoginController::class, 'authenticate']);
+Route::get('/logout', [LoginController::class, 'logout']);
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/', [HomeController::class, 'index'])->name('home.index');
+    Route::get('/livewire', [LivewireController::class, 'index'])->name('livewire.index');
+    Route::prefix('/admin')->group(function () {
+        Route::get('/', [HomeController::class, 'index'])->name('admin.index');
+
+        // system
+        Route::get('/user', [UserController::class, 'index'])->name('system.user');
+        Route::get('/menu-manager', MenuManager::class)->name('system.menu-manager');
+    });
+
+    Route::get('/change_password', [ChangePasswordController::class, 'index'])->name('change-password');
+
+    //Pengaturan
+    Route::prefix('/masters')->group(function () {
+        Route::prefix('/users')->group(function () {
+            Route::get('/', UserManager::class)->name('masters.users');
+            Route::get('/create', UserCreateManager::class)->name('masters.users-create');
+        });
+
+        Route::get('/roles', MastersRolesManager::class)->name('masters.roles');
+        Route::get('/profile-company', ProfileCompanyManager::class)->name('masters.profile-company');
+        Route::get('/products', ProductsManager::class)->name('masters.products');
+
+        Route::prefix('/suppliers')->group(function () {
+            Route::get('/', SuppliersManager::class)->name('masters.suppliers');
+            Route::get('/create', SuppliersCreateManager::class)->name('masters.suppliers-create');
+        });
+
+        Route::prefix('/customers')->group(function () {
+            Route::get('/', CustomersManager::class)->name('masters.customers');
+            Route::get('/create', CustomersCreateManager::class)->name('masters.customers-create');
+        });
+    });
+
+    //Purchase
+    Route::prefix('/purchase')->group(function () {
+        Route::get('/', PurchaseManager::class)->name('purchase.index');
+        Route::get('/create', PurchaseCreateManager::class)->name('purchase.create');
+    });
+
+    //Sales
+    Route::prefix('/sales')->group(function () {
+        Route::get('/', SalesManager::class)->name('sales.index');
+        Route::get('/create', SalesCreateManager::class)->name('sales.create');
+    });
+
+    //Expanse
+    Route::prefix('/expanse')->group(function () {
+        Route::get('/', ExpanseManager::class)->name('expanse.index');
+        Route::get('/create', ExpanseCreateManager::class)->name('expanse.create');
+    });
+
+    //Pengaturan
+    Route::prefix('/pengaturan')->group(function () {
+        Route::get('/profile', [ProfileManager::class, 'index'])->name('pengaturan.profile');
+        Route::get('/user', UsersManager::class)->name('pengaturan.users');
+        Route::get('/roles', RolesManager::class)->name('pengaturan.roles');
+    });
+
+    Route::post('/menu-save-order', [MenuApiController::class, 'save_order']);
+    Route::post('/menu-save-parent', [MenuApiController::class, 'save_parent']);
+});
