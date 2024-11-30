@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MsAccount extends Model
+class PrmCategoryAccount extends Model
 {
     use HasFactory;
 
-    protected $table = 'ms_accounts';
+    protected $table = 'prm_category_accounts';
     protected $guarded = ['id'];
 }

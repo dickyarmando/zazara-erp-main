@@ -104,6 +104,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Bank & Cash',
             'icon' => 'bxs-bank',
             'seq' => 5,
+            'is_show' => '0',
+            'is_status' => '0',
         ]);
 
         PrmMenus::create([
@@ -248,6 +250,28 @@ class DatabaseSeeder extends Seeder
             'seq' => 7,
             'is_update' => 1,
         ]);
+
+        PrmMenus::create([
+            'id' => 26,
+            'parent_id' => 18,
+            'name' => 'Category Account',
+            'action' => 'masters/category-accounts',
+            'seq' => 8,
+            'is_create' => 1,
+            'is_update' => 1,
+            'is_delete' => 1,
+        ]);
+
+        PrmMenus::create([
+            'id' => 27,
+            'parent_id' => 18,
+            'name' => 'Account',
+            'action' => 'masters/accounts',
+            'seq' => 9,
+            'is_create' => 1,
+            'is_update' => 1,
+            'is_delete' => 1,
+        ]);
         //End Menus
 
         // Role Menus Added
@@ -288,10 +312,6 @@ class DatabaseSeeder extends Seeder
             'menu_id' => 7,
             'is_create' => 1,
             'is_update' => 1,
-        ]);
-        PrmRoleMenus::create([
-            'role_id' => 1,
-            'menu_id' => 8,
         ]);
         PrmRoleMenus::create([
             'role_id' => 1,
@@ -379,6 +399,20 @@ class DatabaseSeeder extends Seeder
             'menu_id' => 25,
             'is_update' => 1,
         ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 26,
+            'is_create' => 1,
+            'is_update' => 1,
+            'is_delete' => 1,
+        ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 27,
+            'is_create' => 1,
+            'is_update' => 1,
+            'is_delete' => 1,
+        ]);
         // End Role Menus
 
         // Company Added
@@ -395,5 +429,28 @@ class DatabaseSeeder extends Seeder
             'value' => '11',
         ]);
         // End Config
+
+        // Category Account Added
+        PrmConfig::create([
+            'id' => 1,
+            'name' => 'Assets',
+        ]);
+        PrmConfig::create([
+            'id' => 2,
+            'name' => 'Liabilities',
+        ]);
+        PrmConfig::create([
+            'id' => 3,
+            'name' => 'Equity',
+        ]);
+        PrmConfig::create([
+            'id' => 4,
+            'name' => 'Revenue',
+        ]);
+        PrmConfig::create([
+            'id' => 5,
+            'name' => 'Expanses',
+        ]);
+        // End Category Account
     }
 }

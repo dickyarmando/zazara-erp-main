@@ -10,6 +10,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Livewire\Expanse\ExpanseCreateManager;
 use App\Http\Livewire\Expanse\ExpanseManager;
+use App\Http\Livewire\Masters\AccountManager;
+use App\Http\Livewire\Masters\CategoryAccountManager;
 use App\Http\Livewire\Masters\CustomersCreateManager;
 use App\Http\Livewire\Masters\CustomersManager;
 use App\Http\Livewire\Masters\ProductsManager;
@@ -68,6 +70,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/roles', MastersRolesManager::class)->name('masters.roles');
         Route::get('/profile-company', ProfileCompanyManager::class)->name('masters.profile-company');
         Route::get('/products', ProductsManager::class)->name('masters.products');
+        Route::get('/category-accounts', CategoryAccountManager::class)->name('masters.category-accounts');
+        Route::get('/accounts', AccountManager::class)->name('masters.accounts');
 
         Route::prefix('/suppliers')->group(function () {
             Route::get('/', SuppliersManager::class)->name('masters.suppliers');

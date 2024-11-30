@@ -17,17 +17,17 @@
                         <div class="app-brand justify-content-center">
                             <a href="{{ url('/login') }}" class="app-brand-link gap-2">
                                 <span class="app-brand-logo demo">
-                                    <img src="{{ url('assets/img/logo-zazara.png') }}?v={{ \Carbon\Carbon::now()->timestamp }}"
-                                        alt="Logo" style="height:30px;" />
+                                    <img src="{{ url('assets/img/logo-esb.png') }}?v={{ \Carbon\Carbon::now()->timestamp }}"
+                                        alt="Logo" style="height:70px;" />
                                 </span>
                                 <span class="app-brand-text demo text-body fw-bolder text-uppercase">
-                                    Zazara-ERP
+                                    Ellia SB-ERP
                                 </span>
                             </a>
                         </div>
                         <!-- /Logo -->
 
-                        <h4 class="mb-1">Welcome to Zazara-ERP! 👋</h4>
+                        <h4 class="mb-1">Welcome to Ellia SB-ERP! 👋</h4>
                         <p class="mb-6">Please sign-in to your account and start the adventure</p>
 
                         <!-- Alert Message -->

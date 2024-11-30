@@ -1,5 +1,5 @@
 <!-- Favicon -->
-<link rel="icon" type="image/x-icon" href="{{ url('assets/img/logo-zazara.png') }}" />
+<link rel="icon" type="image/x-icon" href="{{ url('assets/img/logo-esb.png') }}" />
 
 <!-- Icons -->
 <link rel="stylesheet" href="{{ url('assets/vendor/fonts/boxicons.css') }}" />

@@ -10,12 +10,6 @@
 
     <div class="row">
         <div class="col-md-4">
-            @livewire('auth.change-profile')
-        </div>
-        <div class="col-md-4">
-            @livewire('auth.change-avatar')
-        </div>
-        <div class="col-md-4">
             @livewire('auth.change-password')
         </div>
     </div>

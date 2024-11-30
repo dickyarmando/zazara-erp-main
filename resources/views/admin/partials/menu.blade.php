@@ -5,8 +5,8 @@
               <!--  Brand demo (display only for navbar-full and hide on below xl) -->
               <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
                   <a href="{{ url('/admin') }}" class="app-brand-link gap-2">
-                      <img src="{{ url('assets/img/logo-zazara.png') }}" alt="Hypercode" style="height:25px;">
-                      <span class="app-brand-text demo menu-text fw-bold text-heading">Zazara-ERP</span>
+                      <img src="{{ url('assets/img/logo-esb.png') }}" alt="Hypercode" style="height:40px;">
+                      <span class="app-brand-text demo menu-text fw-bold text-heading">Ellia SB-ERP</span>
                   </a>
 
                   <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
