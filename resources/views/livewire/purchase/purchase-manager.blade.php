@@ -71,9 +71,8 @@
                                 <td class="border-start">{{ $purchase->notes }}</td>
                                 <td class="border-start text-right">{{ number_format($purchase->total, 2) }}</td>
                                 <td class="border-start text-center">
-                                    <button type="button" wire:click="delete('{{ $purchase->id }}')"
-                                        class="btn btn-xs btn-success" data-bs-toggle="modal"
-                                        data-bs-target="#UserDeleteModal" title="Open Data"><span
+                                    <button type="button" wire:click="view('{{ $purchase->id }}')"
+                                        class="btn btn-xs btn-success" title="Open Data"><span
                                             class="bx bx-folder-open"></span></button>
                                     <button type="button" wire:click="edit('{{ $purchase->id }}')"
                                         class="btn btn-xs btn-secondary" title="Edit User"><span

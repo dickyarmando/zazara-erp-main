@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prm_category_accounts', function (Blueprint $table) {
+        Schema::create('tr_purchase_files', function (Blueprint $table) {
             $table->id()->index();
-            $table->string('name', '50')->index();
-            $table->string('is_status', 1)->default('1')->index();
+            $table->bigInteger('purchase_id')->index();
+            $table->string('file', 100);
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('prm_category_accounts');
+        Schema::dropIfExists('tr_purchase_files');
     }
 };

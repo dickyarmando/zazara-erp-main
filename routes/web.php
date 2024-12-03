@@ -27,6 +27,7 @@ use App\Http\Livewire\Pengaturan\RolesManager;
 use App\Http\Livewire\Masters\UserManager;
 use App\Http\Livewire\Purchase\PurchaseCreateManager;
 use App\Http\Livewire\Purchase\PurchaseManager;
+use App\Http\Livewire\Purchase\PurchaseViewManager;
 use App\Http\Livewire\Sales\SalesCreateManager;
 use App\Http\Livewire\Sales\SalesManager;
 
@@ -88,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/purchase')->group(function () {
         Route::get('/', PurchaseManager::class)->name('purchase.index');
         Route::get('/create', PurchaseCreateManager::class)->name('purchase.create');
+        Route::get('/view/{id}', PurchaseViewManager::class)->name('purchase.create');
     });
 
     //Sales

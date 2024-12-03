@@ -6,15 +6,17 @@ use App\Models\MsSuppliers;
 use App\Models\PrmConfig;
 use App\Models\TrPurchase;
 use App\Models\TrPurchaseDetails;
+use App\Models\TrPurchaseFiles;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class PurchaseCreateManager extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     protected $paginationTheme = 'bootstrap';
     public $sortColumn = "company_name";
@@ -22,6 +24,7 @@ class PurchaseCreateManager extends Component
     public $sortLink = '<i class="sorticon fa-solid fa-caret-up"></i>';
     public $searchKeyword = '';
     public $set_id;
+    public $set_id_file;
 
     public $month;
     public $year;
@@ -37,30 +40,63 @@ class PurchaseCreateManager extends Component
     public $ppn;
     public $ppn_amount;
     public $discount;
+    public $delivery_fee;
     public $total;
+
     public $items = [];
+    public $files = [];
+    public $purchaseFiles = [];
 
     public function mount()
     {
         $now = Carbon::now();
-        $this->month = $now->month;
-        $this->year = $now->year;
-        $countPurchase = TrPurchase::where(DB::raw('MONTH(date)'), $this->month)
-            ->where(DB::raw('YEAR(date)'), $this->year)
-            ->count();
-        $this->sequence = $countPurchase + 1;
-        $this->number = str_pad($this->sequence, 4, "0", STR_PAD_LEFT);
-        $this->date = $now->format('Y-m-d');
 
-        $configPPN = PrmConfig::where('code', 'ppn')->first();
-        $this->subtotal = 0;
-        $this->ppn = $configPPN->value;
-        $this->ppn_amount = 0;
-        $this->discount = 0;
-        $this->total = 0;
+        if (isset($_REQUEST['id'])) {
+            $purchase = TrPurchase::find($_REQUEST['id']);
+            $supplier = MsSuppliers::find($purchase->supplier_id);
+            $purchaseDetails = TrPurchaseDetails::where('purchase_id', $purchase->id)
+                ->select('id', 'product_name as name', 'unit_name as unit', 'qty', 'rate as price', 'amount as total')
+                ->get()->toArray();
+            $this->purchaseFiles = TrPurchaseFiles::where('purchase_id', $purchase->id)->get();
+            $sequence = explode("/", $purchase->number);
 
-        for ($a = 0; $a < 4; $a++) {
-            $this->add();
+            $this->set_id = $purchase->id;
+            $this->month = $purchase->created_at->format('m');
+            $this->year = $purchase->created_at->format('Y');
+            $this->number = $sequence[3];
+            $this->date = $purchase->date;
+            $this->reference = $purchase->reference;
+            $this->supplier_id = $purchase->supplier_id;
+            $this->supplier_name = $supplier->name;
+            $this->notes = $purchase->notes;
+            $this->subtotal = $purchase->subtotal;
+            $this->ppn = $purchase->ppn;
+            $this->ppn_amount = $purchase->ppn_amount;
+            $this->delivery_fee = $purchase->delivery_fee;
+            $this->discount = $purchase->discount;
+            $this->total = $purchase->total;
+            $this->items = $purchaseDetails;
+        } else {
+            $this->month = $now->month;
+            $this->year = $now->year;
+            $countPurchase = TrPurchase::where(DB::raw('MONTH(created_at)'), $this->month)
+                ->where(DB::raw('YEAR(created_at)'), $this->year)
+                ->count();
+            $this->sequence = $countPurchase + 1;
+            $this->number = str_pad($this->sequence, 4, "0", STR_PAD_LEFT);
+            $this->date = $now->format('Y-m-d');
+
+            $configPPN = PrmConfig::where('code', 'ppn')->first();
+            $this->subtotal = 0;
+            $this->ppn = $configPPN->value;
+            $this->ppn_amount = 0;
+            $this->delivery_fee = 0;
+            $this->discount = 0;
+            $this->total = 0;
+
+            for ($a = 0; $a < 4; $a++) {
+                $this->add();
+            }
         }
     }
 
@@ -124,7 +160,7 @@ class PurchaseCreateManager extends Component
     {
         $this->subtotal = array_sum(array_column($this->items, 'total'));
         $this->ppn_amount = $this->subtotal * $this->ppn / 100;
-        $this->total = ($this->subtotal - $this->discount) + $this->ppn_amount;
+        $this->total = ($this->subtotal - $this->discount) + $this->ppn_amount + $this->delivery_fee;
     }
 
     public function remove($index)
@@ -136,27 +172,34 @@ class PurchaseCreateManager extends Component
 
     public function store()
     {
-        $rules = [
-            'number' => 'required',
-            'date' => 'required',
-            'supplier_id' => 'required',
-            'reference' => '',
-            'notes' => '',
-            'subtotal' => '',
-            'discount' => '',
-            'ppn' => '',
-            'ppn_amount' => '',
-            'total' => '',
-        ];
-
-        $numberOrder = 'PO/ESB/' . $this->month . $this->year . '/' . $this->number;
+        if ($this->files) {
+            $this->validate([
+                'files.*' => 'required|mimes:pdf,png,jpg|max:2048',
+            ]);
+        }
 
         if (empty($this->set_id)) {
+            $rules = [
+                'number' => 'required',
+                'date' => 'required',
+                'supplier_id' => 'required',
+                'reference' => '',
+                'notes' => '',
+                'subtotal' => '',
+                'delivery_fee' => '',
+                'discount' => '',
+                'ppn' => '',
+                'ppn_amount' => '',
+                'total' => '',
+            ];
+
+            $numberOrder = 'PO/ESB/' . $this->month . $this->year . '/' . $this->number;
+
             $countNumber = TrPurchase::where('number', $numberOrder)->count();
 
             if ($countNumber > 0) {
-                $countPurchase = TrPurchase::where(DB::raw('MONTH(date)'), $this->month)
-                    ->where(DB::raw('YEAR(date)'), $this->year)
+                $countPurchase = TrPurchase::where(DB::raw('MONTH(created_at)'), $this->month)
+                    ->where(DB::raw('YEAR(created_at)'), $this->year)
                     ->count();
                 $this->sequence = $countPurchase + 1;
                 $this->number = str_pad($this->sequence, 4, "0", STR_PAD_LEFT);
@@ -183,10 +226,98 @@ class PurchaseCreateManager extends Component
                     TrPurchaseDetails::create($dataDetail);
                 }
             }
+
+            foreach ($this->files as $file) {
+                $filename = $file->store('/', 'purchase_disk');
+
+                if ($filename) {
+                    $dataFiles = [
+                        'purchase_id' => $purchase->id,
+                        'file' => $filename,
+                    ];
+
+                    TrPurchaseFiles::create($dataFiles);
+                }
+            }
         } else {
+            $rules = [
+                'supplier_id' => 'required',
+                'reference' => '',
+                'notes' => '',
+                'subtotal' => '',
+                'delivery_fee' => '',
+                'discount' => '',
+                'ppn' => '',
+                'ppn_amount' => '',
+                'total' => '',
+            ];
+
+            $valid = $this->validate($rules);
+            $valid['updated_by'] = Auth::user()->id;
+            $purchase = TrPurchase::find($this->set_id);
+            $purchase->update($valid);
+
+            TrPurchaseDetails::where('purchase_id', $this->set_id)->delete();
+            foreach ($this->items as $key => $item) {
+                if ($item['name'] != "") {
+                    $dataDetail = [
+                        'purchase_id' => $this->set_id,
+                        'product_name' => $item['name'],
+                        'unit_name' => $item['unit'],
+                        'qty' => $item['qty'],
+                        'rate' => $item['price'],
+                        'amount' => $item['total'],
+                    ];
+
+                    TrPurchaseDetails::create($dataDetail);
+                }
+            }
+
+            foreach ($this->files as $file) {
+                $filename = $file->store('/', 'purchase_disk');
+
+                if ($filename) {
+                    $dataFiles = [
+                        'purchase_id' => $purchase->id,
+                        'file' => $filename,
+                    ];
+
+                    TrPurchaseFiles::create($dataFiles);
+                }
+            }
+
+            $numberOrder = $purchase->number;
         }
 
         session()->flash('success', 'Saved ' . $numberOrder);
         return redirect()->to('/purchase');
+    }
+
+    public function updatedFiles()
+    {
+        $this->validate([
+            'files.*' => 'required|mimes:pdf,png,jpg|max:2048',
+        ]);
+    }
+
+    public function deleteFile($id)
+    {
+        $this->set_id_file = $id;
+    }
+
+    public function destroyFile()
+    {
+        $file = TrPurchaseFiles::find($this->set_id_file);
+        $filePath = public_path('purchase_files/' . $file->file);
+
+        if (file_exists($filePath)) {
+            unset($filePath);
+        }
+
+        $file->delete();
+        $this->dispatchBrowserEvent('close-modal');
+
+        $this->purchaseFiles = TrPurchaseFiles::where('purchase_id', $this->set_id)->get();
+        $this->set_id_file = null;
     }
 }

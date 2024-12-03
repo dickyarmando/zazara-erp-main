@@ -23,7 +23,7 @@
             <div class="card-header d-md-flex align-items-center justify-content-between">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Order Number <span class="text-danger">*</span></label>
                                 <div class="input-group">
@@ -40,11 +40,12 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Date <span class="text-danger">*</span></label>
                                 <input type="date" wire:model="date"
-                                    class="form-control @error('date') is-invalid @enderror" placeholder="Date">
+                                    class="form-control @error('date') is-invalid @enderror" placeholder="Date"
+                                    {{ empty($set_id) ? '' : 'readonly' }}>
                                 @error('date')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -52,7 +53,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Supplier <span class="text-danger">*</span></label>
                                 <input type="hidden" class="form-control @error('supplier_id') is-invalid @enderror"
@@ -154,8 +155,51 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="mb-3">
+                                <label class="form-label">Images</label>
+                                <input type="file" wire:model="files"
+                                    class="form-control @error('files.*') is-invalid @enderror" id="formFileMultiple"
+                                    multiple>
+                                <div wire:loading wire:target="files">Checking...</div>
+                                @error('files.*')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                                @if ($files)
+                                    <div class="mt-3">
+                                        <h5>Selected Files:</h5>
+                                        <ul>
+                                            @foreach ($files as $file)
+                                                <li>{{ $file->getClientOriginalName() }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+                                @if ($purchaseFiles)
+                                    <div class="mt-3">
+                                        <h5>Uploaded Files:</h5>
+                                        <ul>
+                                            @foreach ($purchaseFiles as $file)
+                                                <li>
+                                                    {{ $file->file }} - <a
+                                                        href="{{ url('/purchase_files/' . $file->file) }}"
+                                                        target="_blank" class="btn btn-xs btn-outline-primary"
+                                                        title="View {{ $file->file }}">View</a> - <button
+                                                        type="button" wire:click="deleteFile('{{ $file->id }}')"
+                                                        class="btn btn-xs btn-outline-danger" data-bs-toggle="modal"
+                                                        data-bs-target="#FileDeleteModal"
+                                                        title="Delete File">Delete</button>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3 mt-3">
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -216,6 +260,16 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2">&nbsp;</td>
+                                            <td colspan="2" class="text-right">Delivery Fee</td>
+                                            <td><input type="text" class="form-control text-end"
+                                                    wire:model="delivery_fee"
+                                                    wire:blur.debounce.250ms="calculateTotal()"
+                                                    onclick="this.select();">
+                                            </td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">&nbsp;</td>
                                             <td colspan="2" class="text-right">Discount</td>
                                             <td><input type="text" class="form-control text-end"
                                                     wire:model="discount" wire:blur.debounce.250ms="calculateTotal()"
@@ -259,10 +313,31 @@
         </form>
     </div>
 
+    {{-- Delete --}}
+    <div wire:ignore.self class="modal fade" id="FileDeleteModal" tabindex="-1" product="dialog">
+        <div class="modal-dialog" file="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete file?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-btn"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" wire:click.prevent="destroyFile()" class="btn btn-danger close-modal"
+                        data-bs-dismiss="modal">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
         <script>
             window.addEventListener('close-modal', event => {
                 $('#ChooseModalSuppliers').modal('hide');
+                $('#FileDeleteModal').modal('hide');
             });
         </script>
     @endpush

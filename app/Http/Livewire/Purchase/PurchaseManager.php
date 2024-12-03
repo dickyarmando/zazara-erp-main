@@ -50,4 +50,14 @@ class PurchaseManager extends Component
         $this->sortLink = '<i class="sorticon fa-solid fa-caret-' . $caretOrder . '"></i>';
         $this->sortColumn = $columnName;
     }
+
+    public function edit($id)
+    {
+        return redirect()->to('/purchase/create?id=' . $id);
+    }
+
+    public function view($id)
+    {
+        return redirect()->to('/purchase/view/' . $id);
+    }
 }

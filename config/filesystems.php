@@ -77,6 +77,14 @@ return [
             'throw' => false,
         ],
 
+        'purchase_disk' => [
+            'driver' => 'local',
+            'root' => public_path('purchase_files'),
+            'url' => env('APP_URL') . '/purchase_files',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
     /*
