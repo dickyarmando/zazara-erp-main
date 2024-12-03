@@ -85,6 +85,30 @@ return [
             'throw' => false,
         ],
 
+        'purchase_non_disk' => [
+            'driver' => 'local',
+            'root' => public_path('purchase_non_files'),
+            'url' => env('APP_URL') . '/purchase_non_files',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
+        'sales_disk' => [
+            'driver' => 'local',
+            'root' => public_path('sales_files'),
+            'url' => env('APP_URL') . '/sales_files',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
+        'sales_non_disk' => [
+            'driver' => 'local',
+            'root' => public_path('sales_non_files'),
+            'url' => env('APP_URL') . '/sales_non_files',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
     /*

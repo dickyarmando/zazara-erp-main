@@ -2,14 +2,14 @@
     @section('title', 'Purchase')
 
     <div class="d-md-flex justify-content-between">
-        <h2 class="mb-3"><span class="text-muted fw-light">Data @yield('title')</span></h2>
+        <h2 class="mb-3"><span class="text-muted fw-light">Data @yield('title') Non Tax</span></h2>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a href="javascript:void(0);">@yield('title')</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ url('/purchase') }}">PO Tax</a>
+                    <a href="{{ url('/purchase/non-tax') }}">PO Non Tax</a>
                 </li>
                 <li class="breadcrumb-item active">{{ $purchase->number }}</li>
             </ol>
@@ -98,17 +98,11 @@
                                 $terbilang = $terbilang->format(round($purchase->total, 2));
                                 $terbilang = str_replace('juts', 'juta', $terbilang);
                             @endphp
-                            <td colspan="4" rowspan="5"><b>Terbilang : <span
+                            <td colspan="4" rowspan="4"><b>Terbilang : <span
                                         class="text-capitalize">{{ $terbilang }}</span></b></td>
                             <td class="px-2 text-right" style="border: 1px solid #000;">SUBTOTAL</td>
                             <td class="px-2 text-right" style="border: 1px solid #000;">
                                 {{ number_format($purchase->subtotal, 2, ',', '.') }}</td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 text-right" style="border: 1px solid #000;">PPN ( {{ $purchase->ppn }} % )
-                            </td>
-                            <td class="px-2 text-right" style="border: 1px solid #000;">
-                                {{ number_format($purchase->ppn_amount, 2, ',', '.') }}</td>
                         </tr>
                         <tr>
                             <td class="px-2 text-right" style="border: 1px solid #000;">PENGIRIMAN

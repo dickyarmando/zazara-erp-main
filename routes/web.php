@@ -27,9 +27,14 @@ use App\Http\Livewire\Pengaturan\RolesManager;
 use App\Http\Livewire\Masters\UserManager;
 use App\Http\Livewire\Purchase\PurchaseCreateManager;
 use App\Http\Livewire\Purchase\PurchaseManager;
+use App\Http\Livewire\Purchase\PurchaseNonCreateManager;
+use App\Http\Livewire\Purchase\PurchaseNonManager;
+use App\Http\Livewire\Purchase\PurchaseNonViewManager;
 use App\Http\Livewire\Purchase\PurchaseViewManager;
 use App\Http\Livewire\Sales\SalesCreateManager;
 use App\Http\Livewire\Sales\SalesManager;
+use App\Http\Livewire\Sales\SalesNonCreateManager;
+use App\Http\Livewire\Sales\SalesNonManager;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,13 +94,24 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/purchase')->group(function () {
         Route::get('/', PurchaseManager::class)->name('purchase.index');
         Route::get('/create', PurchaseCreateManager::class)->name('purchase.create');
-        Route::get('/view/{id}', PurchaseViewManager::class)->name('purchase.create');
+        Route::get('/view/{id}', PurchaseViewManager::class)->name('purchase.view');
+
+        Route::prefix('/non-tax')->group(function () {
+            Route::get('/', PurchaseNonManager::class)->name('purchase.non.index');
+            Route::get('/create', PurchaseNonCreateManager::class)->name('purchase.non.create');
+            Route::get('/view/{id}', PurchaseNonViewManager::class)->name('purchase.non.view');
+        });
     });
 
     //Sales
     Route::prefix('/sales')->group(function () {
         Route::get('/', SalesManager::class)->name('sales.index');
         Route::get('/create', SalesCreateManager::class)->name('sales.create');
+
+        Route::prefix('/non-tax')->group(function () {
+            Route::get('/', SalesNonManager::class)->name('sales.non.index');
+            Route::get('/create', SalesNonCreateManager::class)->name('sales.non.create');
+        });
     });
 
     //Expanse

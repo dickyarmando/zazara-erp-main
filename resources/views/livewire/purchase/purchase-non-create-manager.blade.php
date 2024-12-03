@@ -1,15 +1,15 @@
 <div>
-    @section('title', 'Sales')
+    @section('title', 'Purchase')
 
     <div class="d-md-flex justify-content-between">
-        <h2 class="mb-3"><span class="text-muted fw-light">@yield('title') Order</span></h2>
+        <h2 class="mb-3"><span class="text-muted fw-light">@yield('title')</span></h2>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="javascript:void(0);">@yield('title')</a>
+                    <a href="javascript:void(0);">@yield('title') Non Tax</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ url('/sales') }}">SO Tax</a>
+                    <a href="{{ url('/purchase/non-tax') }}">PO Non Tax</a>
                 </li>
                 <li class="breadcrumb-item active">{{ empty($set_id) ? 'Add New' : 'Edit' }}</li>
             </ol>
@@ -25,10 +25,10 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">SO Number <span class="text-danger">*</span></label>
+                                <label class="form-label">Order Number <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"
-                                        id="basic-addon11">INV/ESB/{{ $month . $year }}/</span>
+                                        id="basic-addon11">PO/ESB-N/{{ $month . $year }}/</span>
                                     <input type="text" class="form-control @error('number') is-invalid @enderror"
                                         wire:model="number" placeholder="Order Number" aria-label="Order Number"
                                         aria-describedby="basic-addon11" {{ empty($set_id) ? '' : 'readonly' }} />
@@ -44,7 +44,8 @@
                             <div class="mb-3">
                                 <label class="form-label">Date <span class="text-danger">*</span></label>
                                 <input type="date" wire:model="date"
-                                    class="form-control @error('date') is-invalid @enderror" placeholder="Date">
+                                    class="form-control @error('date') is-invalid @enderror" placeholder="Date"
+                                    {{ empty($set_id) ? '' : 'readonly' }}>
                                 @error('date')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -54,20 +55,22 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Customer <span class="text-danger">*</span></label>
+                                <label class="form-label">Supplier <span class="text-danger">*</span></label>
+                                <input type="hidden" class="form-control @error('supplier_id') is-invalid @enderror"
+                                    wire:model="supplier_id" readonly="">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" wire:model="customer_name"
-                                        placeholder="-- Choose Customer --" readonly="">
+                                    <input type="text" class="form-control" wire:model="supplier_name"
+                                        placeholder="-- Choose Supplier --" readonly="">
                                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                        data-bs-target="#ChooseModalCustomers"><i class="fa fa-search"></i></button>
+                                        data-bs-target="#ChooseModalSuppliers"><i class="fa fa-search"></i></button>
                                 </div>
-                                <div wire:ignore.self class="modal fade" id="ChooseModalCustomers"
+                                <div wire:ignore.self class="modal fade" id="ChooseModalSuppliers"
                                     data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                                     aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Choose Customer</h5>
+                                                <h5 class="modal-title">Choose Supplier</h5>
                                                 <button type="button" class="btn-close"
                                                     wire:click="closeModal"></button>
                                             </div>
@@ -102,37 +105,37 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @forelse ($customers as $customer)
+                                                        @forelse ($suppliers as $supplier)
                                                             <tr>
                                                                 <td class="text-center">
-                                                                    {{ ($customers->currentPage() - 1) * $customers->perPage() + $loop->index + 1 }}
+                                                                    {{ ($suppliers->currentPage() - 1) * $suppliers->perPage() + $loop->index + 1 }}
                                                                 </td>
-                                                                <td class="text-center">{{ $customer->code }}</td>
-                                                                <td>{{ $customer->company_name }}</td>
-                                                                <td>{{ $customer->name }}</td>
-                                                                <td>{{ $customer->phone }}</td>
+                                                                <td class="text-center">{{ $supplier->code }}</td>
+                                                                <td>{{ $supplier->company_name }}</td>
+                                                                <td>{{ $supplier->name }}</td>
+                                                                <td>{{ $supplier->phone }}</td>
                                                                 <td><button class="btn btn-xs btn-outline-danger w-100"
-                                                                        wire:click.prevent="chooseCustomer('{{ $customer->id }}')"><i
+                                                                        wire:click.prevent="chooseSupplier('{{ $supplier->id }}')"><i
                                                                             class="fa fa-plus me-2"></i> Select</button>
                                                                 </td>
                                                             </tr>
                                                         @empty
                                                             <tr>
-                                                                <td class="text-center py-2" colspan="6">No Customers
+                                                                <td class="text-center py-2" colspan="6">No Suppliers
                                                                 </td>
                                                             </tr>
                                                         @endforelse
                                                     </tbody>
                                                 </table>
                                                 <div class="mt-3">
-                                                    {{ $customers->links('admin.custom-pagination') }}
+                                                    {{ $suppliers->links('admin.custom-pagination') }}
                                                 </div>
 
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @error('customer_id')
+                                @error('supplier_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -174,14 +177,14 @@
                                         </ul>
                                     </div>
                                 @endif
-                                @if ($salesFiles)
+                                @if ($purchaseFiles)
                                     <div class="mt-3">
                                         <h5>Uploaded Files:</h5>
                                         <ul>
-                                            @foreach ($salesFiles as $file)
+                                            @foreach ($purchaseFiles as $file)
                                                 <li>
                                                     {{ $file->file }} - <a
-                                                        href="{{ url('/sales_files/' . $file->file) }}"
+                                                        href="{{ url('/purchase_non_files/' . $file->file) }}"
                                                         target="_blank" class="btn btn-xs btn-outline-primary"
                                                         title="View {{ $file->file }}">View</a> - <button
                                                         type="button" wire:click="deleteFile('{{ $file->id }}')"
@@ -249,14 +252,6 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2">&nbsp;</td>
-                                            <td colspan="2" class="text-right">PPN ({{ $ppn }} %)</td>
-                                            <td><input type="text" class="form-control text-end"
-                                                    wire:model="ppn_amount" readonly>
-                                            </td>
-                                            <td>&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">&nbsp;</td>
                                             <td colspan="2" class="text-right">Delivery Fee</td>
                                             <td><input type="text" class="form-control text-end"
                                                     wire:model="delivery_fee"
@@ -310,10 +305,31 @@
         </form>
     </div>
 
+    {{-- Delete --}}
+    <div wire:ignore.self class="modal fade" id="FileDeleteModal" tabindex="-1" product="dialog">
+        <div class="modal-dialog" file="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete file?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-btn"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" wire:click.prevent="destroyFile()" class="btn btn-danger close-modal"
+                        data-bs-dismiss="modal">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
         <script>
             window.addEventListener('close-modal', event => {
-                $('#ChooseModalCustomers').modal('hide');
+                $('#ChooseModalSuppliers').modal('hide');
+                $('#FileDeleteModal').modal('hide');
             });
         </script>
     @endpush

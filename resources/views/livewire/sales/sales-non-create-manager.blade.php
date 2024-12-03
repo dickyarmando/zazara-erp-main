@@ -2,14 +2,14 @@
     @section('title', 'Sales')
 
     <div class="d-md-flex justify-content-between">
-        <h2 class="mb-3"><span class="text-muted fw-light">@yield('title') Order</span></h2>
+        <h2 class="mb-3"><span class="text-muted fw-light">@yield('title') Order Non Tax</span></h2>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a href="javascript:void(0);">@yield('title')</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ url('/sales') }}">SO Tax</a>
+                    <a href="{{ url('/sales/non-tax') }}">SO Non Tax</a>
                 </li>
                 <li class="breadcrumb-item active">{{ empty($set_id) ? 'Add New' : 'Edit' }}</li>
             </ol>
@@ -28,7 +28,7 @@
                                 <label class="form-label">SO Number <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"
-                                        id="basic-addon11">INV/ESB/{{ $month . $year }}/</span>
+                                        id="basic-addon11">INV/ESB-N/{{ $month . $year }}/</span>
                                     <input type="text" class="form-control @error('number') is-invalid @enderror"
                                         wire:model="number" placeholder="Order Number" aria-label="Order Number"
                                         aria-describedby="basic-addon11" {{ empty($set_id) ? '' : 'readonly' }} />
@@ -181,7 +181,7 @@
                                             @foreach ($salesFiles as $file)
                                                 <li>
                                                     {{ $file->file }} - <a
-                                                        href="{{ url('/sales_files/' . $file->file) }}"
+                                                        href="{{ url('/sales_non_files/' . $file->file) }}"
                                                         target="_blank" class="btn btn-xs btn-outline-primary"
                                                         title="View {{ $file->file }}">View</a> - <button
                                                         type="button" wire:click="deleteFile('{{ $file->id }}')"
@@ -244,14 +244,6 @@
                                             <td colspan="2" class="text-right">Sub Total</td>
                                             <td><input type="text" class="form-control text-end"
                                                     wire:model="subtotal" readonly>
-                                            </td>
-                                            <td>&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">&nbsp;</td>
-                                            <td colspan="2" class="text-right">PPN ({{ $ppn }} %)</td>
-                                            <td><input type="text" class="form-control text-end"
-                                                    wire:model="ppn_amount" readonly>
                                             </td>
                                             <td>&nbsp;</td>
                                         </tr>

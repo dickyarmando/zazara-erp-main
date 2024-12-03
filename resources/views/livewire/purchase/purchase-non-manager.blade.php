@@ -2,13 +2,13 @@
     @section('title', 'Purchase')
 
     <div class="d-md-flex justify-content-between">
-        <h2 class="mb-3"><span class="text-muted fw-light">Data @yield('title')</span></h2>
+        <h2 class="mb-3"><span class="text-muted fw-light">Data @yield('title') Non Tax</span></h2>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a href="javascript:void(0);">@yield('title')</a>
                 </li>
-                <li class="breadcrumb-item active">PO Tax</li>
+                <li class="breadcrumb-item active">PO Non Tax</li>
             </ol>
         </nav>
     </div>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-sm-8 col-xs-12 text-right">
                         <div class="d-md-flex justify-content-end">
-                            <a href="{{ url('purchase/create') }}" class="btn btn-primary btn-sm"><i
+                            <a href="{{ url('purchase/non-tax/create') }}" class="btn btn-primary btn-sm"><i
                                     class="bx bx-plus me-2"></i>Add New</a>
                         </div>
                     </div>
@@ -45,16 +45,18 @@
                     <thead>
                         <tr>
                             <th class="w-px-75">No</th>
-                            <th class="sort" wire:click="sortOrder('tr_purchase.number')">Purchase Number
+                            <th class="sort" wire:click="sortOrder('tr_purchase_non.number')">Purchase Number
                                 {!! $sortLink !!}
                             </th>
-                            <th class="sort" wire:click="sortOrder('tr_purchase.date')">Date {!! $sortLink !!}
+                            <th class="sort" wire:click="sortOrder('tr_purchase_non.date')">Date
+                                {!! $sortLink !!}
                             </th>
                             <th class="sort" wire:click="sortOrder('ms_suppliers.company_name')">Supplier
                                 {!! $sortLink !!}</th>
-                            <th class="sort" wire:click="sortOrder('tr_purchase.notes')">Summary
+                            <th class="sort" wire:click="sortOrder('tr_purchase_non.notes')">Summary
                                 {!! $sortLink !!}</th>
-                            <th class="sort" wire:click="sortOrder('tr_purchase.total')">Total {!! $sortLink !!}
+                            <th class="sort" wire:click="sortOrder('tr_purchase_non.total')">Total
+                                {!! $sortLink !!}
                             </th>
                             <th class="w-px-150">Action</th>
                         </tr>

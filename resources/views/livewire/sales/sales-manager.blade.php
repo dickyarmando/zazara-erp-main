@@ -6,9 +6,9 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="javascript:void(0);">Dashboard</a>
+                    <a href="javascript:void(0);">@yield('title')</a>
                 </li>
-                <li class="breadcrumb-item active">@yield('title')</li>
+                <li class="breadcrumb-item active">SO Tax</li>
             </ol>
         </nav>
     </div>
@@ -71,9 +71,8 @@
                                 <td class="border-start">{{ $sales->notes }}</td>
                                 <td class="border-start text-right">{{ number_format($sales->total, 2) }}</td>
                                 <td class="border-start text-center">
-                                    <button type="button" wire:click="delete('{{ $sales->id }}')"
-                                        class="btn btn-xs btn-success" data-bs-toggle="modal"
-                                        data-bs-target="#UserDeleteModal" title="Open Data"><span
+                                    <button type="button" wire:click="view('{{ $sales->id }}')"
+                                        class="btn btn-xs btn-success" title="Open Data"><span
                                             class="bx bx-folder-open"></span></button>
                                     <button type="button" wire:click="edit('{{ $sales->id }}')"
                                         class="btn btn-xs btn-secondary" title="Edit User"><span

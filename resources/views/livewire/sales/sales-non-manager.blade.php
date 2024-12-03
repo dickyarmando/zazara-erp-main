@@ -1,14 +1,14 @@
 <div>
-    @section('title', 'Purchase')
+    @section('title', 'Sales')
 
     <div class="d-md-flex justify-content-between">
-        <h2 class="mb-3"><span class="text-muted fw-light">Data @yield('title')</span></h2>
+        <h2 class="mb-3"><span class="text-muted fw-light">Data @yield('title') Non Tax</span></h2>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a href="javascript:void(0);">@yield('title')</a>
                 </li>
-                <li class="breadcrumb-item active">PO Tax</li>
+                <li class="breadcrumb-item active">SO Non Tax</li>
             </ol>
         </nav>
     </div>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-sm-8 col-xs-12 text-right">
                         <div class="d-md-flex justify-content-end">
-                            <a href="{{ url('purchase/create') }}" class="btn btn-primary btn-sm"><i
+                            <a href="{{ url('sales/non-tax/create') }}" class="btn btn-primary btn-sm"><i
                                     class="bx bx-plus me-2"></i>Add New</a>
                         </div>
                     </div>
@@ -45,43 +45,43 @@
                     <thead>
                         <tr>
                             <th class="w-px-75">No</th>
-                            <th class="sort" wire:click="sortOrder('tr_purchase.number')">Purchase Number
+                            <th class="sort" wire:click="sortOrder('tr_sales.number')">Sales Number
                                 {!! $sortLink !!}
                             </th>
-                            <th class="sort" wire:click="sortOrder('tr_purchase.date')">Date {!! $sortLink !!}
+                            <th class="sort" wire:click="sortOrder('tr_sales.date')">Date {!! $sortLink !!}
                             </th>
-                            <th class="sort" wire:click="sortOrder('ms_suppliers.company_name')">Supplier
+                            <th class="sort" wire:click="sortOrder('ms_customers.company_name')">Customer
                                 {!! $sortLink !!}</th>
-                            <th class="sort" wire:click="sortOrder('tr_purchase.notes')">Summary
+                            <th class="sort" wire:click="sortOrder('tr_sales.notes')">Summary
                                 {!! $sortLink !!}</th>
-                            <th class="sort" wire:click="sortOrder('tr_purchase.total')">Total {!! $sortLink !!}
+                            <th class="sort" wire:click="sortOrder('tr_sales.total')">Total {!! $sortLink !!}
                             </th>
                             <th class="w-px-150">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($purchases as $purchase)
+                        @foreach ($saless as $sales)
                             <tr>
                                 <td class="text-center">
-                                    {{ ($purchases->currentPage() - 1) * $purchases->perPage() + $loop->index + 1 }}
+                                    {{ ($saless->currentPage() - 1) * $saless->perPage() + $loop->index + 1 }}
                                 </td>
-                                <td class="border-start text-center">{{ $purchase->number }}</td>
-                                <td class="border-start text-center">{{ $purchase->date }}</td>
-                                <td class="border-start">{{ $purchase->supplier_name }}</td>
-                                <td class="border-start">{{ $purchase->notes }}</td>
-                                <td class="border-start text-right">{{ number_format($purchase->total, 2) }}</td>
+                                <td class="border-start text-center">{{ $sales->number }}</td>
+                                <td class="border-start text-center">{{ $sales->date }}</td>
+                                <td class="border-start">{{ $sales->customer_name }}</td>
+                                <td class="border-start">{{ $sales->notes }}</td>
+                                <td class="border-start text-right">{{ number_format($sales->total, 2) }}</td>
                                 <td class="border-start text-center">
-                                    <button type="button" wire:click="view('{{ $purchase->id }}')"
+                                    <button type="button" wire:click="view('{{ $sales->id }}')"
                                         class="btn btn-xs btn-success" title="Open Data"><span
                                             class="bx bx-folder-open"></span></button>
-                                    <button type="button" wire:click="edit('{{ $purchase->id }}')"
+                                    <button type="button" wire:click="edit('{{ $sales->id }}')"
                                         class="btn btn-xs btn-secondary" title="Edit User"><span
                                             class="bx bxs-edit"></span></button>
                                 </td>
                             </tr>
                         @endforeach
 
-                        @if ($purchases->count() <= 0)
+                        @if ($saless->count() <= 0)
                             <tr>
                                 <td colspan="7" class="text-center">No data..</td>
                             </tr>
@@ -90,7 +90,7 @@
                 </table>
             </div>
             <div class="panel-footer">
-                {{ $purchases->links('admin.custom-pagination-new') }}
+                {{ $saless->links('admin.custom-pagination-new') }}
             </div>
         </div>
     </div>

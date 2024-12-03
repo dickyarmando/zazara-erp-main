@@ -6,10 +6,10 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="javascript:void(0);">Dashboard</a>
+                    <a href="javascript:void(0);">@yield('title')</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ url('/purchase') }}">@yield('title')</a>
+                    <a href="{{ url('/purchase') }}">PO Tax</a>
                 </li>
                 <li class="breadcrumb-item active">{{ empty($set_id) ? 'Add New' : 'Edit' }}</li>
             </ol>

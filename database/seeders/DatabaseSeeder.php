@@ -47,7 +47,6 @@ class DatabaseSeeder extends Seeder
             'id' => 2,
             'name' => 'Purchase',
             'icon' => 'bxs-purchase-tag',
-            'action' => 'purchase',
             'seq' => 2,
             'is_create' => 1,
             'is_update' => 1,
@@ -272,6 +271,46 @@ class DatabaseSeeder extends Seeder
             'is_update' => 1,
             'is_delete' => 1,
         ]);
+
+        PrmMenus::create([
+            'id' => 28,
+            'parent_id' => 2,
+            'name' => 'PO Tax',
+            'action' => 'purchase',
+            'seq' => 1,
+            'is_create' => 1,
+            'is_update' => 1,
+        ]);
+
+        PrmMenus::create([
+            'id' => 29,
+            'parent_id' => 2,
+            'name' => 'PO Non Tax',
+            'action' => 'purchase/non-tax',
+            'seq' => 2,
+            'is_create' => 1,
+            'is_update' => 1,
+        ]);
+
+        PrmMenus::create([
+            'id' => 30,
+            'parent_id' => 3,
+            'name' => 'SO Tax',
+            'action' => 'sales',
+            'seq' => 1,
+            'is_create' => 1,
+            'is_update' => 1,
+        ]);
+
+        PrmMenus::create([
+            'id' => 31,
+            'parent_id' => 3,
+            'name' => 'SO Non Tax',
+            'action' => 'sales/non-tax',
+            'seq' => 2,
+            'is_create' => 1,
+            'is_update' => 1,
+        ]);
         //End Menus
 
         // Role Menus Added
@@ -412,6 +451,30 @@ class DatabaseSeeder extends Seeder
             'is_create' => 1,
             'is_update' => 1,
             'is_delete' => 1,
+        ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 28,
+            'is_create' => 1,
+            'is_update' => 1,
+        ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 29,
+            'is_create' => 1,
+            'is_update' => 1,
+        ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 30,
+            'is_create' => 1,
+            'is_update' => 1,
+        ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 31,
+            'is_create' => 1,
+            'is_update' => 1,
         ]);
         // End Role Menus
 

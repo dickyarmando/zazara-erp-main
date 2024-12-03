@@ -3,10 +3,9 @@
 namespace App\Http\Livewire\Sales;
 
 use App\Models\MsCustomers;
-use App\Models\PrmConfig;
-use App\Models\TrSales;
-use App\Models\TrSalesDetails;
-use App\Models\TrSalesFiles;
+use App\Models\TrSalesNon;
+use App\Models\TrSalesNonDetails;
+use App\Models\TrSalesNonFiles;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +13,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
-class SalesCreateManager extends Component
+class SalesNonCreateManager extends Component
 {
     use WithPagination, WithFileUploads;
 
@@ -37,8 +36,6 @@ class SalesCreateManager extends Component
     public $customer_name;
     public $notes;
     public $subtotal;
-    public $ppn;
-    public $ppn_amount;
     public $discount;
     public $delivery_fee;
     public $total;
@@ -52,12 +49,12 @@ class SalesCreateManager extends Component
         $now = Carbon::now();
 
         if (isset($_REQUEST['id'])) {
-            $sales = TrSales::find($_REQUEST['id']);
+            $sales = TrSalesNon::find($_REQUEST['id']);
             $customer = MsCustomers::find($sales->customer_id);
-            $salesDetails = TrSalesDetails::where('sales_id', $sales->id)
+            $salesDetails = TrSalesNonDetails::where('sales_non_id', $sales->id)
                 ->select('id', 'product_name as name', 'unit_name as unit', 'qty', 'rate as price', 'amount as total')
                 ->get()->toArray();
-            $this->salesFiles = TrSalesFiles::where('sales_id', $sales->id)->get();
+            $this->salesFiles = TrSalesNonFiles::where('sales_non_id', $sales->id)->get();
             $sequence = explode("/", $sales->number);
 
             $this->set_id = $sales->id;
@@ -70,8 +67,6 @@ class SalesCreateManager extends Component
             $this->customer_name = $customer->name;
             $this->notes = $sales->notes;
             $this->subtotal = $sales->subtotal;
-            $this->ppn = $sales->ppn;
-            $this->ppn_amount = $sales->ppn_amount;
             $this->delivery_fee = $sales->delivery_fee;
             $this->discount = $sales->discount;
             $this->total = $sales->total;
@@ -79,17 +74,14 @@ class SalesCreateManager extends Component
         } else {
             $this->month = $now->month;
             $this->year = $now->year;
-            $countSales = TrSales::where(DB::raw('MONTH(created_at)'), $this->month)
+            $countSales = TrSalesNon::where(DB::raw('MONTH(created_at)'), $this->month)
                 ->where(DB::raw('YEAR(created_at)'), $this->year)
                 ->count();
             $this->sequence = $countSales + 1;
             $this->number = str_pad($this->sequence, 4, "0", STR_PAD_LEFT);
             $this->date = $now->format('Y-m-d');
 
-            $configPPN = PrmConfig::where('code', 'ppn')->first();
             $this->subtotal = 0;
-            $this->ppn = $configPPN->value;
-            $this->ppn_amount = 0;
             $this->delivery_fee = 0;
             $this->discount = 0;
             $this->total = 0;
@@ -112,7 +104,7 @@ class SalesCreateManager extends Component
         }
         $customers = $customers->where('is_status', '1')->paginate(10);
 
-        return view('livewire.sales.sales-create-manager', ['customers' => $customers]);
+        return view('livewire.sales.sales-non-create-manager', ['customers' => $customers]);
     }
 
     public function add()
@@ -144,7 +136,7 @@ class SalesCreateManager extends Component
 
     public function backRedirect()
     {
-        return redirect()->to('/sales');
+        return redirect()->to('/sales/non-tax');
     }
 
     public function calculate($id)
@@ -159,8 +151,7 @@ class SalesCreateManager extends Component
     public function calculateTotal()
     {
         $this->subtotal = array_sum(array_column($this->items, 'total'));
-        $this->ppn_amount = $this->subtotal * $this->ppn / 100;
-        $this->total = ($this->subtotal - $this->discount) + $this->ppn_amount + $this->delivery_fee;
+        $this->total = ($this->subtotal - $this->discount) + $this->delivery_fee;
     }
 
     public function remove($index)
@@ -188,34 +179,32 @@ class SalesCreateManager extends Component
                 'subtotal' => '',
                 'delivery_fee' => '',
                 'discount' => '',
-                'ppn' => '',
-                'ppn_amount' => '',
                 'total' => '',
             ];
 
-            $numberOrder = 'INV/ESB/' . $this->month . $this->year . '/' . $this->number;
+            $numberOrder = 'INV/ESB-N/' . $this->month . $this->year . '/' . $this->number;
 
-            $countNumber = TrSales::where('number', $numberOrder)->count();
+            $countNumber = TrSalesNon::where('number', $numberOrder)->count();
 
             if ($countNumber > 0) {
-                $countSales = TrSales::where(DB::raw('MONTH(created_at)'), $this->month)
+                $countSales = TrSalesNon::where(DB::raw('MONTH(created_at)'), $this->month)
                     ->where(DB::raw('YEAR(created_at)'), $this->year)
                     ->count();
                 $this->sequence = $countSales + 1;
                 $this->number = str_pad($this->sequence, 4, "0", STR_PAD_LEFT);
-                $numberOrder = 'INV/ESB/' . $this->month . $this->year . '/' . $this->number;
+                $numberOrder = 'INV/ESB-N/' . $this->month . $this->year . '/' . $this->number;
             }
 
             $valid = $this->validate($rules);
             $valid['number'] = $numberOrder;
             $valid['created_by'] = Auth::user()->id;
             $valid['updated_by'] = Auth::user()->id;
-            $sales = TrSales::create($valid);
+            $sales = TrSalesNon::create($valid);
 
             foreach ($this->items as $key => $item) {
                 if ($item['name'] != "") {
                     $dataDetail = [
-                        'sales_id' => $sales->id,
+                        'sales_non_id' => $sales->id,
                         'product_name' => $item['name'],
                         'unit_name' => $item['unit'],
                         'qty' => $item['qty'],
@@ -223,20 +212,20 @@ class SalesCreateManager extends Component
                         'amount' => $item['total'],
                     ];
 
-                    TrSalesDetails::create($dataDetail);
+                    TrSalesNonDetails::create($dataDetail);
                 }
             }
 
             foreach ($this->files as $file) {
-                $filename = $file->store('/', 'sales_disk');
+                $filename = $file->store('/', 'sales_non_disk');
 
                 if ($filename) {
                     $dataFiles = [
-                        'sales_id' => $sales->id,
+                        'sales_non_id' => $sales->id,
                         'file' => $filename,
                     ];
 
-                    TrSalesFiles::create($dataFiles);
+                    TrSalesNonFiles::create($dataFiles);
                 }
             }
         } else {
@@ -247,21 +236,19 @@ class SalesCreateManager extends Component
                 'subtotal' => '',
                 'delivery_fee' => '',
                 'discount' => '',
-                'ppn' => '',
-                'ppn_amount' => '',
                 'total' => '',
             ];
 
             $valid = $this->validate($rules);
             $valid['updated_by'] = Auth::user()->id;
-            $sales = TrSales::find($this->set_id);
+            $sales = TrSalesNon::find($this->set_id);
             $sales->update($valid);
 
-            TrSalesDetails::where('sales_id', $this->set_id)->delete();
+            TrSalesNonDetails::where('sales_non_id', $this->set_id)->delete();
             foreach ($this->items as $key => $item) {
                 if ($item['name'] != "") {
                     $dataDetail = [
-                        'sales_id' => $this->set_id,
+                        'sales_non_id' => $this->set_id,
                         'product_name' => $item['name'],
                         'unit_name' => $item['unit'],
                         'qty' => $item['qty'],
@@ -269,20 +256,20 @@ class SalesCreateManager extends Component
                         'amount' => $item['total'],
                     ];
 
-                    TrSalesDetails::create($dataDetail);
+                    TrSalesNonDetails::create($dataDetail);
                 }
             }
 
             foreach ($this->files as $file) {
-                $filename = $file->store('/', 'sales_disk');
+                $filename = $file->store('/', 'sales_non_disk');
 
                 if ($filename) {
                     $dataFiles = [
-                        'sales_id' => $sales->id,
+                        'sales_non_id' => $sales->id,
                         'file' => $filename,
                     ];
 
-                    TrSalesFiles::create($dataFiles);
+                    TrSalesNonFiles::create($dataFiles);
                 }
             }
 
@@ -290,7 +277,7 @@ class SalesCreateManager extends Component
         }
 
         session()->flash('success', 'Saved ' . $numberOrder);
-        return redirect()->to('/sales');
+        return redirect()->to('/sales/non-tax');
     }
 
     public function updatedFiles()
@@ -307,8 +294,8 @@ class SalesCreateManager extends Component
 
     public function destroyFile()
     {
-        $file = TrSalesFiles::find($this->set_id_file);
-        $filePath = public_path('sales_files/' . $file->file);
+        $file = TrSalesNonFiles::find($this->set_id_file);
+        $filePath = public_path('sales_non_files/' . $file->file);
 
         if (file_exists($filePath)) {
             unset($filePath);
@@ -317,7 +304,7 @@ class SalesCreateManager extends Component
         $file->delete();
         $this->dispatchBrowserEvent('close-modal');
 
-        $this->salesFiles = TrSalesFiles::where('sales_id', $this->set_id)->get();
+        $this->salesFiles = TrSalesNonFiles::where('sales_non_id', $this->set_id)->get();
         $this->set_id_file = null;
     }
 }

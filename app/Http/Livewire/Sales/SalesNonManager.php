@@ -2,17 +2,17 @@
 
 namespace App\Http\Livewire\Sales;
 
-use App\Models\TrSales;
+use App\Models\TrSalesNon;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class SalesManager extends Component
+class SalesNonManager extends Component
 {
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
     public $perPage = 10;
-    public $sortColumn = "tr_sales.number";
+    public $sortColumn = "tr_sales_non.number";
     public $sortOrder = "desc";
     public $sortLink = '<i class="sorticon fa-solid fa-caret-up"></i>';
     public $searchKeyword = '';
@@ -21,20 +21,20 @@ class SalesManager extends Component
 
     public function render()
     {
-        $querySales = TrSales::orderBy($this->sortColumn, $this->sortOrder)
-            ->leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales.customer_id')
-            ->select('tr_sales.id', 'tr_sales.number', 'tr_sales.date', 'tr_sales.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales.reference', 'tr_sales.total', 'tr_sales.notes', 'tr_sales.is_receive', 'tr_sales.is_status');
+        $querySales = TrSalesNon::orderBy($this->sortColumn, $this->sortOrder)
+            ->leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales_non.customer_id')
+            ->select('tr_sales_non.id', 'tr_sales_non.number', 'tr_sales_non.date', 'tr_sales_non.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales_non.reference', 'tr_sales_non.total', 'tr_sales_non.notes', 'tr_sales_non.is_receive', 'tr_sales_non.is_status');
 
         if (!empty($this->searchKeyword)) {
-            $querySales->orWhere('tr_sales.number', 'like', "%" . $this->searchKeyword . "%");
+            $querySales->orWhere('tr_sales_non.number', 'like', "%" . $this->searchKeyword . "%");
             $querySales->orWhere('ms_customers.company_name', 'like', "%" . $this->searchKeyword . "%");
-            $querySales->orWhere('tr_sales.notes', 'like', "%" . $this->searchKeyword . "%");
-            $querySales->orWhere('tr_sales.total', 'like', "%" . $this->searchKeyword . "%");
+            $querySales->orWhere('tr_sales_non.notes', 'like', "%" . $this->searchKeyword . "%");
+            $querySales->orWhere('tr_sales_non.total', 'like', "%" . $this->searchKeyword . "%");
         }
 
         $saless = $querySales->paginate($this->perPage);
 
-        return view('livewire.sales.sales-manager', ['saless' => $saless]);
+        return view('livewire.sales.sales-non-manager', ['saless' => $saless]);
     }
 
     public function sortOrder($columnName = "")
@@ -53,11 +53,11 @@ class SalesManager extends Component
 
     public function edit($id)
     {
-        return redirect()->to('/sales/create?id=' . $id);
+        return redirect()->to('/sales/non-tax/create?id=' . $id);
     }
 
     public function view($id)
     {
-        return redirect()->to('/sales/view/' . $id);
+        return redirect()->to('/sales/non-tax/view/' . $id);
     }
 }
