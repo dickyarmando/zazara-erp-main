@@ -2,11 +2,11 @@
     @section('title', 'Purchase')
 
     <div class="d-md-flex justify-content-between">
-        <h2 class="mb-3"><span class="text-muted fw-light">@yield('title')</span></h2>
+        <h2 class="mb-3"><span class="text-muted fw-light">@yield('title') Non Tax</span></h2>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="javascript:void(0);">@yield('title') Non Tax</a>
+                    <a href="javascript:void(0);">@yield('title')</a>
                 </li>
                 <li class="breadcrumb-item">
                     <a href="{{ url('/purchase/non-tax') }}">PO Non Tax</a>
