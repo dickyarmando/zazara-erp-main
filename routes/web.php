@@ -30,7 +30,9 @@ use App\Http\Livewire\Purchase\PurchaseManager;
 use App\Http\Livewire\Purchase\PurchaseNonCreateManager;
 use App\Http\Livewire\Purchase\PurchaseNonManager;
 use App\Http\Livewire\Purchase\PurchaseNonViewManager;
+use App\Http\Livewire\Purchase\PurchaseNonViewPrintManager;
 use App\Http\Livewire\Purchase\PurchaseViewManager;
+use App\Http\Livewire\Purchase\PurchaseViewPrintManager;
 use App\Http\Livewire\Sales\SalesCreateManager;
 use App\Http\Livewire\Sales\SalesManager;
 use App\Http\Livewire\Sales\SalesNonCreateManager;
@@ -95,11 +97,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', PurchaseManager::class)->name('purchase.index');
         Route::get('/create', PurchaseCreateManager::class)->name('purchase.create');
         Route::get('/view/{id}', PurchaseViewManager::class)->name('purchase.view');
+        Route::get('/view/print/{id}', [PurchaseViewPrintManager::class, 'index'])->name('purchase.view.print');
 
         Route::prefix('/non-tax')->group(function () {
             Route::get('/', PurchaseNonManager::class)->name('purchase.non.index');
             Route::get('/create', PurchaseNonCreateManager::class)->name('purchase.non.create');
             Route::get('/view/{id}', PurchaseNonViewManager::class)->name('purchase.non.view');
+            Route::get('/view/print/{id}', [PurchaseNonViewPrintManager::class, 'index'])->name('purchase.non.view.print');
         });
     });
 

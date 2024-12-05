@@ -23,7 +23,7 @@
             <button type="button" wire:click="printDocument" class="btn btn-primary"><span
                     class="bx bx-printer me-2"></span> Print</button>
         </div>
-        <div class="card-body" id="print-document">
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
                     <img src="{{ asset('picture/' . $companies->picture) }}" width="70%" />
@@ -138,11 +138,8 @@
     @push('scripts')
         <script>
             window.addEventListener('print', function() {
-                const content = document.getElementById('print-document').innerHTML;
-                const printWindow = window.open('', '', 'height=400,width=600');
-                printWindow.document.write(content);
-                printWindow.document.close();
-                printWindow.print();
+                var url = '{{ route('purchase.view.print', ['id' => $purchase->id]) }}';
+                window.open(url, '_blank');
             });
         </script>
     @endpush

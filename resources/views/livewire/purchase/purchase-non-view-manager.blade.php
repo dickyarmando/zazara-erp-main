@@ -132,11 +132,8 @@
     @push('scripts')
         <script>
             window.addEventListener('print', function() {
-                const content = document.getElementById('print-document').innerHTML;
-                const printWindow = window.open('', '', 'height=400,width=600');
-                printWindow.document.write(content);
-                printWindow.document.close();
-                printWindow.print();
+                var url = '{{ route('purchase.non.view.print', ['id' => $purchase->id]) }}';
+                window.open(url, '_blank');
             });
         </script>
     @endpush
