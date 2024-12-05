@@ -14,10 +14,10 @@
 
 <body>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-6">
             <img src="{{ asset('picture/' . $companies->picture) }}" width="70%" />
         </div>
-        <div class="col-md-6 text-right">
+        <div class="col-6 text-right">
             {!! $companies->address !!}
         </div>
         <div class="col-md-12">

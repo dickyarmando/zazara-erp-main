@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Purchase - {{ $purchase->number }}</title>
+    <title>Sales - {{ $sales->number }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <!-- Core head -->
@@ -20,48 +20,33 @@
         <div class="col-6 text-right">
             {!! $companies->address !!}
         </div>
-        <div class="col-md-12">
-            <h2 class="text-center mt-5 text-black">PURCHASE ORDER</h2>
+        <div class="col-12 mt-2" style="border-top:4px solid #000;">
+            &nbsp;
         </div>
-        <div class="col-md-12">
-            <table cellpadding="1" cellspacing="1" width="100%">
-                <tr>
-                    <td width="140px" class="px-2" style="border: 1px solid #000;">
-                        Nomor PO
-                    </td>
-                    <td style="border: 1px solid #000;" class="px-2">{{ $purchase->number }}</td>
-                </tr>
-                <tr>
-                    <td class="px-2" style="border: 1px solid #000;">
-                        Tanggal PO
-                    </td>
-                    <td style="border: 1px solid #000;" class="px-2">
-                        {{ date('d-m-Y', strtotime($purchase->date)) }}</td>
-                </tr>
-            </table>
-            <table cellpadding="1" cellspacing="1" width="100%" class="mt-4">
-                <tr>
-                    <td width="140px" class="px-2" style="border: 1px solid #000;">
-                        Kepada
-                    </td>
-                    <td style="border: 1px solid #000;" class="px-2">{{ $suppliers->company_name }}</td>
-                </tr>
-                <tr>
-                    <td class="px-2" style="border: 1px solid #000;">
-                        Up
-                    </td>
-                    <td style="border: 1px solid #000;" class="px-2">
-                        {{ $suppliers->name }}</td>
-                </tr>
-            </table>
+        <div class="col-12 text-right">
+            Jakarta, {{ date('d-m-Y', strtotime($sales->date)) }}
+        </div>
+        <div class="col-12">
+            NO : {{ $sales->number }}
+        </div>
+        <div class="col-md-12 mt-4">
+            Kepada Yth,</br>
+            {{ $customers->company_name }}</br>
+            UP : {{ $customers->name }}
+        </div>
+        <div class="col-md-12 mt-4">
+            Dengan Hormat,</br>
+            Sehubung dengan adanya proyek yang sedang bapak/ibu kerjakan, Berikut penawaran harga nya sebagai
+            berikut :
+
             <table cellpadding="1" cellspacing="1" width="100%" class="mt-4">
                 <tr class="text-center">
                     <td width="20px" class="px-2" style="border: 1px solid #000;">
                         <b>No</b>
                     </td>
                     <td class="px-2" style="border: 1px solid #000;"><b>Nama Barang</b></td>
-                    <td class="px-2" style="border: 1px solid #000;"><b>Satuan</b></td>
                     <td class="px-2" style="border: 1px solid #000;"><b>Qty</b></td>
+                    <td class="px-2" style="border: 1px solid #000;"><b>Satuan</b></td>
                     <td class="px-2" style="border: 1px solid #000;"><b>Harga (Rp)</b></td>
                     <td class="px-2" style="border: 1px solid #000;"><b>Total (Rp)</b></td>
                 </tr>
@@ -84,41 +69,75 @@
                 <tr>
                     @php
                         $terbilang = new \NumberFormatter('id', \NumberFormatter::SPELLOUT);
-                        $terbilang = $terbilang->format(round($purchase->total, 2));
+                        $terbilang = $terbilang->format(round($sales->total, 2));
                         $terbilang = str_replace('juts', 'juta', $terbilang);
                     @endphp
                     <td colspan="4" rowspan="5"><b>Terbilang : <span
                                 class="text-capitalize">{{ $terbilang }}</span></b></td>
                     <td class="px-2 text-right" style="border: 1px solid #000;">SUBTOTAL</td>
                     <td class="px-2 text-right" style="border: 1px solid #000;">
-                        {{ number_format($purchase->subtotal, 2, ',', '.') }}</td>
+                        {{ number_format($sales->subtotal, 2, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td class="px-2 text-right" style="border: 1px solid #000;">PPN ( {{ $purchase->ppn }} % )
+                    <td class="px-2 text-right" style="border: 1px solid #000;">PPN ( {{ $sales->ppn }} % )
                     </td>
                     <td class="px-2 text-right" style="border: 1px solid #000;">
-                        {{ number_format($purchase->ppn_amount, 2, ',', '.') }}</td>
+                        {{ number_format($sales->ppn_amount, 2, ',', '.') }}</td>
                 </tr>
                 <tr>
                     <td class="px-2 text-right" style="border: 1px solid #000;">PENGIRIMAN
                     </td>
                     <td class="px-2 text-right" style="border: 1px solid #000;">
-                        {{ number_format($purchase->delivery_fee, 2, ',', '.') }}</td>
+                        {{ number_format($sales->delivery_fee, 2, ',', '.') }}</td>
                 </tr>
                 <tr>
                     <td class="px-2 text-right" style="border: 1px solid #000;">DISCOUNT
                     </td>
                     <td class="px-2 text-right" style="border: 1px solid #000;">
-                        {{ number_format($purchase->discount, 2, ',', '.') }}</td>
+                        {{ number_format($sales->discount, 2, ',', '.') }}</td>
                 </tr>
                 <tr>
                     <td class="px-2 text-right" style="border: 1px solid #000;"><b>TOTAL</b>
                     </td>
                     <td class="px-2 text-right" style="border: 1px solid #000;">
-                        <b>{{ number_format($purchase->total, 2, ',', '.') }}</b>
+                        <b>{{ number_format($sales->total, 2, ',', '.') }}</b>
                     </td>
                 </tr>
             </table>
+        </div>
+        <div class="col-md-12 mt-4">
+            <u><b>Terms & Conditions</b></u>
+            <ol>
+                <li>
+                    Harga franco on Truck Jabodetabek
+                </li>
+                <li>
+                    Harga sudah termasuk PPN {{ $sales->ppn }}%
+                </li>
+                <li>Lead Time Delivery<br>
+                    3-5 Hari Kerja item dari Jakarta.<br>
+                    7-14 Hari Kerja apabila stock dari Surabaya.
+                </li>
+                <li>
+                    Payment Term : <b>Cash Before Delivery</b>
+                </li>
+                <li>
+                    Pembayaran dapat di transfer ke rekening :<br>
+                    <ul>
+                        <li><b>5455.67.8797 / BCA Cab. WTC Sudirman A/N. ELLIA SUKSES BERSAMA, PT</b></li>
+                        <li><b>01058.01.30.000.0069 / BTN Cab. Asemka A/N. PT. ELLIA SUKSES BERSAMA</b></li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+        <div class="col-md-12 mt-2">
+            Demikian Penawaran harga ini kami ajukan. Atas perhatian dan kerja sama nya kami ucapkan terima
+            kasih.
+        </div>
+        <div class="col-md-12 mt-4">
+            Hormat Kami,</br>
+            <div style="height: 60px;">&nbsp;</div></br>
+            <b>PT. ELLIA SUKSES BERSAMA</b>
         </div>
     </div>
 

@@ -37,6 +37,10 @@ use App\Http\Livewire\Sales\SalesCreateManager;
 use App\Http\Livewire\Sales\SalesManager;
 use App\Http\Livewire\Sales\SalesNonCreateManager;
 use App\Http\Livewire\Sales\SalesNonManager;
+use App\Http\Livewire\Sales\SalesNonViewManager;
+use App\Http\Livewire\Sales\SalesNonViewPrintManager;
+use App\Http\Livewire\Sales\SalesViewManager;
+use App\Http\Livewire\Sales\SalesViewPrintManager;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,10 +115,14 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/sales')->group(function () {
         Route::get('/', SalesManager::class)->name('sales.index');
         Route::get('/create', SalesCreateManager::class)->name('sales.create');
+        Route::get('/view/{id}', SalesViewManager::class)->name('sales.view');
+        Route::get('/view/print/{id}', [SalesViewPrintManager::class, 'index'])->name('sales.view.print');
 
         Route::prefix('/non-tax')->group(function () {
             Route::get('/', SalesNonManager::class)->name('sales.non.index');
             Route::get('/create', SalesNonCreateManager::class)->name('sales.non.create');
+            Route::get('/view/{id}', SalesNonViewManager::class)->name('sales.non.view');
+            Route::get('/view/print/{id}', [SalesNonViewPrintManager::class, 'index'])->name('sales.non.view.print');
         });
     });
 
