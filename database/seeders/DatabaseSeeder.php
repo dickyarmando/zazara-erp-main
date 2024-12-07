@@ -118,6 +118,7 @@ class DatabaseSeeder extends Seeder
             'id' => 10,
             'parent_id' => 9,
             'name' => 'Pay Payments',
+            'action' => 'pay',
             'seq' => 1,
         ]);
 
@@ -125,6 +126,7 @@ class DatabaseSeeder extends Seeder
             'id' => 11,
             'parent_id' => 9,
             'name' => 'Receive Payments',
+            'action' => 'receive',
             'seq' => 2,
         ]);
 
@@ -311,6 +313,17 @@ class DatabaseSeeder extends Seeder
             'is_create' => 1,
             'is_update' => 1,
         ]);
+
+        PrmMenus::create([
+            'id' => 32,
+            'parent_id' => 18,
+            'name' => 'Payment Methods',
+            'action' => 'masters/payment-methods',
+            'seq' => 10,
+            'is_create' => 1,
+            'is_update' => 1,
+            'is_delete' => 1,
+        ]);
         //End Menus
 
         // Role Menus Added
@@ -476,6 +489,13 @@ class DatabaseSeeder extends Seeder
             'is_create' => 1,
             'is_update' => 1,
         ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 32,
+            'is_create' => 1,
+            'is_update' => 1,
+            'is_delete' => 1,
+        ]);
         // End Role Menus
 
         // Company Added
@@ -486,10 +506,27 @@ class DatabaseSeeder extends Seeder
 
         // Config Added
         PrmConfig::create([
+            'id' => 1,
             'code' => 'ppn',
             'name' => 'PPN',
             'type' => 'decimal',
             'value' => '11',
+        ]);
+
+        PrmConfig::create([
+            'id' => 2,
+            'code' => 'pos',
+            'name' => 'PO Sign',
+            'type' => 'varchar',
+            'value' => 'PT. ELLIA SUKSES BERSAMA',
+        ]);
+
+        PrmConfig::create([
+            'id' => 3,
+            'code' => 'sos',
+            'name' => 'SO Sign',
+            'type' => 'varchar',
+            'value' => 'PT. ELLIA SUKSES BERSAMA',
         ]);
         // End Config
 

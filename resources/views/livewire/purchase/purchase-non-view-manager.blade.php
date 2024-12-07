@@ -125,6 +125,11 @@
                         </tr>
                     </table>
                 </div>
+                <div class="col-md-12 mt-4">
+                    Hormat Kami,</br>
+                    <div style="height: 60px;">&nbsp;</div></br>
+                    <b>{{ $poSign->value }}</b>
+                </div>
             </div>
         </div>
     </div>

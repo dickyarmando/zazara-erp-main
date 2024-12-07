@@ -207,6 +207,7 @@ class PurchaseCreateManager extends Component
             }
 
             $valid = $this->validate($rules);
+            $valid['rest'] = $this->total;
             $valid['number'] = $numberOrder;
             $valid['created_by'] = Auth::user()->id;
             $valid['updated_by'] = Auth::user()->id;
@@ -253,6 +254,7 @@ class PurchaseCreateManager extends Component
             ];
 
             $valid = $this->validate($rules);
+            $valid['rest'] = $this->total;
             $valid['updated_by'] = Auth::user()->id;
             $purchase = TrPurchase::find($this->set_id);
             $purchase->update($valid);

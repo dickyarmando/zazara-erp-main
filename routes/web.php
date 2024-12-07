@@ -14,6 +14,8 @@ use App\Http\Livewire\Masters\AccountManager;
 use App\Http\Livewire\Masters\CategoryAccountManager;
 use App\Http\Livewire\Masters\CustomersCreateManager;
 use App\Http\Livewire\Masters\CustomersManager;
+use App\Http\Livewire\Masters\PaymentMethodsCreateManager;
+use App\Http\Livewire\Masters\PaymentMethodsManager;
 use App\Http\Livewire\Masters\ProductsManager;
 use App\Http\Livewire\Masters\ProfileCompanyManager;
 use App\Http\Livewire\Masters\RolesManager as MastersRolesManager;
@@ -25,6 +27,10 @@ use App\Http\Livewire\Pengaturan\ProfileManager;
 use App\Http\Livewire\Pengaturan\UsersManager;
 use App\Http\Livewire\Pengaturan\RolesManager;
 use App\Http\Livewire\Masters\UserManager;
+use App\Http\Livewire\Payment\PayPaymentManager;
+use App\Http\Livewire\Payment\PayPaymentViewManager;
+use App\Http\Livewire\Payment\ReceivePaymentManager;
+use App\Http\Livewire\Payment\ReceivePaymentViewManager;
 use App\Http\Livewire\Purchase\PurchaseCreateManager;
 use App\Http\Livewire\Purchase\PurchaseManager;
 use App\Http\Livewire\Purchase\PurchaseNonCreateManager;
@@ -94,6 +100,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', CustomersManager::class)->name('masters.customers');
             Route::get('/create', CustomersCreateManager::class)->name('masters.customers-create');
         });
+
+        Route::prefix('/payment-methods')->group(function () {
+            Route::get('/', PaymentMethodsManager::class)->name('masters.payment-methods');
+            Route::get('/create', PaymentMethodsCreateManager::class)->name('masters.payment-methods-create');
+        });
     });
 
     //Purchase
@@ -130,6 +141,18 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/expanse')->group(function () {
         Route::get('/', ExpanseManager::class)->name('expanse.index');
         Route::get('/create', ExpanseCreateManager::class)->name('expanse.create');
+    });
+
+    //Pay Payment
+    Route::prefix('/pay')->group(function () {
+        Route::get('/', PayPaymentManager::class)->name('pay.index');
+        Route::get('/view/{id}/{type}', PayPaymentViewManager::class)->name('pay.view');
+    });
+
+    //Receive Payment
+    Route::prefix('/receive')->group(function () {
+        Route::get('/', ReceivePaymentManager::class)->name('receive.index');
+        Route::get('/view/{id}/{type}', ReceivePaymentViewManager::class)->name('receive.view');
     });
 
     //Pengaturan

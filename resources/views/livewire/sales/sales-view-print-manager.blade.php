@@ -107,28 +107,7 @@
         </div>
         <div class="col-md-12 mt-4">
             <u><b>Terms & Conditions</b></u>
-            <ol>
-                <li>
-                    Harga franco on Truck Jabodetabek
-                </li>
-                <li>
-                    Harga sudah termasuk PPN {{ $sales->ppn }}%
-                </li>
-                <li>Lead Time Delivery<br>
-                    3-5 Hari Kerja item dari Jakarta.<br>
-                    7-14 Hari Kerja apabila stock dari Surabaya.
-                </li>
-                <li>
-                    Payment Term : <b>Cash Before Delivery</b>
-                </li>
-                <li>
-                    Pembayaran dapat di transfer ke rekening :<br>
-                    <ul>
-                        <li><b>5455.67.8797 / BCA Cab. WTC Sudirman A/N. ELLIA SUKSES BERSAMA, PT</b></li>
-                        <li><b>01058.01.30.000.0069 / BTN Cab. Asemka A/N. PT. ELLIA SUKSES BERSAMA</b></li>
-                    </ul>
-                </li>
-            </ol>
+            {!! $soTC->value !!}
         </div>
         <div class="col-md-12 mt-2">
             Demikian Penawaran harga ini kami ajukan. Atas perhatian dan kerja sama nya kami ucapkan terima
@@ -137,7 +116,7 @@
         <div class="col-md-12 mt-4">
             Hormat Kami,</br>
             <div style="height: 60px;">&nbsp;</div></br>
-            <b>PT. ELLIA SUKSES BERSAMA</b>
+            <b>{{ $soSign->value }}</b>
         </div>
     </div>
 

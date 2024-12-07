@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Purchase;
 
 use App\Models\TrPurchase;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -23,7 +24,14 @@ class PurchaseManager extends Component
     {
         $queryPurchase = TrPurchase::orderBy($this->sortColumn, $this->sortOrder)
             ->leftJoin('ms_suppliers', 'ms_suppliers.id', '=', 'tr_purchase.supplier_id')
-            ->select('tr_purchase.id', 'tr_purchase.number', 'tr_purchase.date', 'tr_purchase.supplier_id', 'ms_suppliers.company_name as supplier_name', 'tr_purchase.reference', 'tr_purchase.total', 'tr_purchase.notes', 'tr_purchase.is_payed', 'tr_purchase.is_status');
+            ->select('tr_purchase.id', 'tr_purchase.number', 'tr_purchase.date', 'tr_purchase.supplier_id', 'ms_suppliers.company_name as supplier_name', 'tr_purchase.reference', 'tr_purchase.total', 'tr_purchase.notes', 'tr_purchase.is_payed', 'tr_purchase.is_status')
+            ->addSelect([
+                'total_payment' => DB::table('tr_payments')
+                    ->selectRaw('COUNT(*)')
+                    ->whereColumn('tr_payments.purchase_id', 'tr_purchase.id')
+                    ->where('tr_payments.purchase_type', '1')
+                    ->limit(1)
+            ]);
 
         if (!empty($this->searchKeyword)) {
             $queryPurchase->orWhere('tr_purchase.number', 'like', "%" . $this->searchKeyword . "%");

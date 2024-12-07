@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Purchase;
 
 use App\Models\TrPurchaseNon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -23,7 +24,14 @@ class PurchaseNonManager extends Component
     {
         $queryPurchase = TrPurchaseNon::orderBy($this->sortColumn, $this->sortOrder)
             ->leftJoin('ms_suppliers', 'ms_suppliers.id', '=', 'tr_purchase_non.supplier_id')
-            ->select('tr_purchase_non.id', 'tr_purchase_non.number', 'tr_purchase_non.date', 'tr_purchase_non.supplier_id', 'ms_suppliers.company_name as supplier_name', 'tr_purchase_non.reference', 'tr_purchase_non.total', 'tr_purchase_non.notes', 'tr_purchase_non.is_payed', 'tr_purchase_non.is_status');
+            ->select('tr_purchase_non.id', 'tr_purchase_non.number', 'tr_purchase_non.date', 'tr_purchase_non.supplier_id', 'ms_suppliers.company_name as supplier_name', 'tr_purchase_non.reference', 'tr_purchase_non.total', 'tr_purchase_non.notes', 'tr_purchase_non.is_payed', 'tr_purchase_non.is_status')
+            ->addSelect([
+                'total_payment' => DB::table('tr_payments')
+                    ->selectRaw('COUNT(*)')
+                    ->whereColumn('tr_payments.purchase_id', 'tr_purchase_non.id')
+                    ->where('tr_payments.purchase_type', '2')
+                    ->limit(1)
+            ]);
 
         if (!empty($this->searchKeyword)) {
             $queryPurchase->orWhere('tr_purchase_non.number', 'like', "%" . $this->searchKeyword . "%");
