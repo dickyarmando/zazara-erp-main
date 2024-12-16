@@ -48,6 +48,9 @@
                             <th class="sort" wire:click="sortOrder('ms_payment_methods.name')">Payment Method
                                 {!! $sortLink !!}
                             </th>
+                            <th class="sort" wire:click="sortOrder('ms_accounts.code')">Code of Account
+                                {!! $sortLink !!}
+                            </th>
                             <th class="w-px-150">Action</th>
                         </tr>
                     </thead>
@@ -58,6 +61,7 @@
                                     {{ ($paymentMethods->currentPage() - 1) * $paymentMethods->perPage() + $loop->index + 1 }}
                                 </td>
                                 <td class="border-start">{{ $pm->name }}</td>
+                                <td class="border-start">{{ $pm->account_code }} - {{ $pm->account_name }}</td>
                                 <td class="border-start text-center">
                                     <button type="button" wire:click="edit('{{ $pm->id }}')"
                                         class="btn btn-xs btn-secondary me-2" title="Edit Data"><span

@@ -29,6 +29,12 @@
                         <input type="text" class="form-control w-100" placeholder="Search"
                             wire:model.debounce.500ms="searchKeyword">
                     </div>
+                    <div class="col-sm-8 col-xs-12 text-right">
+                        <div class="d-md-flex justify-content-end">
+                            <a href="{{ url('masters/roles/create') }}" class="btn btn-primary btn-sm"><i
+                                    class="bx bx-plus me-2"></i>Add New</a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="panel-body table-responsive position-relative">
@@ -51,7 +57,8 @@
                                     {{ ($roles->currentPage() - 1) * $roles->perPage() + $loop->index + 1 }}</td>
                                 <td class="border-start">{{ $role->name }}</td>
                                 <td class="border-start text-center">
-                                    <button type="button" class="btn btn-xs btn-secondary me-2" title="Edit User"><span
+                                    <button type="button" wire:click="edit('{{ $role->id }}')"
+                                        class="btn btn-xs btn-secondary me-2" title="Edit Data"><span
                                             class="bx bxs-edit"></span></button>
                                     <button type="button" class="btn btn-xs btn-danger" data-bs-toggle="modal"
                                         data-bs-target="#UserDeleteModal" title="Delete Data"><span

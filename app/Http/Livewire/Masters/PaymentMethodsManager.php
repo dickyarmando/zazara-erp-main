@@ -22,11 +22,14 @@ class PaymentMethodsManager extends Component
 
     public function render()
     {
-        $queryPaymentMethods = MsPaymentMethods::orderBy($this->sortColumn, $this->sortOrder)
-            ->select('ms_payment_methods.id', 'ms_payment_methods.name', 'ms_payment_methods.account_id', 'ms_payment_methods.is_status');
+        $queryPaymentMethods = MsPaymentMethods::leftJoin('ms_accounts', 'ms_payment_methods.account_id', '=', 'ms_accounts.id')
+            ->orderBy($this->sortColumn, $this->sortOrder)
+            ->select('ms_payment_methods.id', 'ms_payment_methods.name', 'ms_payment_methods.account_id', 'ms_accounts.code as account_code', 'ms_accounts.name as account_name', 'ms_payment_methods.is_status');
 
         if (!empty($this->searchKeyword)) {
             $queryPaymentMethods->orWhere('ms_payment_methods.name', 'like', "%" . $this->searchKeyword . "%")->where('ms_payment_methods.is_status', '1');
+            $queryPaymentMethods->orWhere('ms_accounts.code', 'like', "%" . $this->searchKeyword . "%")->where('ms_payment_methods.is_status', '1');
+            $queryPaymentMethods->orWhere('ms_accounts.name', 'like', "%" . $this->searchKeyword . "%")->where('ms_payment_methods.is_status', '1');
         }
 
         $paymentMethods = $queryPaymentMethods->where('ms_payment_methods.is_status', '1')->paginate($this->perPage);

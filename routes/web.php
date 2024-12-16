@@ -10,14 +10,17 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Livewire\Expanse\ExpanseCreateManager;
 use App\Http\Livewire\Expanse\ExpanseManager;
+use App\Http\Livewire\Masters\AccountCreateManager;
 use App\Http\Livewire\Masters\AccountManager;
 use App\Http\Livewire\Masters\CategoryAccountManager;
+use App\Http\Livewire\Masters\ConfigurationManager;
 use App\Http\Livewire\Masters\CustomersCreateManager;
 use App\Http\Livewire\Masters\CustomersManager;
 use App\Http\Livewire\Masters\PaymentMethodsCreateManager;
 use App\Http\Livewire\Masters\PaymentMethodsManager;
 use App\Http\Livewire\Masters\ProductsManager;
 use App\Http\Livewire\Masters\ProfileCompanyManager;
+use App\Http\Livewire\Masters\RolesCreateManager;
 use App\Http\Livewire\Masters\RolesManager as MastersRolesManager;
 use App\Http\Livewire\Masters\SuppliersCreateManager;
 use App\Http\Livewire\Masters\SuppliersManager;
@@ -85,11 +88,20 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', UserCreateManager::class)->name('masters.users-create');
         });
 
-        Route::get('/roles', MastersRolesManager::class)->name('masters.roles');
+        Route::prefix('/roles')->group(function () {
+            Route::get('/', MastersRolesManager::class)->name('masters.roles');
+            Route::get('/create', RolesCreateManager::class)->name('masters.roles-create');
+        });
+
         Route::get('/profile-company', ProfileCompanyManager::class)->name('masters.profile-company');
         Route::get('/products', ProductsManager::class)->name('masters.products');
         Route::get('/category-accounts', CategoryAccountManager::class)->name('masters.category-accounts');
-        Route::get('/accounts', AccountManager::class)->name('masters.accounts');
+        Route::get('/configuration', ConfigurationManager::class)->name('masters.configiration');
+
+        Route::prefix('/accounts')->group(function () {
+            Route::get('/', AccountManager::class)->name('masters.accounts');
+            Route::get('/create', AccountCreateManager::class)->name('masters.accounts-create');
+        });
 
         Route::prefix('/suppliers')->group(function () {
             Route::get('/', SuppliersManager::class)->name('masters.suppliers');

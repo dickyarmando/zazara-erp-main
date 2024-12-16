@@ -115,6 +115,20 @@ class PurchaseCreateManager extends Component
         return view('livewire.purchase.purchase-create-manager', ['suppliers' => $suppliers]);
     }
 
+    public function sortOrder($columnName = "")
+    {
+        $caretOrder = "up";
+        if ($this->sortOrder == 'asc') {
+            $this->sortOrder = 'desc';
+            $caretOrder = "down";
+        } else {
+            $this->sortOrder = 'asc';
+            $caretOrder = "up";
+        }
+        $this->sortLink = '<i class="sorticon fa-solid fa-caret-' . $caretOrder . '"></i>';
+        $this->sortColumn = $columnName;
+    }
+
     public function add()
     {
         $this->items[] = [

@@ -48,9 +48,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'Purchase',
             'icon' => 'bxs-purchase-tag',
             'seq' => 2,
-            'is_create' => 1,
-            'is_update' => 1,
-            'is_delete' => 1,
         ]);
 
         PrmMenus::create([
@@ -59,9 +56,6 @@ class DatabaseSeeder extends Seeder
             'icon' => 'bxs-offer',
             'action' => 'sales',
             'seq' => 3,
-            'is_create' => 1,
-            'is_update' => 1,
-            'is_delete' => 1,
         ]);
 
         PrmMenus::create([
@@ -96,6 +90,7 @@ class DatabaseSeeder extends Seeder
             'seq' => 3,
             'is_create' => 1,
             'is_update' => 1,
+            'is_status' => 0,
         ]);
 
         PrmMenus::create([
@@ -248,6 +243,7 @@ class DatabaseSeeder extends Seeder
             'id' => 25,
             'parent_id' => 18,
             'name' => 'Configuration',
+            'action' => 'masters/configuration',
             'seq' => 7,
             'is_update' => 1,
         ]);
@@ -364,6 +360,7 @@ class DatabaseSeeder extends Seeder
             'menu_id' => 7,
             'is_create' => 1,
             'is_update' => 1,
+            'is_status' => 0,
         ]);
         PrmRoleMenus::create([
             'role_id' => 1,
