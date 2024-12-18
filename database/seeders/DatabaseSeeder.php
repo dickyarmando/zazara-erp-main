@@ -365,6 +365,11 @@ class DatabaseSeeder extends Seeder
         ]);
         PrmRoleMenus::create([
             'role_id' => 1,
+            'menu_id' => 8,
+            'is_status' => 0,
+        ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
             'menu_id' => 9,
         ]);
         PrmRoleMenus::create([
