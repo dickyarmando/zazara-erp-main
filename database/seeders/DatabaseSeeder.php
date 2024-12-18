@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\PrmCategoryAccount;
 use App\Models\PrmCompanies;
 use App\Models\PrmConfig;
 use App\Models\PrmMenus;
@@ -528,23 +529,23 @@ class DatabaseSeeder extends Seeder
         // End Config
 
         // Category Account Added
-        PrmConfig::create([
+        PrmCategoryAccount::create([
             'id' => 1,
             'name' => 'Assets',
         ]);
-        PrmConfig::create([
+        PrmCategoryAccount::create([
             'id' => 2,
             'name' => 'Liabilities',
         ]);
-        PrmConfig::create([
+        PrmCategoryAccount::create([
             'id' => 3,
             'name' => 'Equity',
         ]);
-        PrmConfig::create([
+        PrmCategoryAccount::create([
             'id' => 4,
             'name' => 'Revenue',
         ]);
-        PrmConfig::create([
+        PrmCategoryAccount::create([
             'id' => 5,
             'name' => 'Expanses',
         ]);
