@@ -1,12 +1,12 @@
 <div>
-    @section('title', 'Receive Payments')
+    @section('title', 'Sales Report')
 
     <div class="d-md-flex justify-content-between">
         <h2 class="mb-3"><span class="text-muted fw-light">Data @yield('title')</span></h2>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="javascript:void(0);">Payments</a>
+                    <a href="javascript:void(0);">Reports</a>
                 </li>
                 <li class="breadcrumb-item active">@yield('title')</li>
             </ol>
@@ -14,6 +14,72 @@
     </div>
 
     <x-flash-alert />
+
+    <div class="card mb-4">
+        <div class="card-widget-separator-wrapper">
+            <div class="card-body card-widget-separator">
+                <div class="row gy-4 gy-sm-1">
+                    <div class="col-sm-6 col-lg-3">
+                        <div
+                            class="d-flex justify-content-between align-items-center card-widget-2 border-end pb-4 pb-sm-0">
+                            <div>
+                                <h4 class="mb-0">{{ number_format($saless->total()) }}</h4>
+                                <p class="mb-0">Invoices</p>
+                            </div>
+                            <div class="avatar me-lg-6">
+                                <span class="avatar-initial rounded bg-label-secondary text-heading">
+                                    <i class="bx bx-file bx-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <hr class="d-none d-sm-block d-lg-none">
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div
+                            class="d-flex justify-content-between align-items-center card-widget-1 border-end pb-4 pb-sm-0">
+                            <div>
+                                <h4 class="mb-0">Rp. {{ number_format($salesSummary->total_payment, 2) }}</h4>
+                                <p class="mb-0">Total Amount</p>
+                            </div>
+                            <div class="avatar me-sm-6">
+                                <span class="avatar-initial rounded bg-label-secondary text-heading">
+                                    <i class="bx bx-dollar bx-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <hr class="d-none d-sm-block d-lg-none me-6">
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div
+                            class="d-flex justify-content-between align-items-center border-end pb-4 pb-sm-0 card-widget-3">
+                            <div>
+                                <h4 class="mb-0">Rp. {{ number_format($salesSummary->paid, 2) }}</h4>
+                                <p class="mb-0">Paid</p>
+                            </div>
+                            <div class="avatar me-sm-6">
+                                <span class="avatar-initial rounded bg-label-secondary text-heading">
+                                    <i class="bx bx-check-double bx-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="mb-0">Rp. {{ number_format($salesSummary->unpaid, 2) }}</h4>
+                                <p class="mb-0">Unpaid</p>
+                            </div>
+                            <div class="avatar">
+                                <span class="avatar-initial rounded bg-label-secondary text-heading">
+                                    <i class="bx bx-error-circle bx-26px"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="col-md-offset-1 col-md-12">
         <div class="panel">
@@ -52,7 +118,6 @@
                             </th>
                             <th class="sort" wire:click="sortOrder('rest')">Rest {!! $sortLink !!}
                             </th>
-                            <th class="w-px-150">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,18 +136,12 @@
                                 @else
                                     <td class="border-start text-right">{{ number_format($sales->rest, 2) }}</td>
                                 @endif
-                                <td class="border-start text-center">
-                                    <button type="button"
-                                        wire:click="view('{{ $sales->id }}','{{ $sales->type }}')"
-                                        class="btn btn-xs btn-success" title="Open Data"><span
-                                            class="bx bx-folder-open"></span></button>
-                                </td>
                             </tr>
                         @endforeach
 
                         @if ($saless->count() <= 0)
                             <tr>
-                                <td colspan="8" class="text-center">No data..</td>
+                                <td colspan="7" class="text-center">No data..</td>
                             </tr>
                         @endif
                     </tbody>

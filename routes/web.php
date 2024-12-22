@@ -44,6 +44,11 @@ use App\Http\Livewire\Purchase\PurchaseNonViewManager;
 use App\Http\Livewire\Purchase\PurchaseNonViewPrintManager;
 use App\Http\Livewire\Purchase\PurchaseViewManager;
 use App\Http\Livewire\Purchase\PurchaseViewPrintManager;
+use App\Http\Livewire\Reports\DayBookReportManager;
+use App\Http\Livewire\Reports\ExpanseReportManager;
+use App\Http\Livewire\Reports\ProfitLossReportManager;
+use App\Http\Livewire\Reports\PurchaseReportManager;
+use App\Http\Livewire\Reports\SalesReportManager;
 use App\Http\Livewire\Sales\SalesCreateManager;
 use App\Http\Livewire\Sales\SalesManager;
 use App\Http\Livewire\Sales\SalesNonCreateManager;
@@ -169,6 +174,15 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/receive')->group(function () {
         Route::get('/', ReceivePaymentManager::class)->name('receive.index');
         Route::get('/view/{id}/{type}', ReceivePaymentViewManager::class)->name('receive.view');
+    });
+
+    //Reports
+    Route::prefix('/reports')->group(function () {
+        Route::get('/sales', SalesReportManager::class)->name('reports.sales');
+        Route::get('/purchase', PurchaseReportManager::class)->name('reports.purchase');
+        Route::get('/expanse', ExpanseReportManager::class)->name('reports.expanse');
+        Route::get('/profit-loss', ProfitLossReportManager::class)->name('reports.profit-loss');
+        Route::get('/day-books', DayBookReportManager::class)->name('reports.day-books');
     });
 
     //Pengaturan

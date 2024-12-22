@@ -32,7 +32,7 @@ class ExpanseManager extends Component
 
         $generalLedgers = $queryGL->paginate($this->perPage);
 
-        return view('livewire.expanse.expanse-manager', ['generalLedgers' => $generalLedgers]);
+        return view('livewire.expanse.expanse-manager', compact('generalLedgers'));
     }
 
     public function sortOrder($columnName = "")
