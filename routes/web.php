@@ -10,6 +10,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Livewire\Expanse\ExpanseCreateManager;
 use App\Http\Livewire\Expanse\ExpanseManager;
+use App\Http\Livewire\Expanse\ExpanseViewManager;
+use App\Http\Livewire\Expanse\ExpanseViewPrintManager;
 use App\Http\Livewire\Masters\AccountCreateManager;
 use App\Http\Livewire\Masters\AccountManager;
 use App\Http\Livewire\Masters\CategoryAccountManager;
@@ -153,6 +155,8 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/expanse')->group(function () {
         Route::get('/', ExpanseManager::class)->name('expanse.index');
         Route::get('/create', ExpanseCreateManager::class)->name('expanse.create');
+        Route::get('/view/{id}', ExpanseViewManager::class)->name('expanse.view');
+        Route::get('/view/print/{id}', [ExpanseViewPrintManager::class, 'index'])->name('expanse.view.print');
     });
 
     //Pay Payment
