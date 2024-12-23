@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Payment;
 use App\Models\MsPaymentMethods;
 use App\Models\MsSuppliers;
 use App\Models\PrmCompanies;
+use App\Models\PrmConfig;
 use App\Models\TrPayments;
 use App\Models\TrPurchase;
 use App\Models\TrPurchaseDetails;
@@ -48,8 +49,9 @@ class PayPaymentViewManager extends Component
             ->where('purchase_type', $purchaseType)
             ->where('is_status', '1')
             ->orderBy('id', 'asc')->get();
+        $poSign = PrmConfig::find(2);
 
-        return view('livewire.payment.pay-payment-view-manager', compact('companies', 'suppliers', 'payments'));
+        return view('livewire.payment.pay-payment-view-manager', compact('companies', 'suppliers', 'payments', 'poSign'));
     }
 
     public function closeModal()

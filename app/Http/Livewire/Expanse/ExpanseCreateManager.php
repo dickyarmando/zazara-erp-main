@@ -39,21 +39,42 @@ class ExpanseCreateManager extends Component
     public function mount()
     {
         $now = Carbon::now();
-        $this->month = $now->month;
-        $this->year = $now->year;
 
-        $countGL = TrGeneralLedger::where(DB::raw('MONTH(date)'), $this->month)
-            ->where(DB::raw('YEAR(date)'), $this->year)
-            ->count();
-        $this->sequence = $countGL + 1;
-        $this->number = str_pad($this->sequence, 4, "0", STR_PAD_LEFT);
-        $this->date = $now->format('Y-m-d');
+        if (isset($_REQUEST['id'])) {
+            $trGeneralLedger = TrGeneralLedger::find($_REQUEST['id']);
+            $trGeneralLedgerDetails = TrGeneralLedgerDetails::leftJoin('ms_accounts', 'ms_accounts.id', '=', 'tr_general_ledger_details.account_id')
+                ->where('tr_general_ledger_details.general_ledger_id', $trGeneralLedger->id)
+                ->select('tr_general_ledger_details.account_id as account_id', DB::raw('CONCAT(ms_accounts.code, " - ", ms_accounts.name) as account_name'), DB::raw('CASE tr_general_ledger_details.type WHEN "db" THEN amount WHEN "cr" THEN 0 END as debit'), DB::raw('CASE tr_general_ledger_details.type WHEN "db" THEN 0 WHEN "cr" THEN amount END as credit'))
+                ->get()->toArray();
+            $sequence = explode("/", $trGeneralLedger->number);
 
-        $this->total_debit = 0;
-        $this->total_credit = 0;
+            $this->set_id = $trGeneralLedger->id;
+            $this->month = $trGeneralLedger->created_at->format('m');
+            $this->year = $trGeneralLedger->created_at->format('Y');
+            $this->number = $sequence[3];
+            $this->date = $trGeneralLedger->date;
+            $this->reference = $trGeneralLedger->reference;
+            $this->items = $trGeneralLedgerDetails;
+            $this->notes = $trGeneralLedger->notes;
+            $this->total_debit = $trGeneralLedger->total_debit;
+            $this->total_credit = $trGeneralLedger->total_credit;
+        } else {
+            $this->month = $now->month;
+            $this->year = $now->year;
 
-        $this->add('cr');
-        $this->add('db');
+            $countGL = TrGeneralLedger::where(DB::raw('MONTH(date)'), $this->month)
+                ->where(DB::raw('YEAR(date)'), $this->year)
+                ->count();
+            $this->sequence = $countGL + 1;
+            $this->number = str_pad($this->sequence, 4, "0", STR_PAD_LEFT);
+            $this->date = $now->format('Y-m-d');
+
+            $this->total_debit = 0;
+            $this->total_credit = 0;
+
+            $this->add('cr');
+            $this->add('db');
+        }
     }
 
     public function render()
@@ -150,9 +171,9 @@ class ExpanseCreateManager extends Component
             'notes' => '',
         ];
 
-        if (empty($this->set_id)) {
+        $numberOrder = 'EX/ESB/' . $this->month . $this->year . '/' . $this->number;
 
-            $numberOrder = 'EX/ESB/' . $this->month . $this->year . '/' . $this->number;
+        if (empty($this->set_id)) {
 
             $countNumber = TrGeneralLedger::where('number', $numberOrder)->count();
 
@@ -191,6 +212,7 @@ class ExpanseCreateManager extends Component
         } else {
 
             $valid = $this->validate($rules);
+            $valid['number'] = $numberOrder;
             $valid['total_debit'] = $this->total_debit;
             $valid['total_credit'] = $this->total_credit;
             $valid['updated_by'] = Auth::user()->id;
