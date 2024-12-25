@@ -157,6 +157,29 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
+                                <label class="form-label">Sales <span class="text-danger">*</span></label>
+                                @if ($userRoles->is_sales == '0')
+                                    <select wire:model="sales_id"
+                                        class="form-select @error('sales_id') is-invalid @enderror">
+                                        @foreach ($salesList as $k => $v)
+                                            <option value="{{ $v->id }}">{{ $v->name }}</option>
+                                        @endforeach
+                                    </select>
+                                @else
+                                    <input type="hidden" wire:model="sales_id"
+                                        class="form-control @error('sales_id') is-invalid @enderror">
+                                    <input type="text" wire:model="sales_name"
+                                        class="form-control @error('sales_name') is-invalid @enderror" readonly>
+                                @endif
+                                @error('sales_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
                                 <label class="form-label">Images</label>
                                 <input type="file" wire:model="files"
                                     class="form-control @error('files.*') is-invalid @enderror" id="formFileMultiple"

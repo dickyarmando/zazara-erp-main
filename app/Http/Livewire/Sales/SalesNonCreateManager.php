@@ -3,9 +3,11 @@
 namespace App\Http\Livewire\Sales;
 
 use App\Models\MsCustomers;
+use App\Models\PrmRoleMenus;
 use App\Models\TrSalesNon;
 use App\Models\TrSalesNonDetails;
 use App\Models\TrSalesNonFiles;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -34,6 +36,8 @@ class SalesNonCreateManager extends Component
     public $reference;
     public $customer_id;
     public $customer_name;
+    public $sales_id;
+    public $sales_name;
     public $notes;
     public $subtotal;
     public $discount;
@@ -43,10 +47,14 @@ class SalesNonCreateManager extends Component
     public $items = [];
     public $files = [];
     public $salesFiles = [];
+    public $salesList = [];
+    public $userRoles = [];
 
     public function mount()
     {
         $now = Carbon::now();
+        $this->salesList = User::where('is_status', '1')->get();
+        $this->userRoles = PrmRoleMenus::where('menu_id', '31')->where('role_id', Auth::user()->role_id)->first();
 
         if (isset($_REQUEST['id'])) {
             $sales = TrSalesNon::find($_REQUEST['id']);
@@ -56,6 +64,7 @@ class SalesNonCreateManager extends Component
                 ->get()->toArray();
             $this->salesFiles = TrSalesNonFiles::where('sales_non_id', $sales->id)->get();
             $sequence = explode("/", $sales->number);
+            $userSales = User::find($sales->sales_id);
 
             $this->set_id = $sales->id;
             $this->month = $sales->created_at->format('m');
@@ -65,6 +74,8 @@ class SalesNonCreateManager extends Component
             $this->reference = $sales->reference;
             $this->customer_id = $sales->customer_id;
             $this->customer_name = $customer->name;
+            $this->sales_id = $sales->sales_id;
+            $this->sales_name = isset($userSales->name) ? $userSales->name : "";
             $this->notes = $sales->notes;
             $this->subtotal = $sales->subtotal;
             $this->delivery_fee = $sales->delivery_fee;
@@ -80,6 +91,8 @@ class SalesNonCreateManager extends Component
             $this->sequence = $countSales + 1;
             $this->number = str_pad($this->sequence, 4, "0", STR_PAD_LEFT);
             $this->date = $now->format('Y-m-d');
+            $this->sales_id = Auth::user()->id;
+            $this->sales_name = Auth::user()->name;
 
             $this->subtotal = 0;
             $this->delivery_fee = 0;
@@ -174,6 +187,7 @@ class SalesNonCreateManager extends Component
                 'number' => 'required',
                 'date' => 'required',
                 'customer_id' => 'required',
+                'sales_id' => 'required',
                 'reference' => '',
                 'notes' => '',
                 'subtotal' => '',
@@ -232,6 +246,7 @@ class SalesNonCreateManager extends Component
         } else {
             $rules = [
                 'customer_id' => 'required',
+                'sales_id' => 'required',
                 'reference' => '',
                 'notes' => '',
                 'subtotal' => '',

@@ -4,9 +4,11 @@ namespace App\Http\Livewire\Sales;
 
 use App\Models\MsCustomers;
 use App\Models\PrmConfig;
+use App\Models\PrmRoleMenus;
 use App\Models\TrSales;
 use App\Models\TrSalesDetails;
 use App\Models\TrSalesFiles;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +37,8 @@ class SalesCreateManager extends Component
     public $reference;
     public $customer_id;
     public $customer_name;
+    public $sales_id;
+    public $sales_name;
     public $notes;
     public $subtotal;
     public $ppn;
@@ -46,10 +50,14 @@ class SalesCreateManager extends Component
     public $items = [];
     public $files = [];
     public $salesFiles = [];
+    public $salesList = [];
+    public $userRoles = [];
 
     public function mount()
     {
         $now = Carbon::now();
+        $this->salesList = User::where('is_status', '1')->get();
+        $this->userRoles = PrmRoleMenus::where('menu_id', '30')->where('role_id', Auth::user()->role_id)->first();
 
         if (isset($_REQUEST['id'])) {
             $sales = TrSales::find($_REQUEST['id']);
@@ -59,6 +67,7 @@ class SalesCreateManager extends Component
                 ->get()->toArray();
             $this->salesFiles = TrSalesFiles::where('sales_id', $sales->id)->get();
             $sequence = explode("/", $sales->number);
+            $userSales = User::find($sales->sales_id);
 
             $this->set_id = $sales->id;
             $this->month = $sales->created_at->format('m');
@@ -68,6 +77,8 @@ class SalesCreateManager extends Component
             $this->reference = $sales->reference;
             $this->customer_id = $sales->customer_id;
             $this->customer_name = $customer->name;
+            $this->sales_id = $sales->sales_id;
+            $this->sales_name = isset($userSales->name) ? $userSales->name : "";
             $this->notes = $sales->notes;
             $this->subtotal = $sales->subtotal;
             $this->ppn = $sales->ppn;
@@ -85,6 +96,8 @@ class SalesCreateManager extends Component
             $this->sequence = $countSales + 1;
             $this->number = str_pad($this->sequence, 4, "0", STR_PAD_LEFT);
             $this->date = $now->format('Y-m-d');
+            $this->sales_id = Auth::user()->id;
+            $this->sales_name = Auth::user()->name;
 
             $configPPN = PrmConfig::where('code', 'ppn')->first();
             $this->subtotal = 0;
@@ -183,6 +196,7 @@ class SalesCreateManager extends Component
                 'number' => 'required',
                 'date' => 'required',
                 'customer_id' => 'required',
+                'sales_id' => 'required',
                 'reference' => '',
                 'notes' => '',
                 'subtotal' => '',
@@ -243,6 +257,7 @@ class SalesCreateManager extends Component
         } else {
             $rules = [
                 'customer_id' => 'required',
+                'sales_id' => 'required',
                 'reference' => '',
                 'notes' => '',
                 'subtotal' => '',

@@ -57,6 +57,8 @@
                                                     <th class="w-px-75">Create</th>
                                                     <th class="w-px-75">Update</th>
                                                     <th class="w-px-75">Delete</th>
+                                                    <th class="w-px-75">Sales</th>
+                                                    <th class="w-px-75">Approved</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -89,6 +91,20 @@
                                                                     value="1">
                                                             @endif
                                                         </td>
+                                                        <td>
+                                                            @if ($vm['is_sales'] == '1')
+                                                                <input type="checkbox" class="form-check m-auto"
+                                                                    wire:model="menus.{{ $km }}.sales"
+                                                                    value="1">
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($vm['is_approved'] == '1')
+                                                                <input type="checkbox" class="form-check m-auto"
+                                                                    wire:model="menus.{{ $km }}.approved"
+                                                                    value="1">
+                                                            @endif
+                                                        </td>
                                                     </tr>
 
                                                     @foreach ($vm['children'] as $ksm => $vsm)
@@ -118,6 +134,20 @@
                                                                 @if ($vsm['is_delete'] == '1')
                                                                     <input type="checkbox" class="form-check m-auto"
                                                                         wire:model="menus.{{ $km }}.children.{{ $ksm }}.delete"
+                                                                        value="1">
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($vsm['is_sales'] == '1')
+                                                                    <input type="checkbox" class="form-check m-auto"
+                                                                        wire:model="menus.{{ $km }}.children.{{ $ksm }}.sales"
+                                                                        value="1">
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($vsm['is_approved'] == '1')
+                                                                    <input type="checkbox" class="form-check m-auto"
+                                                                        wire:model="menus.{{ $km }}.children.{{ $ksm }}.approved"
                                                                         value="1">
                                                                 @endif
                                                             </td>

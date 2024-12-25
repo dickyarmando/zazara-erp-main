@@ -17,6 +17,8 @@ class PrmRoleMenus extends Model
         'is_create',
         'is_update',
         'is_delete',
+        'is_sales',
+        'is_approved',
         'is_status',
     ];
 

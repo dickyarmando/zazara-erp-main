@@ -38,10 +38,14 @@ class RolesCreateManager extends Component
                 'prm_menus.is_create',
                 'prm_menus.is_update',
                 'prm_menus.is_delete',
+                'prm_menus.is_sales',
+                'prm_menus.is_approved',
                 'prm_role_menus.is_show as show',
                 DB::raw("CASE WHEN prm_role_menus.is_create = '1' THEN '1' ELSE NULL END as `create`"),
                 DB::raw("CASE WHEN prm_role_menus.is_update = '1' THEN '1' ELSE NULL END as `update`"),
                 DB::raw("CASE WHEN prm_role_menus.is_delete = '1' THEN '1' ELSE NULL END as `delete`"),
+                DB::raw("CASE WHEN prm_role_menus.is_sales = '1' THEN '1' ELSE NULL END as `sales`"),
+                DB::raw("CASE WHEN prm_role_menus.is_approved = '1' THEN '1' ELSE NULL END as `approved`"),
                 'prm_menus.parent_id'
             )
             ->where('prm_menus.is_show', '=', '1')
@@ -106,6 +110,8 @@ class RolesCreateManager extends Component
                     "is_create" => isset($vm['create']) ? '1' : '0',
                     "is_update" => isset($vm['update']) ? '1' : '0',
                     "is_delete" => isset($vm['delete']) ? '1' : '0',
+                    "is_sales" => isset($vm['sales']) ? '1' : '0',
+                    "is_approved" => isset($vm['approved']) ? '1' : '0',
                 ];
 
                 PrmRoleMenus::create($rolesMenu);
@@ -119,6 +125,8 @@ class RolesCreateManager extends Component
                             "is_create" => isset($vsm['create']) ? '1' : '0',
                             "is_update" => isset($vsm['update']) ? '1' : '0',
                             "is_delete" => isset($vsm['delete']) ? '1' : '0',
+                            "is_sales" => isset($vsm['sales']) ? '1' : '0',
+                            "is_approved" => isset($vsm['approved']) ? '1' : '0',
                         ];
 
                         PrmRoleMenus::create($rolesMenu);

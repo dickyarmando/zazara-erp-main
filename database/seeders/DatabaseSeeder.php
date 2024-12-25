@@ -279,6 +279,8 @@ class DatabaseSeeder extends Seeder
             'seq' => 1,
             'is_create' => 1,
             'is_update' => 1,
+            'is_sales' => 1,
+            'is_approved' => 1,
         ]);
 
         PrmMenus::create([
@@ -289,6 +291,8 @@ class DatabaseSeeder extends Seeder
             'seq' => 2,
             'is_create' => 1,
             'is_update' => 1,
+            'is_sales' => 1,
+            'is_approved' => 1,
         ]);
 
         PrmMenus::create([
@@ -299,6 +303,8 @@ class DatabaseSeeder extends Seeder
             'seq' => 1,
             'is_create' => 1,
             'is_update' => 1,
+            'is_sales' => 1,
+            'is_approved' => 1,
         ]);
 
         PrmMenus::create([
@@ -309,6 +315,8 @@ class DatabaseSeeder extends Seeder
             'seq' => 2,
             'is_create' => 1,
             'is_update' => 1,
+            'is_sales' => 1,
+            'is_approved' => 1,
         ]);
 
         PrmMenus::create([
@@ -473,24 +481,28 @@ class DatabaseSeeder extends Seeder
             'menu_id' => 28,
             'is_create' => 1,
             'is_update' => 1,
+            'is_approved' => 1,
         ]);
         PrmRoleMenus::create([
             'role_id' => 1,
             'menu_id' => 29,
             'is_create' => 1,
             'is_update' => 1,
+            'is_approved' => 1,
         ]);
         PrmRoleMenus::create([
             'role_id' => 1,
             'menu_id' => 30,
             'is_create' => 1,
             'is_update' => 1,
+            'is_approved' => 1,
         ]);
         PrmRoleMenus::create([
             'role_id' => 1,
             'menu_id' => 31,
             'is_create' => 1,
             'is_update' => 1,
+            'is_approved' => 1,
         ]);
         PrmRoleMenus::create([
             'role_id' => 1,

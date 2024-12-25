@@ -4,9 +4,11 @@ namespace App\Http\Livewire\Purchase;
 
 use App\Models\MsSuppliers;
 use App\Models\PrmConfig;
+use App\Models\PrmRoleMenus;
 use App\Models\TrPurchase;
 use App\Models\TrPurchaseDetails;
 use App\Models\TrPurchaseFiles;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +37,8 @@ class PurchaseCreateManager extends Component
     public $reference;
     public $supplier_id;
     public $supplier_name;
+    public $sales_id;
+    public $sales_name;
     public $notes;
     public $subtotal;
     public $ppn;
@@ -46,10 +50,14 @@ class PurchaseCreateManager extends Component
     public $items = [];
     public $files = [];
     public $purchaseFiles = [];
+    public $salesList = [];
+    public $userRoles = [];
 
     public function mount()
     {
         $now = Carbon::now();
+        $this->salesList = User::where('is_status', '1')->get();
+        $this->userRoles = PrmRoleMenus::where('menu_id', '28')->where('role_id', Auth::user()->role_id)->first();
 
         if (isset($_REQUEST['id'])) {
             $purchase = TrPurchase::find($_REQUEST['id']);
@@ -59,6 +67,7 @@ class PurchaseCreateManager extends Component
                 ->get()->toArray();
             $this->purchaseFiles = TrPurchaseFiles::where('purchase_id', $purchase->id)->get();
             $sequence = explode("/", $purchase->number);
+            $sales = User::find($purchase->sales_id);
 
             $this->set_id = $purchase->id;
             $this->month = $purchase->created_at->format('m');
@@ -68,6 +77,8 @@ class PurchaseCreateManager extends Component
             $this->reference = $purchase->reference;
             $this->supplier_id = $purchase->supplier_id;
             $this->supplier_name = $supplier->name;
+            $this->sales_id = $purchase->sales_id;
+            $this->sales_name = isset($sales->name) ? $sales->name : "";
             $this->notes = $purchase->notes;
             $this->subtotal = $purchase->subtotal;
             $this->ppn = $purchase->ppn;
@@ -85,6 +96,8 @@ class PurchaseCreateManager extends Component
             $this->sequence = $countPurchase + 1;
             $this->number = str_pad($this->sequence, 4, "0", STR_PAD_LEFT);
             $this->date = $now->format('Y-m-d');
+            $this->sales_id = Auth::user()->id;
+            $this->sales_name = Auth::user()->name;
 
             $configPPN = PrmConfig::where('code', 'ppn')->first();
             $this->subtotal = 0;
@@ -197,6 +210,7 @@ class PurchaseCreateManager extends Component
                 'number' => 'required',
                 'date' => 'required',
                 'supplier_id' => 'required',
+                'sales_id' => 'required',
                 'reference' => '',
                 'notes' => '',
                 'subtotal' => '',
@@ -257,6 +271,7 @@ class PurchaseCreateManager extends Component
         } else {
             $rules = [
                 'supplier_id' => 'required',
+                'sales_id' => 'required',
                 'reference' => '',
                 'notes' => '',
                 'subtotal' => '',

@@ -3,9 +3,11 @@
 namespace App\Http\Livewire\Purchase;
 
 use App\Models\MsSuppliers;
+use App\Models\PrmRoleMenus;
 use App\Models\TrPurchaseNon;
 use App\Models\TrPurchaseNonDetails;
 use App\Models\TrPurchaseNonFiles;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -34,6 +36,8 @@ class PurchaseNonCreateManager extends Component
     public $reference;
     public $supplier_id;
     public $supplier_name;
+    public $sales_id;
+    public $sales_name;
     public $notes;
     public $subtotal;
     public $discount;
@@ -43,10 +47,14 @@ class PurchaseNonCreateManager extends Component
     public $items = [];
     public $files = [];
     public $purchaseFiles = [];
+    public $salesList = [];
+    public $userRoles = [];
 
     public function mount()
     {
         $now = Carbon::now();
+        $this->salesList = User::where('is_status', '1')->get();
+        $this->userRoles = PrmRoleMenus::where('menu_id', '29')->where('role_id', Auth::user()->role_id)->first();
 
         if (isset($_REQUEST['id'])) {
             $purchase = TrPurchaseNon::find($_REQUEST['id']);
@@ -56,6 +64,7 @@ class PurchaseNonCreateManager extends Component
                 ->get()->toArray();
             $this->purchaseFiles = TrPurchaseNonFiles::where('purchase_non_id', $purchase->id)->get();
             $sequence = explode("/", $purchase->number);
+            $sales = User::find($purchase->sales_id);
 
             $this->set_id = $purchase->id;
             $this->month = $purchase->created_at->format('m');
@@ -65,6 +74,8 @@ class PurchaseNonCreateManager extends Component
             $this->reference = $purchase->reference;
             $this->supplier_id = $purchase->supplier_id;
             $this->supplier_name = $supplier->name;
+            $this->sales_id = $purchase->sales_id;
+            $this->sales_name = isset($sales->name) ? $sales->name : "";
             $this->notes = $purchase->notes;
             $this->subtotal = $purchase->subtotal;
             $this->delivery_fee = $purchase->delivery_fee;
@@ -80,6 +91,8 @@ class PurchaseNonCreateManager extends Component
             $this->sequence = $countPurchase + 1;
             $this->number = str_pad($this->sequence, 4, "0", STR_PAD_LEFT);
             $this->date = $now->format('Y-m-d');
+            $this->sales_id = Auth::user()->id;
+            $this->sales_name = Auth::user()->name;
 
             $this->subtotal = 0;
             $this->delivery_fee = 0;
@@ -174,6 +187,7 @@ class PurchaseNonCreateManager extends Component
                 'number' => 'required',
                 'date' => 'required',
                 'supplier_id' => 'required',
+                'sales_id' => 'required',
                 'reference' => '',
                 'notes' => '',
                 'subtotal' => '',
@@ -232,6 +246,7 @@ class PurchaseNonCreateManager extends Component
         } else {
             $rules = [
                 'supplier_id' => 'required',
+                'sales_id' => 'required',
                 'reference' => '',
                 'notes' => '',
                 'subtotal' => '',
