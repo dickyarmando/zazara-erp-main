@@ -19,6 +19,7 @@ class CustomersCreateManager extends Component
     public $phone;
     public $telephone;
     public $fax;
+    public $npwp;
 
     public function mount()
     {
@@ -35,6 +36,7 @@ class CustomersCreateManager extends Component
             $this->phone = $customer->phone;
             $this->telephone = $customer->telephone;
             $this->fax = $customer->fax;
+            $this->npwp = $customer->npwp;
         } else {
             $this->code = 'CST' . $now->year . $now->month . $now->day . $now->hour . $now->minute . $now->second;
         }
@@ -60,7 +62,8 @@ class CustomersCreateManager extends Component
             'email' => '',
             'phone' => '',
             'telephone' => '',
-            'fax' => ''
+            'fax' => '',
+            'npwp' => ''
         ];
 
         if (empty($this->set_id)) {

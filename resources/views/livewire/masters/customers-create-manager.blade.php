@@ -62,7 +62,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Email Company</label>
                                 <input type="email" wire:model="email"
@@ -75,7 +75,20 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">NPWP</label>
+                                <input type="text" wire:model="npwp"
+                                    class="form-control @error('npwp') is-invalid @enderror" placeholder="NPWP"
+                                    maxlength="20">
+                                @error('npwp')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Mobile Phone</label>
                                 <input type="text" wire:model="phone"
@@ -88,7 +101,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Telephone</label>
                                 <input type="text" wire:model="telephone"
@@ -101,7 +114,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Fax</label>
                                 <input type="text" wire:model="fax"

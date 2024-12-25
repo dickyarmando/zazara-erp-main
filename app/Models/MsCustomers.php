@@ -24,6 +24,7 @@ class MsCustomers extends Model
         'phone',
         'telephone',
         'fax',
+        'npwp',
         'is_status',
     ];
 }
