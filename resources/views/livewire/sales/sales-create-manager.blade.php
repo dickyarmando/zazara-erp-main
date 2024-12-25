@@ -28,7 +28,7 @@
                                 <label class="form-label">SO Number <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"
-                                        id="basic-addon11">INV/ESB/{{ $month . $year }}/</span>
+                                        id="basic-addon11">SO/ESB/{{ $month . $year }}/</span>
                                     <input type="text" class="form-control @error('number') is-invalid @enderror"
                                         wire:model="number" placeholder="Order Number" aria-label="Order Number"
                                         aria-describedby="basic-addon11" {{ empty($set_id) ? '' : 'readonly' }} />

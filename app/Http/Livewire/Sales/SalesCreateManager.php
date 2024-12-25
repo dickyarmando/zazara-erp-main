@@ -207,7 +207,7 @@ class SalesCreateManager extends Component
                 'total' => '',
             ];
 
-            $numberOrder = 'INV/ESB/' . $this->month . $this->year . '/' . $this->number;
+            $numberOrder = 'SO/ESB/' . $this->month . $this->year . '/' . $this->number;
 
             $countNumber = TrSales::where('number', $numberOrder)->count();
 
@@ -217,7 +217,7 @@ class SalesCreateManager extends Component
                     ->count();
                 $this->sequence = $countSales + 1;
                 $this->number = str_pad($this->sequence, 4, "0", STR_PAD_LEFT);
-                $numberOrder = 'INV/ESB/' . $this->month . $this->year . '/' . $this->number;
+                $numberOrder = 'SO/ESB/' . $this->month . $this->year . '/' . $this->number;
             }
 
             $valid = $this->validate($rules);
