@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Masters;
 
 use App\Models\MsSuppliers;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -21,6 +22,8 @@ class SuppliersCreateManager extends Component
 
     public function mount()
     {
+        $now = Carbon::now();
+
         $this->set_id = request()->id;
         if (!empty($this->set_id)) {
             $supplier = MsSuppliers::find($this->set_id);
@@ -32,6 +35,8 @@ class SuppliersCreateManager extends Component
             $this->phone = $supplier->phone;
             $this->telephone = $supplier->telephone;
             $this->fax = $supplier->fax;
+        } else {
+            $this->code = 'SPL' . $now->year . $now->month . $now->day . $now->hour . $now->minute . $now->second;
         }
     }
 

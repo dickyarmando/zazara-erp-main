@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Masters;
 
 use App\Models\MsCustomers;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -21,6 +22,8 @@ class CustomersCreateManager extends Component
 
     public function mount()
     {
+        $now = Carbon::now();
+
         $this->set_id = request()->id;
         if (!empty($this->set_id)) {
             $customer = MsCustomers::find($this->set_id);
@@ -32,6 +35,8 @@ class CustomersCreateManager extends Component
             $this->phone = $customer->phone;
             $this->telephone = $customer->telephone;
             $this->fax = $customer->fax;
+        } else {
+            $this->code = 'CST' . $now->year . $now->month . $now->day . $now->hour . $now->minute . $now->second;
         }
     }
 

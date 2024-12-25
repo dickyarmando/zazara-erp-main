@@ -25,9 +25,10 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="mb-3">
-                                <label class="form-label">Code Company <span class="text-danger">*</span></label>
+                                <label class="form-label">Code Supplier <span class="text-danger">*</span></label>
                                 <input type="text" wire:model="code"
-                                    class="form-control @error('code') is-invalid @enderror" placeholder="Code Company">
+                                    class="form-control @error('code') is-invalid @enderror"
+                                    placeholder="Code Supplier">
                                 @error('code')
                                     <div class="invalid-feedback">
                                         {{ $message }}
