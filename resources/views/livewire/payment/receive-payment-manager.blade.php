@@ -39,6 +39,9 @@
                     <thead>
                         <tr>
                             <th class="w-px-75">No</th>
+                            <th class="sort" wire:click="sortOrder('invoice_number')">Invoice Number
+                                {!! $sortLink !!}
+                            </th>
                             <th class="sort" wire:click="sortOrder('number')">Sales Number
                                 {!! $sortLink !!}
                             </th>
@@ -61,8 +64,9 @@
                                 <td class="text-center">
                                     {{ ($saless->currentPage() - 1) * $saless->perPage() + $loop->index + 1 }}
                                 </td>
+                                <td class="border-start text-center">{{ $sales->invoice_number }}</td>
                                 <td class="border-start text-center">{{ $sales->number }}</td>
-                                <td class="border-start text-center">{{ $sales->date }}</td>
+                                <td class="border-start text-center">{{ $sales->invoice_date }}</td>
                                 <td class="border-start">{{ $sales->customer_name }}</td>
                                 <td class="border-start text-right">{{ number_format($sales->total, 2) }}</td>
                                 <td class="border-start text-right">{{ number_format($sales->payment, 2) }}</td>
@@ -73,7 +77,7 @@
                                 @endif
                                 <td class="border-start text-center">
                                     <button type="button"
-                                        wire:click="view('{{ $sales->id }}','{{ $sales->type }}')"
+                                        wire:click="view('{{ $sales->invoice_id }}','{{ $sales->type }}')"
                                         class="btn btn-xs btn-success" title="Open Data"><span
                                             class="bx bx-folder-open"></span></button>
                                 </td>
@@ -82,7 +86,7 @@
 
                         @if ($saless->count() <= 0)
                             <tr>
-                                <td colspan="8" class="text-center">No data..</td>
+                                <td colspan="9" class="text-center">No data..</td>
                             </tr>
                         @endif
                     </tbody>

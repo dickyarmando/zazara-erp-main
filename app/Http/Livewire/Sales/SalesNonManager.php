@@ -32,7 +32,8 @@ class SalesNonManager extends Component
     {
         $querySales = TrSalesNon::orderBy($this->sortColumn, $this->sortOrder)
             ->leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales_non.customer_id')
-            ->select('tr_sales_non.id', 'tr_sales_non.number', 'tr_sales_non.date', 'tr_sales_non.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales_non.reference', 'tr_sales_non.total', 'tr_sales_non.notes', 'tr_sales_non.is_receive', 'tr_sales_non.is_status', 'tr_sales_non.approved_at', 'tr_sales_non.approved_by')
+            ->leftJoin('tr_invoices_nons', 'tr_invoices_nons.sales_non_id', '=', 'tr_sales_non.id')
+            ->select('tr_sales_non.id', 'tr_sales_non.number', 'tr_sales_non.date', 'tr_sales_non.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales_non.reference', 'tr_sales_non.total', 'tr_sales_non.notes', 'tr_sales_non.is_receive', 'tr_sales_non.is_status', 'tr_sales_non.approved_at', 'tr_sales_non.approved_by', 'tr_sales_non.is_invoice', 'tr_invoices_nons.id as invoice_id')
             ->addSelect([
                 'total_payment' => DB::table('tr_receives')
                     ->selectRaw('COUNT(*)')
@@ -75,5 +76,15 @@ class SalesNonManager extends Component
     public function view($id)
     {
         return redirect()->to('/sales/non-tax/view/' . $id);
+    }
+
+    public function createInvoice($id)
+    {
+        return redirect()->to('/sales/non-tax/invoice/create/' . $id);
+    }
+
+    public function viewInvoice($id)
+    {
+        return redirect()->to('/sales/non-tax/invoice/view/' . $id);
     }
 }

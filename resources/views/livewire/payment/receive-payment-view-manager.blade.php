@@ -23,9 +23,9 @@
             <div class="card">
                 <div class="card-body">
                     @if ($set_type == 'Tax')
-                        @include('livewire.sales.data-view-sales')
+                        @include('livewire.invoice.data-view-invoice')
                     @elseif($set_type == 'Non')
-                        @include('livewire.sales.data-view-sales-non')
+                        @include('livewire.invoice.data-view-invoice')
                     @endif
                 </div>
             </div>
@@ -122,13 +122,13 @@
 
                         <div class="d-flex justify-content-between bg-lighter p-2 mb-4">
                             <p class="mb-0">Sales Balance:</p>
-                            <p class="fw-medium mb-0">Rp. {{ number_format($sales->rest, 2, ',', '.') }}</p>
+                            <p class="fw-medium mb-0">Rp. {{ number_format($invoices->rest, 2, ',', '.') }}</p>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Receive Amount <span class="text-danger">*</span></label>
                             <input type="text" wire:model="amount"
                                 class="form-control @error('amount') is-invalid @enderror"
-                                placeholder="Rp. {{ number_format($sales->rest, 2, ',', '.') }}">
+                                placeholder="Rp. {{ number_format($invoices->rest, 2, ',', '.') }}">
                             @error('amount')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -185,12 +185,12 @@
     @push('scripts')
         <script>
             window.addEventListener('print-tax', function() {
-                var url = '{{ route('sales.view.print', ['id' => $sales->id]) }}';
+                var url = '{{ route('sales.invoice.view.print', ['id' => $invoices->id]) }}';
                 window.open(url, '_blank');
             });
 
             window.addEventListener('print-non', function() {
-                var url = '{{ route('sales.non.view.print', ['id' => $sales->id]) }}';
+                var url = '{{ route('sales.non.invoice.view.print', ['id' => $invoices->id]) }}';
                 window.open(url, '_blank');
             });
 

@@ -5,6 +5,8 @@ namespace App\Http\Livewire\Payment;
 use App\Models\MsCustomers;
 use App\Models\PrmCompanies;
 use App\Models\PrmConfig;
+use App\Models\TrInvoice;
+use App\Models\TrInvoicesNon;
 use App\Models\TrReceives;
 use App\Models\TrSales;
 use App\Models\TrSalesDetails;
@@ -27,10 +29,17 @@ class ReceivePaymentViewManager extends Component
     public $sales;
     public $items;
 
+    public $invoices;
+
     public function mount()
     {
         $this->set_id = request()->id;
         $this->set_type = request()->type;
+        $invoices = TrInvoice::find($this->set_id);
+        if ($this->set_type === 'Non') {
+            $invoices = TrInvoicesNon::find($this->set_id);
+        }
+        $this->invoices = $invoices;
 
         $this->formReset();
     }
@@ -44,14 +53,15 @@ class ReceivePaymentViewManager extends Component
 
         $companies = PrmCompanies::find(1);
         $customers = MsCustomers::find($this->sales->customer_id);
-        $soSign = PrmConfig::find(3);
-        $soTC = PrmConfig::find(4);
+        $invSignName = PrmConfig::find(5);
+        $invSignPosition = PrmConfig::find(6);
+        $invTC = PrmConfig::find(7);
         $receives = TrReceives::where('sales_id', $this->set_id)
             ->where('sales_type', $salesType)
             ->where('is_status', '1')
             ->orderBy('id', 'asc')->get();
 
-        return view('livewire.payment.receive-payment-view-manager', compact('companies', 'customers', 'receives', 'soSign', 'soTC'));
+        return view('livewire.payment.receive-payment-view-manager', compact('companies', 'customers', 'receives', 'invSignName', 'invSignPosition', 'invTC'));
     }
 
     public function closeModal()
@@ -81,12 +91,12 @@ class ReceivePaymentViewManager extends Component
         $this->date = $now->format('Y-m-d');
 
         if ($this->set_type == 'Tax') {
-            $this->sales = TrSales::find($this->set_id);
+            $this->sales = TrSales::find($this->invoices->sales_id);
             $this->items = TrSalesDetails::where('sales_id', $this->sales->id)
                 ->select('id', 'product_name as name', 'unit_name as unit', 'qty', 'rate as price', 'amount as total')
                 ->get()->toArray();
         } else if ($this->set_type == 'Non') {
-            $this->sales = TrSalesNon::find($this->set_id);
+            $this->sales = TrSalesNon::find($this->invoices->sales_non_id);
             $this->items = TrSalesNonDetails::where('sales_non_id', $this->sales->id)
                 ->select('id', 'product_name as name', 'unit_name as unit', 'qty', 'rate as price', 'amount as total')
                 ->get()->toArray();
@@ -136,9 +146,13 @@ class ReceivePaymentViewManager extends Component
         }
 
         if ($this->set_type == 'Tax') {
-            TrSales::find($this->set_id)->update($dataSales);
+            $invoices = TrInvoice::find($this->set_id);
+            $invoices->update($dataSales);
+            TrSales::find($invoices->sales_id)->update($dataSales);
         } else if ($this->set_type == 'Non') {
-            TrSalesNon::find($this->set_id)->update($dataSales);
+            $invoices = TrInvoicesNon::find($this->set_id);
+            $invoices->update($dataSales);
+            TrSalesNon::find($invoices->sales_non_id)->update($dataSales);
         }
 
         $this->formReset();

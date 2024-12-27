@@ -12,6 +12,12 @@ use App\Http\Livewire\Expanse\ExpanseCreateManager;
 use App\Http\Livewire\Expanse\ExpanseManager;
 use App\Http\Livewire\Expanse\ExpanseViewManager;
 use App\Http\Livewire\Expanse\ExpanseViewPrintManager;
+use App\Http\Livewire\Invoice\InvoiceCreateManager;
+use App\Http\Livewire\Invoice\InvoiceNonCreateManager;
+use App\Http\Livewire\Invoice\InvoiceNonViewManager;
+use App\Http\Livewire\Invoice\InvoiceNonViewPrintManager;
+use App\Http\Livewire\Invoice\InvoiceViewManager;
+use App\Http\Livewire\Invoice\InvoiceViewPrintManager;
 use App\Http\Livewire\Masters\AccountCreateManager;
 use App\Http\Livewire\Masters\AccountManager;
 use App\Http\Livewire\Masters\CategoryAccountManager;
@@ -147,12 +153,18 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', SalesCreateManager::class)->name('sales.create');
         Route::get('/view/{id}', SalesViewManager::class)->name('sales.view');
         Route::get('/view/print/{id}', [SalesViewPrintManager::class, 'index'])->name('sales.view.print');
+        Route::get('/invoice/create/{so}', InvoiceCreateManager::class)->name('sales.invoice.create');
+        Route::get('/invoice/view/{id}', InvoiceViewManager::class)->name('sales.invoice.view');
+        Route::get('/invoice/view/print/{id}', [InvoiceViewPrintManager::class, 'index'])->name('sales.invoice.view.print');
 
         Route::prefix('/non-tax')->group(function () {
             Route::get('/', SalesNonManager::class)->name('sales.non.index');
             Route::get('/create', SalesNonCreateManager::class)->name('sales.non.create');
             Route::get('/view/{id}', SalesNonViewManager::class)->name('sales.non.view');
             Route::get('/view/print/{id}', [SalesNonViewPrintManager::class, 'index'])->name('sales.non.view.print');
+            Route::get('/invoice/create/{so}', InvoiceNonCreateManager::class)->name('sales.non.invoice.create');
+            Route::get('/invoice/view/{id}', InvoiceNonViewManager::class)->name('sales.non.invoice.view');
+            Route::get('/invoice/view/print/{id}', [InvoiceNonViewPrintManager::class, 'index'])->name('sales.non.invoice.view.print');
         });
     });
 
