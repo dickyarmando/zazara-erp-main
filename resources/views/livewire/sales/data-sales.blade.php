@@ -17,7 +17,9 @@
                     {!! $sortLink !!}</th>
                 <th class="sort" wire:click="sortOrder('tr_sales.total')">Total {!! $sortLink !!}
                 </th>
-                <th class="sort" wire:click="sortOrder('tr_sales.is_payed')">Status {!! $sortLink !!}
+                <th class="sort" wire:click="sortOrder('tr_sales.is_payed')">Payment {!! $sortLink !!}
+                </th>
+                <th class="sort" wire:click="sortOrder('tr_sales.approved_at')">Status {!! $sortLink !!}
                 </th>
                 <th class="w-px-150">Action</th>
             </tr>
@@ -29,9 +31,9 @@
                         {{ ($saless->currentPage() - 1) * $saless->perPage() + $loop->index + 1 }}
                     </td>
                     <td class="border-start text-center">{{ $sales->number }}</td>
-                    <td class="border-start text-center">{{ $sales->date }}</td>
+                    <td class="border-start text-center no-wrap">{{ $sales->date }}</td>
                     <td class="border-start">{{ $sales->customer_name }}</td>
-                    <td class="border-start" style="white-space: unset;">{{ $sales->notes }}</td>
+                    <td class="border-start unset">{{ $sales->notes }}</td>
                     <td class="border-start text-right">{{ number_format($sales->total, 2) }}</td>
                     <td class="border-start text-center">
                         @if ($sales->is_payed == '1')
@@ -44,10 +46,17 @@
                             @endif
                         @endif
                     </td>
+                    <td class="border-start text-center unset">
+                        @if (isset($sales->approved_at))
+                            <span class="badge bg-label-success" text-capitalized> Approved </span>
+                        @else
+                            <span class="badge bg-label-warning" text-capitalized> Waiting Approve </span>
+                        @endif
+                    </td>
                     <td class="border-start text-center">
                         <button type="button" wire:click="view('{{ $sales->id }}')" class="btn btn-xs btn-success"
                             title="Open Data"><span class="bx bx-folder-open"></span></button>
-                        @if ($sales->total_payment == 0)
+                        @if ($userRoles->is_update == '1')
                             <button type="button" wire:click="edit('{{ $sales->id }}')"
                                 class="btn btn-xs btn-secondary" title="Edit User"><span
                                     class="bx bxs-edit"></span></button>

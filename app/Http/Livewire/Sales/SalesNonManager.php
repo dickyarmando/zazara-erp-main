@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Sales;
 
+use App\Models\PrmRoleMenus;
 use App\Models\TrSalesNon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -19,12 +21,18 @@ class SalesNonManager extends Component
     public $searchKeyword = '';
     public $roleFilter = '';
     public $set_id;
+    public $userRoles = [];
+
+    public function mount()
+    {
+        $this->userRoles = PrmRoleMenus::where('menu_id', '31')->where('role_id', Auth::user()->role_id)->first();
+    }
 
     public function render()
     {
         $querySales = TrSalesNon::orderBy($this->sortColumn, $this->sortOrder)
             ->leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales_non.customer_id')
-            ->select('tr_sales_non.id', 'tr_sales_non.number', 'tr_sales_non.date', 'tr_sales_non.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales_non.reference', 'tr_sales_non.total', 'tr_sales_non.notes', 'tr_sales_non.is_receive', 'tr_sales_non.is_status')
+            ->select('tr_sales_non.id', 'tr_sales_non.number', 'tr_sales_non.date', 'tr_sales_non.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales_non.reference', 'tr_sales_non.total', 'tr_sales_non.notes', 'tr_sales_non.is_receive', 'tr_sales_non.is_status', 'tr_sales_non.approved_at', 'tr_sales_non.approved_by')
             ->addSelect([
                 'total_payment' => DB::table('tr_receives')
                     ->selectRaw('COUNT(*)')

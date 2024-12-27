@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Sales;
 
+use App\Models\PrmRoleMenus;
 use App\Models\TrSales;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -19,12 +21,18 @@ class SalesManager extends Component
     public $searchKeyword = '';
     public $roleFilter = '';
     public $set_id;
+    public $userRoles = [];
+
+    public function mount()
+    {
+        $this->userRoles = PrmRoleMenus::where('menu_id', '30')->where('role_id', Auth::user()->role_id)->first();
+    }
 
     public function render()
     {
         $querySales = TrSales::orderBy($this->sortColumn, $this->sortOrder)
             ->leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales.customer_id')
-            ->select('tr_sales.id', 'tr_sales.number', 'tr_sales.date', 'tr_sales.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales.reference', 'tr_sales.total', 'tr_sales.notes', 'tr_sales.is_receive', 'tr_sales.is_status')
+            ->select('tr_sales.id', 'tr_sales.number', 'tr_sales.date', 'tr_sales.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales.reference', 'tr_sales.total', 'tr_sales.notes', 'tr_sales.is_receive', 'tr_sales.is_status', 'tr_sales.approved_at', 'tr_sales.approved_by')
             ->addSelect([
                 'total_payment' => DB::table('tr_receives')
                     ->selectRaw('COUNT(*)')

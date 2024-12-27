@@ -43,6 +43,7 @@ class SalesNonCreateManager extends Component
     public $discount;
     public $delivery_fee;
     public $total;
+    public $is_approved;
 
     public $items = [];
     public $files = [];
@@ -82,6 +83,9 @@ class SalesNonCreateManager extends Component
             $this->discount = $sales->discount;
             $this->total = $sales->total;
             $this->items = $salesDetails;
+            if (isset($sales->approved_at)) {
+                $this->is_approved = '1';
+            }
         } else {
             $this->month = $now->month;
             $this->year = $now->year;

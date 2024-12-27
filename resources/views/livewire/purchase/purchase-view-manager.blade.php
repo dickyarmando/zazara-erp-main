@@ -36,8 +36,10 @@
                 <button type="button" wire:click="printDocument" class="btn btn-primary"><span
                         class="bx bx-printer me-2"></span> Print</button>
             @else
-                <button type="button" data-bs-toggle="modal" data-bs-target="#ApproveModal"
-                    class="btn btn-success"><span class="bx bx-check me-2"></span> Approve Purchase</button>
+                @if ($userRoles->is_approved === '1')
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#ApproveModal"
+                        class="btn btn-success"><span class="bx bx-check me-2"></span> Approve Purchase</button>
+                @endif
             @endif
         </div>
         <div class="card-body">
@@ -57,7 +59,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" wire:click.prevent="approve()" class="btn btn-danger close-modal"
+                    <button type="button" wire:click.prevent="approve()" class="btn btn-success close-modal"
                         data-bs-dismiss="modal">Yes, approve</button>
                 </div>
             </div>

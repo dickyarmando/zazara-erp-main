@@ -118,7 +118,7 @@ class RolesCreateManager extends Component
 
                 foreach ($vm['children'] as $ksm => $vsm) {
                     if ($vsm['show'] == '1') {
-                        $rolesMenu = [
+                        $rolesMenuDetail = [
                             "role_id" => $this->set_id,
                             "menu_id" => $vsm['id'],
                             "is_show" => '1',
@@ -129,7 +129,7 @@ class RolesCreateManager extends Component
                             "is_approved" => $this->checkStatus($vsm['approved']),
                         ];
 
-                        PrmRoleMenus::create($rolesMenu);
+                        PrmRoleMenus::create($rolesMenuDetail);
                     }
                 }
             }

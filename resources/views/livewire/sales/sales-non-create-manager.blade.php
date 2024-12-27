@@ -44,7 +44,8 @@
                             <div class="mb-3">
                                 <label class="form-label">Date <span class="text-danger">*</span></label>
                                 <input type="date" wire:model="date"
-                                    class="form-control @error('date') is-invalid @enderror" placeholder="Date">
+                                    class="form-control @error('date') is-invalid @enderror" placeholder="Date"
+                                    {{ empty($is_approved) ? '' : 'readonly' }}>
                                 @error('date')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -59,7 +60,9 @@
                                     <input type="text" class="form-control" wire:model="customer_name"
                                         placeholder="-- Choose Customer --" readonly="">
                                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                        data-bs-target="#ChooseModalCustomers"><i class="fa fa-search"></i></button>
+                                        data-bs-target="#ChooseModalCustomers"
+                                        {{ empty($is_approved) ? '' : 'disabled' }}><i
+                                            class="fa fa-search"></i></button>
                                 </div>
                                 <div wire:ignore.self class="modal fade" id="ChooseModalCustomers"
                                     data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -144,7 +147,7 @@
                                 <label class="form-label">Reference</label>
                                 <input type="text" wire:model="reference"
                                     class="form-control @error('reference') is-invalid @enderror"
-                                    placeholder="Reference">
+                                    placeholder="Reference" {{ empty($is_approved) ? '' : 'readonly' }}>
                                 @error('reference')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -156,12 +159,19 @@
                             <div class="mb-3">
                                 <label class="form-label">Sales <span class="text-danger">*</span></label>
                                 @if ($userRoles->is_sales == '0')
-                                    <select wire:model="sales_id"
-                                        class="form-select @error('sales_id') is-invalid @enderror">
-                                        @foreach ($salesList as $k => $v)
-                                            <option value="{{ $v->id }}">{{ $v->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    @if (isset($is_approved))
+                                        <input type="hidden" wire:model="sales_id"
+                                            class="form-control @error('sales_id') is-invalid @enderror">
+                                        <input type="text" wire:model="sales_name"
+                                            class="form-control @error('sales_name') is-invalid @enderror" readonly>
+                                    @else
+                                        <select wire:model="sales_id"
+                                            class="form-select @error('sales_id') is-invalid @enderror">
+                                            @foreach ($salesList as $k => $v)
+                                                <option value="{{ $v->id }}">{{ $v->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    @endif
                                 @else
                                     <input type="hidden" wire:model="sales_id"
                                         class="form-control @error('sales_id') is-invalid @enderror">
@@ -180,7 +190,7 @@
                                 <label class="form-label">Images</label>
                                 <input type="file" wire:model="files"
                                     class="form-control @error('files.*') is-invalid @enderror" id="formFileMultiple"
-                                    multiple>
+                                    multiple {{ empty($is_approved) ? '' : 'disabled' }}>
                                 <div wire:loading wire:target="files">Checking...</div>
                                 @error('files.*')
                                     <div class="invalid-feedback">
@@ -206,11 +216,14 @@
                                                     {{ $file->file }} - <a
                                                         href="{{ url('/sales_non_files/' . $file->file) }}"
                                                         target="_blank" class="btn btn-xs btn-outline-primary"
-                                                        title="View {{ $file->file }}">View</a> - <button
-                                                        type="button" wire:click="deleteFile('{{ $file->id }}')"
-                                                        class="btn btn-xs btn-outline-danger" data-bs-toggle="modal"
-                                                        data-bs-target="#FileDeleteModal"
-                                                        title="Delete File">Delete</button>
+                                                        title="View {{ $file->file }}">View</a>
+                                                    @if (!isset($is_approved))
+                                                        - <button type="button"
+                                                            wire:click="deleteFile('{{ $file->id }}')"
+                                                            class="btn btn-xs btn-outline-danger"
+                                                            data-bs-toggle="modal" data-bs-target="#FileDeleteModal"
+                                                            title="Delete File">Delete</button>
+                                                    @endif
                                                 </li>
                                             @endforeach
                                         </ul>
@@ -228,31 +241,39 @@
                                             <th style="width:150px;">Qty</th>
                                             <th style="width:200px;">Rate</th>
                                             <th style="width:200px;">Amount</th>
-                                            <th style="width:80px;" class="text-center">Action</th>
+                                            @if (!isset($is_approved))
+                                                <th style="width:80px;" class="text-center">Action</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse ($items as $index => $item)
                                             <tr>
                                                 <td><input type="text" class="form-control"
-                                                        wire:model="items.{{ $index }}.name"></td>
+                                                        wire:model="items.{{ $index }}.name"
+                                                        {{ empty($is_approved) ? '' : 'readonly' }}></td>
                                                 <td><input type="text" class="form-control"
-                                                        wire:model="items.{{ $index }}.unit"></td>
+                                                        wire:model="items.{{ $index }}.unit"
+                                                        {{ empty($is_approved) ? '' : 'readonly' }}></td>
                                                 <td><input type="text" class="form-control"
                                                         wire:model="items.{{ $index }}.qty"
                                                         wire:blur.debounce.250ms="calculate({{ $index }})"
-                                                        onclick="this.select();">
+                                                        onclick="this.select();"
+                                                        {{ empty($is_approved) ? '' : 'readonly' }}>
                                                 </td>
                                                 <td><input type="text" class="form-control text-end"
                                                         wire:model="items.{{ $index }}.price"
                                                         wire:blur.debounce.250ms="calculate({{ $index }})"
-                                                        onclick="this.select();">
+                                                        onclick="this.select();"
+                                                        {{ empty($is_approved) ? '' : 'readonly' }}>
                                                 </td>
                                                 <td><input type="text" class="form-control text-end"
                                                         wire:model="items.{{ $index }}.total" readonly></td>
-                                                <td class="text-center"><button class="btn btn-sm btn-danger"
-                                                        wire:click.prevent="remove('{{ $index }}')"><i
-                                                            class="fa fa-times"></i></button></td>
+                                                @if (!isset($is_approved))
+                                                    <td class="text-center"><button class="btn btn-sm btn-danger"
+                                                            wire:click.prevent="remove('{{ $index }}')"><i
+                                                                class="fa fa-times"></i></button></td>
+                                                @endif
                                             </tr>
                                         @empty
                                             <tr>
@@ -261,14 +282,21 @@
                                         @endforelse
 
                                         <tr>
-                                            <td colspan="2"><button type="button" wire:click="add"
-                                                    class="btn btn-primary btn-sm"><i class="fa fa-plus me-2"></i>Add
-                                                    Line</button></td>
+                                            <td colspan="2">
+                                                @if (!isset($is_approved))
+                                                    <button type="button" wire:click="add"
+                                                        class="btn btn-primary btn-sm"><i
+                                                            class="fa fa-plus me-2"></i>Add
+                                                        Line</button>
+                                                @endif
+                                            </td>
                                             <td colspan="2" class="text-right">Sub Total</td>
                                             <td><input type="text" class="form-control text-end"
                                                     wire:model="subtotal" readonly>
                                             </td>
-                                            <td>&nbsp;</td>
+                                            @if (!isset($is_approved))
+                                                <td>&nbsp;</td>
+                                            @endif
                                         </tr>
                                         <tr>
                                             <td colspan="2">&nbsp;</td>
@@ -278,16 +306,21 @@
                                                     wire:blur.debounce.250ms="calculateTotal()"
                                                     onclick="this.select();">
                                             </td>
-                                            <td>&nbsp;</td>
+                                            @if (!isset($is_approved))
+                                                <td>&nbsp;</td>
+                                            @endif
                                         </tr>
                                         <tr>
                                             <td colspan="2">&nbsp;</td>
                                             <td colspan="2" class="text-right">Discount</td>
                                             <td><input type="text" class="form-control text-end"
                                                     wire:model="discount" wire:blur.debounce.250ms="calculateTotal()"
-                                                    onclick="this.select();">
+                                                    onclick="this.select();"
+                                                    {{ empty($is_approved) ? '' : 'readonly' }}>
                                             </td>
-                                            <td>&nbsp;</td>
+                                            @if (!isset($is_approved))
+                                                <td>&nbsp;</td>
+                                            @endif
                                         </tr>
                                         <tr>
                                             <td colspan="2">&nbsp;</td>
@@ -295,7 +328,9 @@
                                             <td><input type="text" class="form-control text-end"
                                                     wire:model="total" readonly>
                                             </td>
-                                            <td>&nbsp;</td>
+                                            @if (!isset($is_approved))
+                                                <td>&nbsp;</td>
+                                            @endif
                                         </tr>
                                     </tbody>
                                 </table>

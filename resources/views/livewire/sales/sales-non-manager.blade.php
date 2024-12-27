@@ -31,8 +31,10 @@
                     </div>
                     <div class="col-sm-8 col-xs-12 text-right">
                         <div class="d-md-flex justify-content-end">
-                            <a href="{{ url('sales/non-tax/create') }}" class="btn btn-primary btn-sm"><i
-                                    class="bx bx-plus me-2"></i>Add New</a>
+                            @if ($userRoles->is_create == '1')
+                                <a href="{{ url('sales/non-tax/create') }}" class="btn btn-primary btn-sm"><i
+                                        class="bx bx-plus me-2"></i>Add New</a>
+                            @endif
                         </div>
                     </div>
                 </div>
