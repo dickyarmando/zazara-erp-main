@@ -45,18 +45,20 @@
                     <thead>
                         <tr>
                             <th class="w-px-75">No</th>
-                            <th class="sort" wire:click="sortOrder('ms_suppliers.code')">Code {!! $sortLink !!}
+                            <th class="sort" wire:click="sortOrder('ms_customers.code')">Code {!! $sortLink !!}
                             </th>
-                            <th class="sort" wire:click="sortOrder('ms_suppliers.company_name')">Company Name
+                            <th class="sort" wire:click="sortOrder('ms_customers.company_name')">Company Name
                                 {!! $sortLink !!}
                             </th>
-                            <th class="sort" wire:click="sortOrder('ms_suppliers.email')">Email
+                            <th class="sort" wire:click="sortOrder('ms_customers.email')">Email
                                 {!! $sortLink !!}</th>
-                            <th class="sort" wire:click="sortOrder('ms_suppliers.phone')">Phone
+                            <th class="sort" wire:click="sortOrder('ms_customers.phone')">Phone
                                 {!! $sortLink !!}</th>
-                            <th class="sort" wire:click="sortOrder('ms_suppliers.telephone')">Telephone
+                            <th class="sort" wire:click="sortOrder('ms_customers.telephone')">Telephone
                                 {!! $sortLink !!}</th>
-                            <th class="sort" wire:click="sortOrder('ms_suppliers.name')">Contact Person
+                            <th class="sort" wire:click="sortOrder('ms_customers.name')">Contact Person
+                                {!! $sortLink !!}</th>
+                            <th class="sort" wire:click="sortOrder('ms_customers.name')">Status
                                 {!! $sortLink !!}</th>
                             <th class="w-px-150">Action</th>
                         </tr>
@@ -74,13 +76,27 @@
                                 <td class="border-start">{{ $customer->telephone }}</td>
                                 <td class="border-start">{{ $customer->name }}</td>
                                 <td class="border-start text-center">
+                                    @if ($customer->is_status == '1')
+                                        <span class="badge bg-label-success" text-capitalized> Active </span>
+                                    @else
+                                        <span class="badge bg-label-danger" text-capitalized> Non Active </span>
+                                    @endif
+                                </td>
+                                <td class="border-start text-center">
                                     <button type="button" wire:click="edit('{{ $customer->id }}')"
                                         class="btn btn-xs btn-secondary me-2" title="Edit Data"><span
                                             class="bx bxs-edit"></span></button>
-                                    <button type="button" wire:click="delete('{{ $customer->id }}')"
-                                        class="btn btn-xs btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#CustomerDeleteModal" title="Delete Data"><span
-                                            class="bx bxs-trash"></span></button>
+                                    @if ($customer->is_status == '1')
+                                        <button type="button" wire:click="delete('{{ $customer->id }}')"
+                                            class="btn btn-xs btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#CustomerDeleteModal" title="Non Active Data"><span
+                                                class="bx bx-x"></span></button>
+                                    @else
+                                        <button type="button" wire:click="delete('{{ $customer->id }}')"
+                                            class="btn btn-xs btn-success" data-bs-toggle="modal"
+                                            data-bs-target="#CustomerActivedModal" title="Actived Data"><span
+                                                class="bx bx-check"></span></button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -99,15 +115,15 @@
         </div>
     </div>
 
-    {{-- Delete --}}
+    {{-- Non Active --}}
     <div wire:ignore.self class="modal fade" id="CustomerDeleteModal" tabindex="-1" ruangan="dialog">
         <div class="modal-dialog" customer="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirm Delete</h5>
+                    <h5 class="modal-title">Confirm Non Active</h5>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete?</p>
+                    <p>Are you sure you want to non active?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Cancel</button>
@@ -118,10 +134,31 @@
         </div>
     </div>
 
+    {{-- Active --}}
+    <div wire:ignore.self class="modal fade" id="CustomerActivedModal" tabindex="-1" ruangan="dialog">
+        <div class="modal-dialog" customer="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Actived</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to actived?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-btn"
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" wire:click.prevent="actived()" class="btn btn-success close-modal"
+                        data-bs-dismiss="modal">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
         <script>
             window.addEventListener('close-modal', event => {
                 $('#CustomerDeleteModal').modal('hide');
+                $('#CustomerActivedModal').modal('hide');
             });
         </script>
     @endpush

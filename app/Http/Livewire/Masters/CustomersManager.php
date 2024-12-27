@@ -24,20 +24,20 @@ class CustomersManager extends Component
     public function render()
     {
         $queryCustomers = MsCustomers::orderBy($this->sortColumn, $this->sortOrder)
-            ->select('ms_customers.id', 'ms_customers.code', 'ms_customers.name', 'ms_customers.company_name', 'ms_customers.address', 'ms_customers.email', 'ms_customers.phone', 'ms_customers.telephone', 'ms_customers.fax');
+            ->select('ms_customers.id', 'ms_customers.code', 'ms_customers.name', 'ms_customers.company_name', 'ms_customers.address', 'ms_customers.email', 'ms_customers.phone', 'ms_customers.telephone', 'ms_customers.fax', 'ms_customers.is_status');
 
         if (!empty($this->searchKeyword)) {
-            $queryCustomers->orWhere('ms_customers.code', 'like', "%" . $this->searchKeyword . "%")->where('ms_customers.is_status', '1');
-            $queryCustomers->orWhere('ms_customers.name', 'like', "%" . $this->searchKeyword . "%")->where('ms_customers.is_status', '1');
-            $queryCustomers->orWhere('ms_customers.company_name', 'like', "%" . $this->searchKeyword . "%")->where('ms_customers.is_status', '1');
-            $queryCustomers->orWhere('ms_customers.address', 'like', "%" . $this->searchKeyword . "%")->where('ms_customers.is_status', '1');
-            $queryCustomers->orWhere('ms_customers.email', 'like', "%" . $this->searchKeyword . "%")->where('ms_customers.is_status', '1');
-            $queryCustomers->orWhere('ms_customers.phone', 'like', "%" . $this->searchKeyword . "%")->where('ms_customers.is_status', '1');
-            $queryCustomers->orWhere('ms_customers.telephone', 'like', "%" . $this->searchKeyword . "%")->where('ms_customers.is_status', '1');
-            $queryCustomers->orWhere('ms_customers.fax', 'like', "%" . $this->searchKeyword . "%")->where('ms_customers.is_status', '1');
+            $queryCustomers->orWhere('ms_customers.code', 'like', "%" . $this->searchKeyword . "%");
+            $queryCustomers->orWhere('ms_customers.name', 'like', "%" . $this->searchKeyword . "%");
+            $queryCustomers->orWhere('ms_customers.company_name', 'like', "%" . $this->searchKeyword . "%");
+            $queryCustomers->orWhere('ms_customers.address', 'like', "%" . $this->searchKeyword . "%");
+            $queryCustomers->orWhere('ms_customers.email', 'like', "%" . $this->searchKeyword . "%");
+            $queryCustomers->orWhere('ms_customers.phone', 'like', "%" . $this->searchKeyword . "%");
+            $queryCustomers->orWhere('ms_customers.telephone', 'like', "%" . $this->searchKeyword . "%");
+            $queryCustomers->orWhere('ms_customers.fax', 'like', "%" . $this->searchKeyword . "%");
         }
 
-        $customers = $queryCustomers->where('ms_customers.is_status', '1')->paginate($this->perPage);
+        $customers = $queryCustomers->paginate($this->perPage);
 
         return view('livewire.masters.customers-manager', ['customers' => $customers]);
     }
@@ -70,8 +70,8 @@ class CustomersManager extends Component
     {
         $valid = [
             'is_status' => '0',
-            'deleted_at' => Carbon::now()->toDateTimeString(),
-            'deleted_by' => Auth::user()->id
+            'updated_at' => Carbon::now()->toDateTimeString(),
+            'updated_by' => Auth::user()->id
         ];
 
         $tp = MsCustomers::find($this->set_id);
@@ -88,5 +88,21 @@ class CustomersManager extends Component
 
         $this->resetErrorBag();
         $this->resetValidation();
+    }
+
+    public function actived()
+    {
+        $valid = [
+            'is_status' => '1',
+            'updated_at' => Carbon::now()->toDateTimeString(),
+            'updated_by' => Auth::user()->id
+        ];
+
+        $tp = MsCustomers::find($this->set_id);
+        $tp->update($valid);
+
+        $this->formReset();
+        session()->flash('success', 'Actived');
+        $this->dispatchBrowserEvent('close-modal');
     }
 }
