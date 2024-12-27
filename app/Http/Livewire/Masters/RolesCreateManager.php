@@ -107,11 +107,11 @@ class RolesCreateManager extends Component
                     "role_id" => $this->set_id,
                     "menu_id" => $vm['id'],
                     "is_show" => '1',
-                    "is_create" => isset($vm['create']) ? '1' : '0',
-                    "is_update" => isset($vm['update']) ? '1' : '0',
-                    "is_delete" => isset($vm['delete']) ? '1' : '0',
-                    "is_sales" => isset($vm['sales']) ? '1' : '0',
-                    "is_approved" => isset($vm['approved']) ? '1' : '0',
+                    "is_create" => $this->checkStatus($vm['create']),
+                    "is_update" => $this->checkStatus($vm['update']),
+                    "is_delete" => $this->checkStatus($vm['delete']),
+                    "is_sales" => $this->checkStatus($vm['sales']),
+                    "is_approved" => $this->checkStatus($vm['approved']),
                 ];
 
                 PrmRoleMenus::create($rolesMenu);
@@ -122,11 +122,11 @@ class RolesCreateManager extends Component
                             "role_id" => $this->set_id,
                             "menu_id" => $vsm['id'],
                             "is_show" => '1',
-                            "is_create" => isset($vsm['create']) ? '1' : '0',
-                            "is_update" => isset($vsm['update']) ? '1' : '0',
-                            "is_delete" => isset($vsm['delete']) ? '1' : '0',
-                            "is_sales" => isset($vsm['sales']) ? '1' : '0',
-                            "is_approved" => isset($vsm['approved']) ? '1' : '0',
+                            "is_create" => $this->checkStatus($vsm['create']),
+                            "is_update" => $this->checkStatus($vsm['update']),
+                            "is_delete" => $this->checkStatus($vsm['delete']),
+                            "is_sales" => $this->checkStatus($vsm['sales']),
+                            "is_approved" => $this->checkStatus($vsm['approved']),
                         ];
 
                         PrmRoleMenus::create($rolesMenu);
@@ -142,5 +142,16 @@ class RolesCreateManager extends Component
     public function backRedirect()
     {
         return redirect()->to('/masters/roles');
+    }
+
+    public function checkStatus($id)
+    {
+        $value = isset($id) ? '1' : '0';
+
+        if ($value === 'false') {
+            $value = '0';
+        }
+
+        return $value;
     }
 }

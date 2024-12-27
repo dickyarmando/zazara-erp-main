@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Purchase;
 
+use App\Models\PrmRoleMenus;
 use App\Models\TrPurchaseNon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -19,12 +21,18 @@ class PurchaseNonManager extends Component
     public $searchKeyword = '';
     public $roleFilter = '';
     public $set_id;
+    public $userRoles = [];
+
+    public function mount()
+    {
+        $this->userRoles = PrmRoleMenus::where('menu_id', '29')->where('role_id', Auth::user()->role_id)->first();
+    }
 
     public function render()
     {
         $queryPurchase = TrPurchaseNon::orderBy($this->sortColumn, $this->sortOrder)
             ->leftJoin('ms_suppliers', 'ms_suppliers.id', '=', 'tr_purchase_non.supplier_id')
-            ->select('tr_purchase_non.id', 'tr_purchase_non.number', 'tr_purchase_non.date', 'tr_purchase_non.supplier_id', 'ms_suppliers.company_name as supplier_name', 'tr_purchase_non.reference', 'tr_purchase_non.total', 'tr_purchase_non.notes', 'tr_purchase_non.is_payed', 'tr_purchase_non.is_status')
+            ->select('tr_purchase_non.id', 'tr_purchase_non.number', 'tr_purchase_non.date', 'tr_purchase_non.supplier_id', 'ms_suppliers.company_name as supplier_name', 'tr_purchase_non.reference', 'tr_purchase_non.total', 'tr_purchase_non.notes', 'tr_purchase_non.is_payed', 'tr_purchase_non.is_status', 'tr_purchase_non.approved_at', 'tr_purchase_non.approved_by')
             ->addSelect([
                 'total_payment' => DB::table('tr_payments')
                     ->selectRaw('COUNT(*)')

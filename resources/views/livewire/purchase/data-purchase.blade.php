@@ -17,7 +17,10 @@
                     {!! $sortLink !!}</th>
                 <th class="sort" wire:click="sortOrder('tr_purchase.total')">Total {!! $sortLink !!}
                 </th>
-                <th class="sort" wire:click="sortOrder('tr_purchase.is_payed')">Status
+                <th class="sort" wire:click="sortOrder('tr_purchase.is_payed')">Payment
+                    {!! $sortLink !!}
+                </th>
+                <th class="sort" wire:click="sortOrder('tr_purchase.approved_at')">Status
                     {!! $sortLink !!}
                 </th>
                 <th class="w-px-150">Action</th>
@@ -30,9 +33,9 @@
                         {{ ($purchases->currentPage() - 1) * $purchases->perPage() + $loop->index + 1 }}
                     </td>
                     <td class="border-start text-center">{{ $purchase->number }}</td>
-                    <td class="border-start text-center">{{ $purchase->date }}</td>
+                    <td class="border-start text-center no-wrap">{{ $purchase->date }}</td>
                     <td class="border-start">{{ $purchase->supplier_name }}</td>
-                    <td class="border-start" style="white-space: unset;">{{ $purchase->notes }}</td>
+                    <td class="border-start unset">{{ $purchase->notes }}</td>
                     <td class="border-start text-right">{{ number_format($purchase->total, 2) }}</td>
                     <td class="border-start text-center">
                         @if ($purchase->is_payed == '1')
@@ -45,13 +48,22 @@
                             @endif
                         @endif
                     </td>
+                    <td class="border-start text-center unset">
+                        @if (isset($purchase->approved_at))
+                            <span class="badge bg-label-success" text-capitalized> Approved </span>
+                        @else
+                            <span class="badge bg-label-warning" text-capitalized> Waiting Approve </span>
+                        @endif
+                    </td>
                     <td class="border-start text-center">
                         <button type="button" wire:click="view('{{ $purchase->id }}')" class="btn btn-xs btn-success"
                             title="Open Data"><span class="bx bx-folder-open"></span></button>
-                        @if ($purchase->total_payment == 0)
-                            <button type="button" wire:click="edit('{{ $purchase->id }}')"
-                                class="btn btn-xs btn-secondary" title="Edit User"><span
-                                    class="bx bxs-edit"></span></button>
+                        @if (!isset($purchase->approved_at))
+                            @if ($userRoles->is_update == '1')
+                                <button type="button" wire:click="edit('{{ $purchase->id }}')"
+                                    class="btn btn-xs btn-secondary" title="Edit User"><span
+                                        class="bx bxs-edit"></span></button>
+                            @endif
                         @endif
                     </td>
                 </tr>

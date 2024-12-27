@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Purchase;
 
+use App\Models\PrmRoleMenus;
 use App\Models\TrPurchase;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -19,12 +21,18 @@ class PurchaseManager extends Component
     public $searchKeyword = '';
     public $roleFilter = '';
     public $set_id;
+    public $userRoles = [];
+
+    public function mount()
+    {
+        $this->userRoles = PrmRoleMenus::where('menu_id', '28')->where('role_id', Auth::user()->role_id)->first();
+    }
 
     public function render()
     {
         $queryPurchase = TrPurchase::orderBy($this->sortColumn, $this->sortOrder)
             ->leftJoin('ms_suppliers', 'ms_suppliers.id', '=', 'tr_purchase.supplier_id')
-            ->select('tr_purchase.id', 'tr_purchase.number', 'tr_purchase.date', 'tr_purchase.supplier_id', 'ms_suppliers.company_name as supplier_name', 'tr_purchase.reference', 'tr_purchase.total', 'tr_purchase.notes', 'tr_purchase.is_payed', 'tr_purchase.is_status')
+            ->select('tr_purchase.id', 'tr_purchase.number', 'tr_purchase.date', 'tr_purchase.supplier_id', 'ms_suppliers.company_name as supplier_name', 'tr_purchase.reference', 'tr_purchase.total', 'tr_purchase.notes', 'tr_purchase.is_payed', 'tr_purchase.is_status', 'tr_purchase.approved_at', 'tr_purchase.approved_by')
             ->addSelect([
                 'total_payment' => DB::table('tr_payments')
                     ->selectRaw('COUNT(*)')
