@@ -5,3 +5,17 @@
 .no-wrap{
     white-space: nowrap !important;
 }
+
+@media print{
+    body{
+        font-size: 11pt !important;
+    }
+
+    h2{
+        font-size: 14pt !important;
+    }
+
+    div{
+        font-size: 11pt !important;
+    }
+}

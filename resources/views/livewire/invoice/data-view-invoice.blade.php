@@ -140,7 +140,7 @@
     </div>
     <div class="col-4 mt-4 text-center">
         Diterima Oleh</br>
-        <div style="height: 60px;">&nbsp;</div></br>
+        <div style="height: 100px;">&nbsp;</div></br>
         <b>(<span style="padding-left:150px;">&nbsp;</span>)</b>
     </div>
     <div class="col-4 mt-4 text-center">
@@ -148,7 +148,7 @@
     </div>
     <div class="col-4 mt-4 text-center">
         Diketahui Oleh</br>
-        <div style="height: 60px;">&nbsp;</div></br>
+        <div style="height: 100px;">&nbsp;</div></br>
         <b>Nama : {{ $invSignName->value }}</b><br>
         <b>Jabatan : {{ $invSignPosition->value }}</b>
     </div>
