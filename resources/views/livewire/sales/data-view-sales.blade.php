@@ -29,6 +29,7 @@
                 <td width="20px" class="px-2" style="border: 1px solid #000;">
                     <b>No</b>
                 </td>
+                <td class="px-2" style="border: 1px solid #000;"><b>Kode Barang</b></td>
                 <td class="px-2" style="border: 1px solid #000;"><b>Nama Barang</b></td>
                 <td class="px-2" style="border: 1px solid #000;"><b>Qty</b></td>
                 <td class="px-2" style="border: 1px solid #000;"><b>UoM</b></td>
@@ -40,6 +41,7 @@
                     <td width="20px" class="px-2 text-center" style="border: 1px solid #000;">
                         {{ $index + 1 }}
                     </td>
+                    <td class="px-2" style="border: 1px solid #000;">{{ $item['code'] }}</td>
                     <td class="px-2" style="border: 1px solid #000;">{{ $item['name'] }}</td>
                     <td class="px-2 text-center" style="border: 1px solid #000;">{{ $item['qty'] }}</td>
                     <td class="px-2 text-center" style="border: 1px solid #000;">{{ $item['unit'] }}</td>
@@ -57,7 +59,7 @@
                     $terbilang = $terbilang->format(round($sales->total, 2));
                     $terbilang = str_replace('juts', 'juta', $terbilang);
                 @endphp
-                <td colspan="4" rowspan="5"><b>Terbilang : <span
+                <td colspan="5" rowspan="5"><b>Terbilang : <span
                             class="text-capitalize">{{ $terbilang }}</span></b></td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">SUBTOTAL</td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">

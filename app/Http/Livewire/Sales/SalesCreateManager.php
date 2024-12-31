@@ -71,7 +71,7 @@ class SalesCreateManager extends Component
             $sales = TrSales::find($_REQUEST['id']);
             $customer = MsCustomers::find($sales->customer_id);
             $salesDetails = TrSalesDetails::where('sales_id', $sales->id)
-                ->select('id', 'product_name as name', 'unit_name as unit', 'qty', 'rate as price', 'amount as total')
+                ->select('id', 'product_code as code', 'product_name as name', 'unit_name as unit', 'qty', 'rate as price', 'amount as total')
                 ->get()->toArray();
             $this->salesFiles = TrSalesFiles::where('sales_id', $sales->id)->get();
             $sequence = explode("/", $sales->number);
@@ -179,6 +179,7 @@ class SalesCreateManager extends Component
     public function add()
     {
         $this->items[] = [
+            'code' => '',
             'name' => '',
             'unit' => '',
             'qty' => 1,
@@ -279,6 +280,7 @@ class SalesCreateManager extends Component
                 if ($item['name'] != "") {
                     $dataDetail = [
                         'sales_id' => $sales->id,
+                        'product_code' => $item['code'],
                         'product_name' => $item['name'],
                         'unit_name' => $item['unit'],
                         'qty' => $item['qty'],
@@ -334,6 +336,7 @@ class SalesCreateManager extends Component
                 if ($item['name'] != "") {
                     $dataDetail = [
                         'sales_id' => $this->set_id,
+                        'product_code' => $item['code'],
                         'product_name' => $item['name'],
                         'unit_name' => $item['unit'],
                         'qty' => $item['qty'],

@@ -46,7 +46,7 @@
                 <div class="d-flex">
                     <button type="button" wire:click="printDocument" class="btn btn-primary me-2"><span
                             class="bx bx-printer me-2"></span> Print</button>
-                    @if ($user_role == '1')
+                    @if ($user_role == '1' && $sales->is_invoice == '0')
                         <button type="button" data-bs-toggle="modal" data-bs-target="#UnapprovedModal"
                             class="btn btn-warning me-2"><span class="bx bx-refresh me-2"></span> Unapproved
                             Sales</button>

@@ -68,7 +68,7 @@ class SalesNonCreateManager extends Component
             $sales = TrSalesNon::find($_REQUEST['id']);
             $customer = MsCustomers::find($sales->customer_id);
             $salesDetails = TrSalesNonDetails::where('sales_non_id', $sales->id)
-                ->select('id', 'product_name as name', 'unit_name as unit', 'qty', 'rate as price', 'amount as total')
+                ->select('id', 'product_code as code', 'product_name as name', 'unit_name as unit', 'qty', 'rate as price', 'amount as total')
                 ->get()->toArray();
             $this->salesFiles = TrSalesNonFiles::where('sales_non_id', $sales->id)->get();
             $sequence = explode("/", $sales->number);
@@ -171,6 +171,7 @@ class SalesNonCreateManager extends Component
     public function add()
     {
         $this->items[] = [
+            'code' => '',
             'name' => '',
             'unit' => '',
             'qty' => 1,
@@ -268,6 +269,7 @@ class SalesNonCreateManager extends Component
                 if ($item['name'] != "") {
                     $dataDetail = [
                         'sales_non_id' => $sales->id,
+                        'product_code' => $item['code'],
                         'product_name' => $item['name'],
                         'unit_name' => $item['unit'],
                         'qty' => $item['qty'],
@@ -321,6 +323,7 @@ class SalesNonCreateManager extends Component
                 if ($item['name'] != "") {
                     $dataDetail = [
                         'sales_non_id' => $this->set_id,
+                        'product_code' => $item['code'],
                         'product_name' => $item['name'],
                         'unit_name' => $item['unit'],
                         'qty' => $item['qty'],

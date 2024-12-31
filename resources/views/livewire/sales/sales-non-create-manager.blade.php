@@ -236,11 +236,12 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
+                                            <th>Code</th>
                                             <th>Description</th>
-                                            <th style="width:200px;">UoM</th>
-                                            <th style="width:150px;">Qty</th>
-                                            <th style="width:200px;">Rate</th>
-                                            <th style="width:200px;">Amount</th>
+                                            <th style="width:150px;">UoM</th>
+                                            <th style="width:120px;">Qty</th>
+                                            <th style="width:180px;">Rate</th>
+                                            <th style="width:180px;">Amount</th>
                                             @if (!isset($is_approved))
                                                 <th style="width:80px;" class="text-center">Action</th>
                                             @endif
@@ -249,6 +250,12 @@
                                     <tbody>
                                         @forelse ($items as $index => $item)
                                             <tr>
+                                                <td>
+                                                    <input type="text" class="form-control"
+                                                        wire:model="items.{{ $index }}.code"
+                                                        placeholder="Code Product"
+                                                        {{ empty($is_approved) ? '' : 'readonly' }}>
+                                                </td>
                                                 <td>
                                                     <div class="input-group">
                                                         <input type="text" class="form-control"
@@ -288,7 +295,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td class="text-center py-2" colspan="6">No items</td>
+                                                <td class="text-center py-2" colspan="7">No items</td>
                                             </tr>
                                         @endforelse
 
