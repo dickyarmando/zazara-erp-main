@@ -28,6 +28,16 @@
         </div>
     @endif
 
+    @if ($sales->is_status == '0')
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            @inject('user', 'App\Models\User')
+            @php
+                $userCanceled = $user->where('id', $sales->updated_by)->first();
+            @endphp
+            Canceled by {{ $userCanceled->name }} at {{ $sales->updated_at }}
+        </div>
+    @endif
+
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between">
             <button type="button" class="btn btn-label-secondary" wire:click="backRedirect"><span
@@ -36,9 +46,13 @@
                 <button type="button" wire:click="printDocument" class="btn btn-primary"><span
                         class="bx bx-printer me-2"></span> Print</button>
             @else
-                @if ($userRoles->is_approved === '1')
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#ApproveModal"
-                        class="btn btn-success"><span class="bx bx-check me-2"></span> Approve Sales</button>
+                @if ($userRoles->is_approved === '1' && $sales->is_status == '1')
+                    <div class="d-flex">
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#ApproveModal"
+                            class="btn btn-success me-2"><span class="bx bx-check me-2"></span> Approve Sales</button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#CancelModal"
+                            class="btn btn-danger"><span class="bx bx-x me-2"></span> Cancel Sales</button>
+                    </div>
                 @endif
             @endif
         </div>
@@ -66,6 +80,25 @@
         </div>
     </div>
 
+    {{-- Cancel --}}
+    <div wire:ignore.self class="modal fade" id="CancelModal" tabindex="-1" product="dialog">
+        <div class="modal-dialog" approve="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Cancel</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to cancel sales {{ $sales->number }}?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" wire:click.prevent="cancelSales()" class="btn btn-danger close-modal"
+                        data-bs-dismiss="modal">Yes, cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
         <script>
             window.addEventListener('print', function() {
@@ -75,6 +108,7 @@
 
             window.addEventListener('close-modal', event => {
                 $('#ApproveModal').modal('hide');
+                $('#CancelModal').modal('hide');
             });
         </script>
     @endpush

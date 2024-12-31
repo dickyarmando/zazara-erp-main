@@ -63,4 +63,20 @@ class SalesViewManager extends Component
         session()->flash('success', 'Approved');
         $this->dispatchBrowserEvent('close-modal');
     }
+
+    public function cancelSales()
+    {
+        $now = Carbon::now();
+        $valid = [
+            'is_status' => '0',
+            'updated_at' => $now->toDateTimeString(),
+            'updated_by' => Auth::user()->id
+        ];
+
+        $tp = TrSales::find($this->set_id);
+        $tp->update($valid);
+
+        session()->flash('success', 'Cancelled');
+        $this->dispatchBrowserEvent('close-modal');
+    }
 }

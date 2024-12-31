@@ -47,10 +47,14 @@
                         @endif
                     </td> --}}
                     <td class="border-start text-center unset">
-                        @if (isset($sales->approved_at))
-                            <span class="badge bg-label-success" text-capitalized> Approved </span>
+                        @if ($sales->is_status == '1')
+                            @if (isset($sales->approved_at))
+                                <span class="badge bg-label-success" text-capitalized> Approved </span>
+                            @else
+                                <span class="badge bg-label-warning" text-capitalized> Waiting Approve </span>
+                            @endif
                         @else
-                            <span class="badge bg-label-warning" text-capitalized> Waiting Approve </span>
+                            <span class="badge bg-label-danger" text-capitalized> Cancelled </span>
                         @endif
                     </td>
                     <td class="border-start text-center">
@@ -71,7 +75,7 @@
                                 class="btn btn-xs btn-success" title="Open Data"><span
                                     class="bx bx-folder-open"></span></button>
                         @endif
-                        @if ($userRoles->is_update == '1')
+                        @if ($userRoles->is_update == '1' && $sales->is_status == '1')
                             <button type="button" wire:click="edit('{{ $sales->id }}')"
                                 class="btn btn-xs btn-secondary" title="Edit Data"><span
                                     class="bx bxs-edit"></span></button>
