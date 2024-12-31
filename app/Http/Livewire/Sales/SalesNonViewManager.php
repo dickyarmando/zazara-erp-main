@@ -15,12 +15,14 @@ use Livewire\Component;
 class SalesNonViewManager extends Component
 {
     public $set_id;
+    public $user_role;
     public $userRoles = [];
 
     public function mount()
     {
         $this->set_id = request()->id;
-        $this->userRoles = PrmRoleMenus::where('menu_id', '31')->where('role_id', Auth::user()->role_id)->first();
+        $this->user_role = Auth::user()->role_id;
+        $this->userRoles = PrmRoleMenus::where('menu_id', '31')->where('role_id', $this->user_role)->first();
     }
 
     public function render()
@@ -77,6 +79,23 @@ class SalesNonViewManager extends Component
         $tp->update($valid);
 
         session()->flash('success', 'Cancelled');
+        $this->dispatchBrowserEvent('close-modal');
+    }
+
+    public function unapproved()
+    {
+        $now = Carbon::now();
+        $valid = [
+            'approved_at' => null,
+            'approved_by' => null,
+            'updated_at' => $now->toDateTimeString(),
+            'updated_by' => Auth::user()->id
+        ];
+
+        $tp = TrSalesNon::find($this->set_id);
+        $tp->update($valid);
+
+        session()->flash('success', 'unapproved');
         $this->dispatchBrowserEvent('close-modal');
     }
 }

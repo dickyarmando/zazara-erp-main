@@ -43,8 +43,15 @@
             <button type="button" class="btn btn-label-secondary" wire:click="backRedirect"><span
                     class="bx bx-arrow-back me-2"></span> Back</button>
             @if (isset($sales->approved_at))
-                <button type="button" wire:click="printDocument" class="btn btn-primary"><span
-                        class="bx bx-printer me-2"></span> Print</button>
+                <div class="d-flex">
+                    <button type="button" wire:click="printDocument" class="btn btn-primary me-2"><span
+                            class="bx bx-printer me-2"></span> Print</button>
+                    @if ($user_role == '1')
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#UnapprovedModal"
+                            class="btn btn-warning me-2"><span class="bx bx-refresh me-2"></span> Unapproved
+                            Sales</button>
+                    @endif
+                </div>
             @else
                 @if ($userRoles->is_approved === '1' && $sales->is_status == '1')
                     <div class="d-flex">
@@ -99,6 +106,25 @@
         </div>
     </div>
 
+    {{-- Unapproved --}}
+    <div wire:ignore.self class="modal fade" id="UnapprovedModal" tabindex="-1" product="dialog">
+        <div class="modal-dialog" unapproved="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Unapproved</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to unapproved sales {{ $sales->number }}?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" wire:click.prevent="unapproved()" class="btn btn-warning close-modal"
+                        data-bs-dismiss="modal">Yes, unapproved</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
         <script>
             window.addEventListener('print', function() {
@@ -109,6 +135,7 @@
             window.addEventListener('close-modal', event => {
                 $('#ApproveModal').modal('hide');
                 $('#CancelModal').modal('hide');
+                $('#UnapprovedModal').modal('hide');
             });
         </script>
     @endpush
