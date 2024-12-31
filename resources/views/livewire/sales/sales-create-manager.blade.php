@@ -237,7 +237,7 @@
                                     <thead>
                                         <tr>
                                             <th>Description</th>
-                                            <th style="width:200px;">Unit</th>
+                                            <th style="width:200px;">UoM</th>
                                             <th style="width:150px;">Qty</th>
                                             <th style="width:200px;">Rate</th>
                                             <th style="width:200px;">Amount</th>

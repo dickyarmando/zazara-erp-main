@@ -38,7 +38,7 @@
             @else
                 @if ($userRoles->is_approved === '1')
                     <button type="button" data-bs-toggle="modal" data-bs-target="#ApproveModal"
-                        class="btn btn-success"><span class="bx bx-check me-2"></span> Approve Purchase</button>
+                        class="btn btn-success"><span class="bx bx-check me-2"></span> Approve Sales</button>
                 @endif
             @endif
         </div>
