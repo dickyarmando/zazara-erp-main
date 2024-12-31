@@ -73,7 +73,7 @@
                 </td>
                 <td class="px-2" style="border: 1px solid #000;"><b>Nama Barang</b></td>
                 <td class="px-2" style="border: 1px solid #000;"><b>Qty</b></td>
-                <td class="px-2" style="border: 1px solid #000;"><b>Satuan</b></td>
+                <td class="px-2" style="border: 1px solid #000;"><b>UoM</b></td>
                 <td class="px-2" style="border: 1px solid #000;min-width: 120px;"><b>Harga (Rp)</b></td>
                 <td class="px-2" style="border: 1px solid #000;min-width: 120px;"><b>Total (Rp)</b></td>
             </tr>

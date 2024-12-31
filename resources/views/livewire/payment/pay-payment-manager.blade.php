@@ -38,7 +38,8 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="w-px-75">No</th>
+                            <th class="w-px-75"><input class="form-check-input" type="checkbox" value=""
+                                    id="defaultCheck2"></th>
                             <th class="sort" wire:click="sortOrder('number')">Purchase Number
                                 {!! $sortLink !!}
                             </th>
@@ -59,7 +60,8 @@
                         @foreach ($purchases as $purchase)
                             <tr>
                                 <td class="text-center">
-                                    {{ ($purchases->currentPage() - 1) * $purchases->perPage() + $loop->index + 1 }}
+                                    <input class="form-check-input" type="checkbox" value="{{ $purchase->id }}"
+                                        id="defaultCheck2">
                                 </td>
                                 <td class="border-start text-center">{{ $purchase->number }}</td>
                                 <td class="border-start text-center">{{ $purchase->date }}</td>
