@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Purchase;
 
+use App\Models\MsProducts;
 use App\Models\MsSuppliers;
 use App\Models\PrmConfig;
 use App\Models\PrmRoleMenus;
@@ -27,6 +28,12 @@ class PurchaseCreateManager extends Component
     public $searchKeyword = '';
     public $set_id;
     public $set_id_file;
+    public $set_index;
+
+    public $sortColumnItem = "name";
+    public $sortOrderItem = "asc";
+    public $sortLinkItem = '<i class="sorticon fa-solid fa-caret-up"></i>';
+    public $searchKeywordItem = '';
 
     public $month;
     public $year;
@@ -125,7 +132,16 @@ class PurchaseCreateManager extends Component
         }
         $suppliers = $suppliers->where('is_status', '1')->paginate(10);
 
-        return view('livewire.purchase.purchase-create-manager', ['suppliers' => $suppliers]);
+        $products = MsProducts::orderby($this->sortColumnItem, $this->sortOrderItem)
+            ->select('id', 'name', 'is_status');
+
+        if (!empty($this->searchKeywordItem)) {
+            $products->orWhere('name', 'like', "%" . $this->searchKeywordItem . "%")->where('is_status', '1');
+        }
+
+        $products = $products->where('is_status', '1')->paginate(10);
+
+        return view('livewire.purchase.purchase-create-manager', compact('suppliers', 'products'));
     }
 
     public function sortOrder($columnName = "")
@@ -140,6 +156,20 @@ class PurchaseCreateManager extends Component
         }
         $this->sortLink = '<i class="sorticon fa-solid fa-caret-' . $caretOrder . '"></i>';
         $this->sortColumn = $columnName;
+    }
+
+    public function sortOrderItem($columnName = "")
+    {
+        $caretOrder = "up";
+        if ($this->sortOrderItem == 'asc') {
+            $this->sortOrderItem = 'desc';
+            $caretOrder = "down";
+        } else {
+            $this->sortOrderItem = 'asc';
+            $caretOrder = "up";
+        }
+        $this->sortLinkItem = '<i class="sorticon fa-solid fa-caret-' . $caretOrder . '"></i>';
+        $this->sortColumnItem = $columnName;
     }
 
     public function add()
@@ -253,6 +283,13 @@ class PurchaseCreateManager extends Component
                     ];
 
                     TrPurchaseDetails::create($dataDetail);
+
+                    $products = MsProducts::where('name', $item['name'])->where('is_status', '1')->first();
+                    if (!isset($products->id)) {
+                        $products = MsProducts::create([
+                            'name' => $item['name'],
+                        ]);
+                    }
                 }
             }
 
@@ -301,6 +338,13 @@ class PurchaseCreateManager extends Component
                     ];
 
                     TrPurchaseDetails::create($dataDetail);
+
+                    $products = MsProducts::where('name', $item['name'])->where('is_status', '1')->first();
+                    if (!isset($products->id)) {
+                        $products = MsProducts::create([
+                            'name' => $item['name'],
+                        ]);
+                    }
                 }
             }
 
@@ -350,5 +394,18 @@ class PurchaseCreateManager extends Component
 
         $this->purchaseFiles = TrPurchaseFiles::where('purchase_id', $this->set_id)->get();
         $this->set_id_file = null;
+    }
+
+    public function setIndex($index)
+    {
+        $this->set_index = $index;
+    }
+
+    public function chooseProducts($id)
+    {
+        $product = MsProducts::find($id);
+        $this->items[$this->set_index]['name'] = $product->name;
+
+        $this->dispatchBrowserEvent('close-modal');
     }
 }

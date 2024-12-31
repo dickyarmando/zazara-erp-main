@@ -249,9 +249,20 @@
                                     <tbody>
                                         @forelse ($items as $index => $item)
                                             <tr>
-                                                <td><input type="text" class="form-control"
-                                                        wire:model="items.{{ $index }}.name"
-                                                        {{ empty($is_approved) ? '' : 'readonly' }}></td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control"
+                                                            wire:model="items.{{ $index }}.name"
+                                                            placeholder="Description"
+                                                            {{ empty($is_approved) ? '' : 'readonly' }}>
+                                                        <button type="button" class="btn btn-outline-primary"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#ChooseModalProducts"
+                                                            wire:click.prevent="setIndex('{{ $index }}')"
+                                                            {{ empty($is_approved) ? '' : 'disabled' }}><i
+                                                                class="fa fa-search"></i></button>
+                                                    </div>
+                                                </td>
                                                 <td><input type="text" class="form-control"
                                                         wire:model="items.{{ $index }}.unit"
                                                         {{ empty($is_approved) ? '' : 'readonly' }}></td>
@@ -372,10 +383,67 @@
         </form>
     </div>
 
+    {{-- Products --}}
+    <div wire:ignore.self class="modal fade" id="ChooseModalProducts" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Choose Product</h5>
+                    <button type="button" class="btn-close" wire:click="closeModal"></button>
+                </div>
+                <div class="modal-body position-relative">
+
+                    <div class="d-md-flex align-items-center justify-content-end mb-3">
+                        <input type="text" class="form-control shadow-sm" placeholder="Search"
+                            style="width: 250px;" wire:model="searchKeywordItem">
+                    </div>
+                    <div wire:loading class="position-absolute fs-1 top-50 start-50 z-3 text-info">
+                        <i class="fa fa-spin fa-spinner"></i>
+                    </div>
+                    <table class="table card-table table-hover table-striped table-sm table-bordered">
+                        <thead>
+                            <tr class="border-top">
+                                <th class="w-px-75">No</th>
+                                <th class="sort" wire:click="sortOrderItem('name')">Name Product
+                                    {!! $sortLinkItem !!}</th>
+                                <th class="w-px-150">#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($products as $product)
+                                <tr>
+                                    <td class="text-center">
+                                        {{ ($products->currentPage() - 1) * $products->perPage() + $loop->index + 1 }}
+                                    </td>
+                                    <td>{{ $product->name }}</td>
+                                    <td><button class="btn btn-xs btn-outline-danger w-100"
+                                            wire:click.prevent="chooseProducts('{{ $product->id }}')"><i
+                                                class="fa fa-plus me-2"></i> Select</button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td class="text-center py-2" colspan="3">No Products
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <div class="mt-3">
+                        {{ $products->links('admin.custom-pagination') }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
         <script>
             window.addEventListener('close-modal', event => {
                 $('#ChooseModalCustomers').modal('hide');
+                $('#ChooseModalProducts').modal('hide');
             });
         </script>
     @endpush
