@@ -14,7 +14,7 @@
     <div class="col-6 mt-4">
         <div class="row">
             <div class="col-5">
-                Nomor Invoice
+                No. Invoice
             </div>
             <div class="col-7">
                 : {{ $invoices->number }}
@@ -26,7 +26,7 @@
                 : {{ date('d-m-Y', strtotime($invoices->date)) }}
             </div>
             <div class="col-5">
-                Nomor Sales Order
+                No. SO
             </div>
             <div class="col-7">
                 : {{ $sales->number }}
