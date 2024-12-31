@@ -39,10 +39,10 @@
                     <thead>
                         <tr>
                             <th class="w-px-75">No</th>
-                            <th class="sort" wire:click="sortOrder('invoice_number')">Invoice Number
+                            <th class="sort" wire:click="sortOrder('invoice_number')">Invoice No
                                 {!! $sortLink !!}
                             </th>
-                            <th class="sort" wire:click="sortOrder('number')">Sales Number
+                            <th class="sort" wire:click="sortOrder('number')">Sales No
                                 {!! $sortLink !!}
                             </th>
                             <th class="sort" wire:click="sortOrder('date')">Date {!! $sortLink !!}
@@ -55,6 +55,8 @@
                             </th>
                             <th class="sort" wire:click="sortOrder('rest')">Rest {!! $sortLink !!}
                             </th>
+                            <th class="sort no-wrap" wire:click="sortOrder('due_date')">Due Date {!! $sortLink !!}
+                            </th>
                             <th class="w-px-150">Action</th>
                         </tr>
                     </thead>
@@ -66,7 +68,7 @@
                                 </td>
                                 <td class="border-start text-center">{{ $sales->invoice_number }}</td>
                                 <td class="border-start text-center">{{ $sales->number }}</td>
-                                <td class="border-start text-center">{{ $sales->invoice_date }}</td>
+                                <td class="border-start text-center no-wrap">{{ $sales->invoice_date }}</td>
                                 <td class="border-start">{{ $sales->customer_name }}</td>
                                 <td class="border-start text-right">{{ number_format($sales->total, 2) }}</td>
                                 <td class="border-start text-right">{{ number_format($sales->payment, 2) }}</td>
@@ -75,6 +77,7 @@
                                 @else
                                     <td class="border-start text-right">{{ number_format($sales->rest, 2) }}</td>
                                 @endif
+                                <td class="border-start text-center">{{ $sales->due_date }}</td>
                                 <td class="border-start text-center">
                                     <button type="button"
                                         wire:click="view('{{ $sales->invoice_id }}','{{ $sales->type }}')"
