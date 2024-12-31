@@ -5,9 +5,12 @@ namespace App\Http\Livewire\Invoice;
 use App\Models\MsCustomers;
 use App\Models\PrmCompanies;
 use App\Models\PrmConfig;
+use App\Models\PrmRoleMenus;
 use App\Models\TrInvoicesNon;
 use App\Models\TrSalesNon;
 use App\Models\TrSalesNonDetails;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class InvoiceNonViewManager extends Component
@@ -16,6 +19,7 @@ class InvoiceNonViewManager extends Component
     public $set_inv_id;
 
     public $invoices = [];
+    public $userRoles = [];
 
     public function mount()
     {
@@ -23,6 +27,7 @@ class InvoiceNonViewManager extends Component
         $invoices = TrInvoicesNon::find($this->set_inv_id);
         $this->set_id = $invoices->sales_non_id;
         $this->invoices = $invoices;
+        $this->userRoles = PrmRoleMenus::where('menu_id', '11')->where('role_id', Auth::user()->role_id)->first();
     }
     public function render()
     {
@@ -47,5 +52,22 @@ class InvoiceNonViewManager extends Component
     public function printDocument()
     {
         $this->dispatchBrowserEvent('print');
+    }
+
+    public function approve()
+    {
+        $now = Carbon::now();
+        $valid = [
+            'approved_at' => $now->toDateTimeString(),
+            'approved_by' => Auth::user()->id,
+            'updated_at' => $now->toDateTimeString(),
+            'updated_by' => Auth::user()->id
+        ];
+
+        $tp = TrInvoicesNon::find($this->set_inv_id);
+        $tp->update($valid);
+
+        session()->flash('success', 'Approved');
+        $this->dispatchBrowserEvent('close-modal');
     }
 }

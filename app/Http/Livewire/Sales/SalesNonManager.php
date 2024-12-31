@@ -22,10 +22,13 @@ class SalesNonManager extends Component
     public $roleFilter = '';
     public $set_id;
     public $userRoles = [];
+    public $userRolesReceives = [];
+
 
     public function mount()
     {
         $this->userRoles = PrmRoleMenus::where('menu_id', '31')->where('role_id', Auth::user()->role_id)->first();
+        $this->userRolesReceives = PrmRoleMenus::where('menu_id', '11')->where('role_id', Auth::user()->role_id)->first();
     }
 
     public function render()

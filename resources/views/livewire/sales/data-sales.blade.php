@@ -81,9 +81,13 @@
                                     class="bx bxs-edit"></span></button>
                         @endif
                         @if ($sales->is_invoice == '0' && $sales->approved_at != null)
-                            <button type="button" wire:click="createInvoice('{{ $sales->id }}')"
-                                class="btn btn-xs btn-primary" title="Create Invoice"><span
-                                    class="bx bxs-receipt"></span></button>
+                            @if (isset($userRolesReceives))
+                                @if ($userRolesReceives->is_show == '1')
+                                    <button type="button" wire:click="createInvoice('{{ $sales->id }}')"
+                                        class="btn btn-xs btn-primary" title="Create Invoice"><span
+                                            class="bx bxs-receipt"></span></button>
+                                @endif
+                            @endif
                         @endif
                     </td>
                 </tr>
