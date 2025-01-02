@@ -56,7 +56,7 @@
                         {{ $index + 1 }}
                     </td>
                     <td class="px-2" style="border: 1px solid #000;">{{ $item['name'] }}</td>
-                    <td class="px-2 text-center" style="border: 1px solid #000;">{{ $item['qty'] }}</td>
+                    <td class="px-2 text-center" style="border: 1px solid #000;">{{ intval($item['qty']) }}</td>
                     <td class="px-2 text-center" style="border: 1px solid #000;">{{ $item['unit'] }}</td>
                     <td class="px-2 text-right" style="border: 1px solid #000;">
                         {{ number_format($item['price'], 2, ',', '.') }}
