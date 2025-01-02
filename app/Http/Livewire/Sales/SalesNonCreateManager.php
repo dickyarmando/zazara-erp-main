@@ -68,7 +68,7 @@ class SalesNonCreateManager extends Component
             $sales = TrSalesNon::find($_REQUEST['id']);
             $customer = MsCustomers::find($sales->customer_id);
             $salesDetails = TrSalesNonDetails::where('sales_non_id', $sales->id)
-                ->select('id', 'product_code as code', 'product_name as name', 'unit_name as unit', 'qty', 'rate as price', 'amount as total')
+                ->select('id', 'product_code as code', 'product_name as name', 'unit_name as unit', DB::raw('CEIL(qty) as qty'), DB::raw('CEIL(rate) as price'), DB::raw('CEIL(amount) as total'))
                 ->get()->toArray();
             $this->salesFiles = TrSalesNonFiles::where('sales_non_id', $sales->id)->get();
             $sequence = explode("/", $sales->number);
@@ -85,10 +85,10 @@ class SalesNonCreateManager extends Component
             $this->sales_id = $sales->sales_id;
             $this->sales_name = isset($userSales->name) ? $userSales->name : "";
             $this->notes = $sales->notes;
-            $this->subtotal = $sales->subtotal;
-            $this->delivery_fee = $sales->delivery_fee;
-            $this->discount = $sales->discount;
-            $this->total = $sales->total;
+            $this->subtotal = number_format($sales->subtotal, 0, '.', '');
+            $this->delivery_fee = number_format($sales->delivery_fee, 0, '.', '');
+            $this->discount = number_format($sales->discount, 0, '.', '');
+            $this->total = number_format($sales->total, 0, '.', '');
             $this->items = $salesDetails;
             if (isset($sales->approved_at)) {
                 $this->is_approved = '1';
@@ -204,7 +204,7 @@ class SalesNonCreateManager extends Component
     public function calculate($id)
     {
         $item = $this->items[$id];
-        $item['total'] = $item['qty'] * $item['price'];
+        $item['total'] = number_format($item['qty'] * $item['price'], 0, '.', '');
         $this->items[$id] = $item;
 
         $this->calculateTotal();
@@ -212,8 +212,8 @@ class SalesNonCreateManager extends Component
 
     public function calculateTotal()
     {
-        $this->subtotal = array_sum(array_column($this->items, 'total'));
-        $this->total = ($this->subtotal - $this->discount) + $this->delivery_fee;
+        $this->subtotal = number_format(array_sum(array_column($this->items, 'total')), 0, '.', '');
+        $this->total = number_format(($this->subtotal - $this->discount) + $this->delivery_fee, 0, '.', '');
     }
 
     public function remove($index)

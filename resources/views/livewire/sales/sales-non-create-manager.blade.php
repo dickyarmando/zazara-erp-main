@@ -300,7 +300,7 @@
                                         @endforelse
 
                                         <tr>
-                                            <td colspan="2">
+                                            <td colspan="3">
                                                 @if (!isset($is_approved))
                                                     <button type="button" wire:click="add"
                                                         class="btn btn-primary btn-sm"><i
@@ -317,7 +317,7 @@
                                             @endif
                                         </tr>
                                         <tr>
-                                            <td colspan="2">&nbsp;</td>
+                                            <td colspan="3">&nbsp;</td>
                                             <td colspan="2" class="text-right">Delivery Fee</td>
                                             <td><input type="text" class="form-control text-end"
                                                     wire:model="delivery_fee"
@@ -329,7 +329,7 @@
                                             @endif
                                         </tr>
                                         <tr>
-                                            <td colspan="2">&nbsp;</td>
+                                            <td colspan="3">&nbsp;</td>
                                             <td colspan="2" class="text-right">Discount</td>
                                             <td><input type="text" class="form-control text-end"
                                                     wire:model="discount" wire:blur.debounce.250ms="calculateTotal()"
@@ -341,7 +341,7 @@
                                             @endif
                                         </tr>
                                         <tr>
-                                            <td colspan="2">&nbsp;</td>
+                                            <td colspan="3">&nbsp;</td>
                                             <td colspan="2" class="text-right">Total</td>
                                             <td><input type="text" class="form-control text-end"
                                                     wire:model="total" readonly>

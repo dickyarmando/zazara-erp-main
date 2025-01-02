@@ -43,45 +43,46 @@
                     </td>
                     <td class="px-2" style="border: 1px solid #000;">{{ $item['code'] }}</td>
                     <td class="px-2" style="border: 1px solid #000;">{{ $item['name'] }}</td>
-                    <td class="px-2 text-center" style="border: 1px solid #000;">{{ intval($item['qty']) }}</td>
+                    <td class="px-2 text-center" style="border: 1px solid #000;">
+                        {{ number_format($item['qty'], 0, ',', '.') }}</td>
                     <td class="px-2 text-center" style="border: 1px solid #000;">{{ $item['unit'] }}</td>
                     <td class="px-2 text-right" style="border: 1px solid #000;">
-                        {{ number_format($item['price'], 2, ',', '.') }}
+                        {{ number_format($item['price'], 0, ',', '.') }}
                     </td>
                     <td class="px-2 text-right" style="border: 1px solid #000;">
-                        {{ number_format($item['total'], 2, ',', '.') }}
+                        {{ number_format($item['total'], 0, ',', '.') }}
                     </td>
                 </tr>
             @endforeach
             <tr>
                 @php
                     $terbilang = new \NumberFormatter('id', \NumberFormatter::SPELLOUT);
-                    $terbilang = $terbilang->format(round($sales->total, 2));
+                    $terbilang = $terbilang->format(round($sales->total, 0));
                     $terbilang = str_replace('juts', 'juta', $terbilang);
                 @endphp
                 <td colspan="5" rowspan="5"><b>Terbilang : <span
                             class="text-capitalize">{{ $terbilang }}</span></b></td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">SUBTOTAL</td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">
-                    {{ number_format($sales->subtotal, 2, ',', '.') }}</td>
+                    {{ number_format($sales->subtotal, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td class="px-2 text-right" style="border: 1px solid #000;">PENGIRIMAN
                 </td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">
-                    {{ number_format($sales->delivery_fee, 2, ',', '.') }}</td>
+                    {{ number_format($sales->delivery_fee, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td class="px-2 text-right" style="border: 1px solid #000;">DISCOUNT
                 </td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">
-                    {{ number_format($sales->discount, 2, ',', '.') }}</td>
+                    {{ number_format($sales->discount, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td class="px-2 text-right" style="border: 1px solid #000;"><b>TOTAL</b>
                 </td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">
-                    <b>{{ number_format($sales->total, 2, ',', '.') }}</b>
+                    <b>{{ number_format($sales->total, 0, ',', '.') }}</b>
                 </td>
             </tr>
         </table>

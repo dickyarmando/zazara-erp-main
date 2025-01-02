@@ -44,7 +44,7 @@ class InvoiceCreateManager extends Component
         $sales = TrSales::find($so);
         $customer = MsCustomers::find($sales->customer_id);
         $salesDetails = TrSalesDetails::where('sales_id', $sales->id)
-            ->select('id', 'product_name as name', 'unit_name as unit', 'qty', 'rate as price', 'amount as total')
+            ->select('id', 'product_name as name', 'unit_name as unit', DB::raw('CEIL(qty) as qty'), DB::raw('CEIL(rate) as price'), DB::raw('CEIL(amount) as total'))
             ->get()->toArray();
         $this->salesFiles = TrSalesFiles::where('sales_id', $sales->id)->get();
 
@@ -61,12 +61,12 @@ class InvoiceCreateManager extends Component
         $this->customer_id = $sales->customer_id;
         $this->customer_name = $customer->company_name;
         $this->due_termin = 0;
-        $this->subtotal = $sales->subtotal;
-        $this->ppn = $sales->ppn;
-        $this->ppn_amount = $sales->ppn_amount;
-        $this->delivery_fee = $sales->delivery_fee;
-        $this->discount = $sales->discount;
-        $this->total = $sales->total;
+        $this->subtotal = number_format($sales->subtotal, 0, '.', '');
+        $this->ppn = number_format($sales->ppn, 0, '.', '');
+        $this->ppn_amount = number_format($sales->ppn_amount, 0, '.', '');
+        $this->delivery_fee = number_format($sales->delivery_fee, 0, '.', '');
+        $this->discount = number_format($sales->discount, 0, '.', '');
+        $this->total = number_format($sales->total, 0, '.', '');
         $this->items = $salesDetails;
     }
 

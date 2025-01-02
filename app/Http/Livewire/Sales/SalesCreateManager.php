@@ -71,7 +71,7 @@ class SalesCreateManager extends Component
             $sales = TrSales::find($_REQUEST['id']);
             $customer = MsCustomers::find($sales->customer_id);
             $salesDetails = TrSalesDetails::where('sales_id', $sales->id)
-                ->select('id', 'product_code as code', 'product_name as name', 'unit_name as unit', 'qty', 'rate as price', 'amount as total')
+                ->select('id', 'product_code as code', 'product_name as name', 'unit_name as unit', DB::raw('CEIL(qty) as qty'), DB::raw('CEIL(rate) as price'), DB::raw('CEIL(amount) as total'))
                 ->get()->toArray();
             $this->salesFiles = TrSalesFiles::where('sales_id', $sales->id)->get();
             $sequence = explode("/", $sales->number);
@@ -88,12 +88,12 @@ class SalesCreateManager extends Component
             $this->sales_id = $sales->sales_id;
             $this->sales_name = isset($userSales->name) ? $userSales->name : "";
             $this->notes = $sales->notes;
-            $this->subtotal = $sales->subtotal;
-            $this->ppn = $sales->ppn;
-            $this->ppn_amount = $sales->ppn_amount;
-            $this->delivery_fee = $sales->delivery_fee;
-            $this->discount = $sales->discount;
-            $this->total = $sales->total;
+            $this->subtotal = number_format($sales->subtotal, 0, '.', '');
+            $this->ppn = number_format($sales->ppn, 0, '.', '');
+            $this->ppn_amount = number_format($sales->ppn_amount, 0, '.', '');
+            $this->delivery_fee = number_format($sales->delivery_fee, 0, '.', '');
+            $this->discount = number_format($sales->discount, 0, '.', '');
+            $this->total = number_format($sales->total, 0, '.', '');
             $this->items = $salesDetails;
             if (isset($sales->approved_at)) {
                 $this->is_approved = '1';
@@ -212,7 +212,7 @@ class SalesCreateManager extends Component
     public function calculate($id)
     {
         $item = $this->items[$id];
-        $item['total'] = $item['qty'] * $item['price'];
+        $item['total'] = number_format($item['qty'] * $item['price'], 2, '.', '');
         $this->items[$id] = $item;
 
         $this->calculateTotal();
@@ -220,9 +220,9 @@ class SalesCreateManager extends Component
 
     public function calculateTotal()
     {
-        $this->subtotal = array_sum(array_column($this->items, 'total'));
-        $this->ppn_amount = $this->subtotal * $this->ppn / 100;
-        $this->total = ($this->subtotal - $this->discount) + $this->ppn_amount + $this->delivery_fee;
+        $this->subtotal = number_format(array_sum(array_column($this->items, 'total')), 0, '.', '');
+        $this->ppn_amount = number_format($this->subtotal * $this->ppn / 100, 0, '.', '');
+        $this->total = number_format(($this->subtotal - $this->discount) + $this->ppn_amount + $this->delivery_fee, 0, '.', '');
     }
 
     public function remove($index)

@@ -36,7 +36,7 @@
                     <td class="border-start text-center no-wrap">{{ $purchase->date }}</td>
                     <td class="border-start">{{ $purchase->supplier_name }}</td>
                     <td class="border-start unset">{{ $purchase->notes }}</td>
-                    <td class="border-start text-right">{{ number_format($purchase->total, 2) }}</td>
+                    <td class="border-start text-right">{{ number_format($purchase->total, 0) }}</td>
                     <td class="border-start text-center">
                         @if ($purchase->is_payed == '1')
                             <span class="badge bg-label-success" text-capitalized> Paid </span>

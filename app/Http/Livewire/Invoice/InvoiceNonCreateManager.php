@@ -42,7 +42,7 @@ class InvoiceNonCreateManager extends Component
         $sales = TrSalesNon::find($so);
         $customer = MsCustomers::find($sales->customer_id);
         $salesDetails = TrSalesNonDetails::where('sales_non_id', $sales->id)
-            ->select('id', 'product_name as name', 'unit_name as unit', 'qty', 'rate as price', 'amount as total')
+            ->select('id', 'product_name as name', 'unit_name as unit', DB::raw('CEIL(qty) as qty'), DB::raw('CEIL(rate) as price'), DB::raw('CEIL(amount) as total'))
             ->get()->toArray();
         $this->salesFiles = TrSalesNonFiles::where('sales_non_id', $sales->id)->get();
 
@@ -59,10 +59,10 @@ class InvoiceNonCreateManager extends Component
         $this->customer_id = $sales->customer_id;
         $this->customer_name = $customer->company_name;
         $this->due_termin = 0;
-        $this->subtotal = $sales->subtotal;
-        $this->delivery_fee = $sales->delivery_fee;
-        $this->discount = $sales->discount;
-        $this->total = $sales->total;
+        $this->subtotal = number_format($sales->subtotal, 0, '.', '');
+        $this->delivery_fee = number_format($sales->delivery_fee, 0, '.', '');
+        $this->discount = number_format($sales->discount, 0, '.', '');
+        $this->total = number_format($sales->total, 0, '.', '');
         $this->items = $salesDetails;
     }
 
