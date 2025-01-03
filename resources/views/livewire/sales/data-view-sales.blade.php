@@ -67,8 +67,7 @@
                     {{ number_format($sales->subtotal, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td class="px-2 text-right" style="border: 1px solid #000;">(
-                    {{ number_format($sales->ppn, 0, ',', '.') }} % )
+                <td class="px-2 text-right" style="border: 1px solid #000;">PPN
                 </td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">
                     {{ number_format($sales->ppn_amount, 0, ',', '.') }}</td>
