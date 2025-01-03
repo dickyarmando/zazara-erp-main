@@ -80,8 +80,7 @@
                     {{ number_format($purchase->subtotal, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td class="px-2 text-right" style="border: 1px solid #000;">PPN (
-                    {{ number_format($purchase->ppn, 0, ',', '.') }} % )
+                <td class="px-2 text-right" style="border: 1px solid #000;">PPN
                 </td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">
                     {{ number_format($purchase->ppn_amount, 0, ',', '.') }}</td>
