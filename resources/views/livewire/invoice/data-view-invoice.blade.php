@@ -83,7 +83,7 @@
                         {{ $index + 1 }}
                     </td>
                     <td class="px-2" style="border: 1px solid #000;">{{ $item['name'] }}</td>
-                    <td class="px-2 text-center" style="border: 1px solid #000;">
+                    <td class="px-2 text-right" style="border: 1px solid #000;">
                         {{ number_format($item['qty'], 0, ',', '.') }}</td>
                     <td class="px-2 text-center" style="border: 1px solid #000;">{{ $item['unit'] }}</td>
                     <td class="px-2 text-right" style="border: 1px solid #000;">
@@ -108,8 +108,7 @@
             </tr>
             @if (isset($sales->ppn))
                 <tr>
-                    <td class="px-2 text-right" style="border: 1px solid #000;">PPN (
-                        {{ number_format($sales->ppn, 0, ',', '.') }} % )
+                    <td class="px-2 text-right" style="border: 1px solid #000;">PPN
                     </td>
                     <td class="px-2 text-right" style="border: 1px solid #000;">
                         {{ number_format($sales->ppn_amount, 0, ',', '.') }}</td>
