@@ -67,7 +67,7 @@ class PurchaseNonCreateManager extends Component
             $purchase = TrPurchaseNon::find($_REQUEST['id']);
             $supplier = MsSuppliers::find($purchase->supplier_id);
             $purchaseDetails = TrPurchaseNonDetails::where('purchase_non_id', $purchase->id)
-                ->select('id', 'product_name as name', 'unit_name as unit', DB::raw('CEIL(qty) as qty'), DB::raw('CEIL(rate) as price'), DB::raw('CEIL(amount) as total'))
+                ->select('id', 'product_name as name', 'unit_name as unit', DB::raw('CEIL(qty) as qty'), 'rate as price', DB::raw('CEIL(amount) as total'))
                 ->get()->toArray();
             $this->purchaseFiles = TrPurchaseNonFiles::where('purchase_non_id', $purchase->id)->get();
             $sequence = explode("/", $purchase->number);

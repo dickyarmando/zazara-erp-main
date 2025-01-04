@@ -68,7 +68,7 @@ class SalesNonCreateManager extends Component
             $sales = TrSalesNon::find($_REQUEST['id']);
             $customer = MsCustomers::find($sales->customer_id);
             $salesDetails = TrSalesNonDetails::where('sales_non_id', $sales->id)
-                ->select('id', 'product_code as code', 'product_name as name', 'unit_name as unit', DB::raw('CEIL(qty) as qty'), DB::raw('CEIL(rate) as price'), DB::raw('CEIL(amount) as total'))
+                ->select('id', 'product_code as code', 'product_name as name', 'unit_name as unit', DB::raw('CEIL(qty) as qty'), 'rate as price', DB::raw('CEIL(amount) as total'))
                 ->get()->toArray();
             $this->salesFiles = TrSalesNonFiles::where('sales_non_id', $sales->id)->get();
             $sequence = explode("/", $sales->number);

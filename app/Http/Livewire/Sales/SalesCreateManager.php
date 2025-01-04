@@ -71,7 +71,7 @@ class SalesCreateManager extends Component
             $sales = TrSales::find($_REQUEST['id']);
             $customer = MsCustomers::find($sales->customer_id);
             $salesDetails = TrSalesDetails::where('sales_id', $sales->id)
-                ->select('id', 'product_code as code', 'product_name as name', 'unit_name as unit', DB::raw('CEIL(qty) as qty'), DB::raw('CEIL(rate) as price'), DB::raw('CEIL(amount) as total'))
+                ->select('id', 'product_code as code', 'product_name as name', 'unit_name as unit', DB::raw('CEIL(qty) as qty'), 'rate as price', DB::raw('CEIL(amount) as total'))
                 ->get()->toArray();
             $this->salesFiles = TrSalesFiles::where('sales_id', $sales->id)->get();
             $sequence = explode("/", $sales->number);
