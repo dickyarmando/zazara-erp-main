@@ -216,7 +216,10 @@ class PurchaseCreateManager extends Component
     public function calculateTotal()
     {
         $this->subtotal = number_format(array_sum(array_column($this->items, 'total')), 0, '.', '');
-        $this->ppn_amount = number_format($this->subtotal * $this->ppn / 100, 0, '.', '');
+
+        $ppnValue = $this->subtotal * $this->ppn / 100;
+
+        $this->ppn_amount = number_format(floor($ppnValue), 0, '.', '');
         $this->total = number_format(($this->subtotal - $this->discount) + $this->ppn_amount + $this->delivery_fee, 0, '.', '');
     }
 
