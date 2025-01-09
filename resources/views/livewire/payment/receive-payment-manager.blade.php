@@ -29,6 +29,13 @@
                         <input type="text" class="form-control w-100" placeholder="Search"
                             wire:model.debounce.500ms="searchKeyword">
                     </div>
+                    <div class="col-sm-8 col-xs-12 text-right">
+                        <div class="d-md-flex justify-content-end">
+                            <button type="button" wire:click="receiveMultiple()" class="btn btn-success"
+                                title="Receive" data-bs-toggle="modal" data-bs-target="#ReceiveModal"><i
+                                    class="bx bx-money me-2"></i>Receives</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="panel-body table-responsive position-relative">
@@ -38,7 +45,9 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="w-px-75">No</th>
+                            <th class="w-px-75"><input class="form-check-input" type="checkbox" id="checkAll"
+                                    wire:model="selectAll">
+                            </th>
                             <th class="sort" wire:click="sortOrder('invoice_number')">Invoice No
                                 {!! $sortLink !!}
                             </th>
@@ -64,7 +73,13 @@
                         @foreach ($saless as $sales)
                             <tr>
                                 <td class="text-center">
-                                    {{ ($saless->currentPage() - 1) * $saless->perPage() + $loop->index + 1 }}
+                                    @if ($sales->type == 'Tax')
+                                        <input class="form-check-input" type="checkbox" value="{{ $sales->invoice_id }}"
+                                            wire:model="selected">
+                                    @else
+                                        <input class="form-check-input" type="checkbox" value="{{ $sales->invoice_id }}"
+                                            wire:model="selectedN">
+                                    @endif
                                 </td>
                                 <td class="border-start text-center">{{ $sales->invoice_number }}</td>
                                 <td class="border-start text-center">{{ $sales->number }}</td>
@@ -101,7 +116,135 @@
         </div>
     </div>
 
+    {{-- Receive --}}
+    <div wire:ignore.self class="modal fade" id="ReceiveModal" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" receive="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@yield('title') Multiple</h5>
+                    <button type="button" class="btn-close" wire:click="closeModal" aria-label="Close"></button>
+                </div>
+
+                <form wire:submit.prevent="store">
+                    <div class="modal-body">
+
+                        <x-flash-alert />
+
+                        <div class="accordion" id="accordionExample">
+                            @foreach ($invReceiveMultiple as $key => $val)
+                                <div class="card accordion-item active">
+                                    <h2 class="accordion-header" id="heading{{ $key }}">
+                                        <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                                            data-bs-target="#accordion{{ $key }}" aria-expanded="true"
+                                            aria-controls="accordionOne{{ $key }}">
+                                            {{ $val['number'] }}
+                                        </button>
+                                    </h2>
+
+                                    <div id="accordion{{ $key }}" class="accordion-collapse collapse show"
+                                        data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <div class="d-flex justify-content-between bg-lighter p-2 mb-4">
+                                                <p class="mb-0">Sales Balance:</p>
+                                                <p class="fw-medium mb-0">Rp.
+                                                    {{ number_format($val['rest'], 2, ',', '.') }}</p>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Receive Amount <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text"
+                                                    wire:model="invReceiveMultiple.{{ $key }}.amount"
+                                                    class="form-control @error('invReceiveMultiple.{{ $key }}.amount') is-invalid @enderror"
+                                                    value="Rp. {{ number_format($val['rest'], 2, ',', '.') }}"
+                                                    onclick="this.select()">
+                                                @error('invReceiveMultiple.{{ $key }}.amount')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Date <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="date"
+                                                    wire:model="invReceiveMultiple.{{ $key }}.date"
+                                                    class="form-control @error('invReceiveMultiple.{{ $key }}.date') is-invalid @enderror"
+                                                    placeholder="Date">
+                                                @error('invReceiveMultiple.{{ $key }}.date')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                            <div class="mb-3">
+                                                @inject('paymentMethods', 'App\Models\MsPaymentMethods')
+                                                <label class="form-label">Payment Method <span
+                                                        class="text-danger">*</span></label>
+                                                <select
+                                                    wire:model="invReceiveMultiple.{{ $key }}.payment_method_id"
+                                                    class="form-select @error('invReceiveMultiple.{{ $key }}.payment_method_id') is-invalid @enderror">
+                                                    @foreach ($paymentMethods::where('is_status', '=', '1')->orderBy('name')->select('id', 'name')->get() as $key => $val)
+                                                        <option value="{{ $val['id'] }}">
+                                                            {{ $val['name'] }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('invReceiveMultiple.{{ $key }}.payment_method_id')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Notes</label>
+                                                <textarea wire:model="invReceiveMultiple.{{ $key }}.notes"
+                                                    class="form-control @error('invReceiveMultiple.{{ $key }}.notes') is-invalid @enderror"
+                                                    placeholder="Notes" rows="3"></textarea>
+                                                @error('invReceiveMultiple.{{ $key }}.notes')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-label-secondary"
+                            wire:click="closeModal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Data</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
-        <script></script>
+        <script>
+            window.addEventListener('checkall-indeterminate', event => {
+                $("#checkAll").prop("indeterminate", true);
+            });
+
+            window.addEventListener('checkall-indeterminate-false', event => {
+                $("#checkAll").prop("indeterminate", false);
+            });
+
+            window.addEventListener('checkall-checked', event => {
+                $("#checkAll").prop("checked", true);
+            });
+
+            window.addEventListener('checkall-checked-false', event => {
+                $("#checkAll").prop("checked", false);
+            });
+
+            window.addEventListener('close-modal', event => {
+                $('#ReceiveModal').modal('hide');
+            });
+        </script>
     @endpush
 </div>

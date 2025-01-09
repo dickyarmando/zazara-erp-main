@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire\Payment;
 
+use App\Models\TrPayments;
 use App\Models\TrPurchase;
 use App\Models\TrPurchaseNon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -20,6 +22,11 @@ class PayPaymentManager extends Component
     public $searchKeyword = '';
     public $roleFilter = '';
     public $set_id;
+
+    public $selected = [];
+    public $selectedN = [];
+    public $selectAll = false;
+    public $purchasesPayMultiple = [];
 
     public function render()
     {
@@ -72,5 +79,150 @@ class PayPaymentManager extends Component
     public function view($id, $type)
     {
         return redirect()->to('/pay/view/' . $id . '/' . $type);
+    }
+
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selected = $this->getAllPurchaseIds();
+            $this->selectedN = $this->getAllPurchaseIdsN();
+        } else {
+            $this->selected = [];
+            $this->selectedN = [];
+        }
+    }
+
+    public function updatedSelected()
+    {
+        if (count($this->selected) + count($this->selectedN) === $this->getAllPurchaseIds()->count() + $this->getAllPurchaseIdsN()->count()) {
+            $this->selectAll = true;
+            $this->dispatchBrowserEvent('checkall-indeterminate-false');
+            $this->dispatchBrowserEvent('checkall-checked');
+        } elseif (count($this->selected) + count($this->selectedN) === 0) {
+            $this->selectAll = false;
+            $this->dispatchBrowserEvent('checkall-checked-false');
+            $this->dispatchBrowserEvent('checkall-indeterminate-false');
+        } else {
+            $this->dispatchBrowserEvent('checkall-indeterminate');
+        }
+    }
+
+    public function updatedSelectedN()
+    {
+        if (count($this->selected) + count($this->selectedN) === $this->getAllPurchaseIds()->count() + $this->getAllPurchaseIdsN()->count()) {
+            $this->selectAll = true;
+            $this->dispatchBrowserEvent('checkall-indeterminate-false');
+            $this->dispatchBrowserEvent('checkall-checked');
+        } elseif (count($this->selected) + count($this->selectedN) === 0) {
+            $this->selectAll = false;
+            $this->dispatchBrowserEvent('checkall-indeterminate-false');
+            $this->dispatchBrowserEvent('checkall-checked-false');
+        } else {
+            $this->dispatchBrowserEvent('checkall-indeterminate');
+        }
+    }
+
+    private function getAllPurchaseIds()
+    {
+        $purchaseTax = TrPurchase::whereNotNull('approved_at')->where('is_payed', '0')->pluck('id');
+        return $purchaseTax;
+    }
+
+    private function getAllPurchaseIdsN()
+    {
+        $purchaseNonTax = TrPurchaseNon::whereNotNull('approved_at')->where('is_payed', '0')->pluck('id');
+        return $purchaseNonTax;
+    }
+
+    public function paymentMultiple()
+    {
+        if (count($this->selected) <= 0 && count($this->selectedN) <= 0) {
+            session()->flash('error', 'Please select at least one purchase');
+            $this->closeModal();
+        }
+
+        $purchases = TrPurchase::whereIn('id', $this->selected)
+            ->select('id', 'number', 'total', 'payment', 'rest', 'rest as amount')
+            ->addSelect(DB::raw('"Tax" as type'))
+            ->addSelect(DB::raw('CURDATE() as date'))
+            ->addSelect(DB::raw('"1" as payment_method_id'))
+            ->addSelect(DB::raw('"" as notes'))
+            ->get()
+            ->toArray();
+        $purchasesN = TrPurchaseNon::whereIn('id', $this->selectedN)
+            ->select('id', 'number', 'total', 'payment', 'rest', 'rest as amount')
+            ->addSelect(DB::raw('"Non" as type'))
+            ->addSelect(DB::raw('CURDATE() as date'))
+            ->addSelect(DB::raw('"1" as payment_method_id'))
+            ->addSelect(DB::raw('"" as notes'))
+            ->get()
+            ->toArray();
+
+        $this->purchasesPayMultiple = array_merge($purchases, $purchasesN);
+    }
+
+    public function store()
+    {
+        foreach ($this->purchasesPayMultiple as $key => $val) {
+
+            $purchaseType = '1';
+            if ($val['type'] == 'Non') {
+                $purchaseType = '2';
+            }
+
+            $dataPayment = [
+                'purchase_id' => $val['id'],
+                'purchase_type' => $purchaseType,
+                'date' => $val['date'],
+                'payment_method_id' => $val['payment_method_id'],
+                'amount' => $val['amount'],
+                'notes' => $val['notes'],
+                'created_by' => Auth::user()->id,
+                'updated_by' => Auth::user()->id,
+            ];
+
+            TrPayments::create($dataPayment);
+
+            $payment = $val['payment'] + $val['amount'];
+            $balance = $val['total'] - $payment;
+
+            $dataPurchase = [
+                'payment' => $payment,
+                'rest' => $balance,
+                'is_payed' => '0',
+                'updated_by' => Auth::user()->id,
+            ];
+
+            if ($balance <= 0) {
+                $dataPurchase['is_payed'] = '1';
+            }
+
+            if ($val['type'] == 'Tax') {
+                TrPurchase::find($val['id'])->update($dataPurchase);
+            } else if ($val['type'] == 'Non') {
+                TrPurchaseNon::find($val['id'])->update($dataPurchase);
+            }
+        }
+
+        $this->formReset();
+        session()->flash('success', 'Saved');
+    }
+
+    public function closeModal()
+    {
+        $this->resetErrorBag();
+        $this->resetValidation();
+        $this->dispatchBrowserEvent('close-modal');
+    }
+
+    public function formReset()
+    {
+        $this->selected = [];
+        $this->selectedN = [];
+        $this->selectAll = false;
+        $this->purchasesPayMultiple = [];
+
+        $this->closeModal();
+        $this->dispatchBrowserEvent('checkall-indeterminate-false');
     }
 }

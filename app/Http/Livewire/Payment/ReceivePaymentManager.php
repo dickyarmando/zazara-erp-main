@@ -4,8 +4,10 @@ namespace App\Http\Livewire\Payment;
 
 use App\Models\TrInvoice;
 use App\Models\TrInvoicesNon;
+use App\Models\TrReceives;
 use App\Models\TrSales;
 use App\Models\TrSalesNon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -22,6 +24,11 @@ class ReceivePaymentManager extends Component
     public $searchKeyword = '';
     public $roleFilter = '';
     public $set_id;
+
+    public $selected = [];
+    public $selectedN = [];
+    public $selectAll = false;
+    public $invReceiveMultiple = [];
 
     public function render()
     {
@@ -78,5 +85,154 @@ class ReceivePaymentManager extends Component
     public function view($id, $type)
     {
         return redirect()->to('/receive/view/' . $id . '/' . $type);
+    }
+
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selected = $this->getAllSalesIds();
+            $this->selectedN = $this->getAllSalesIdsN();
+        } else {
+            $this->selected = [];
+            $this->selectedN = [];
+        }
+    }
+
+    public function updatedSelected()
+    {
+        if (count($this->selected) + count($this->selectedN) === $this->getAllSalesIds()->count() + $this->getAllSalesIdsN()->count()) {
+            $this->selectAll = true;
+            $this->dispatchBrowserEvent('checkall-indeterminate-false');
+            $this->dispatchBrowserEvent('checkall-checked');
+        } elseif (count($this->selected) + count($this->selectedN) === 0) {
+            $this->selectAll = false;
+            $this->dispatchBrowserEvent('checkall-checked-false');
+            $this->dispatchBrowserEvent('checkall-indeterminate-false');
+        } else {
+            $this->dispatchBrowserEvent('checkall-indeterminate');
+        }
+    }
+
+    public function updatedSelectedN()
+    {
+        if (count($this->selected) + count($this->selectedN) === $this->getAllSalesIds()->count() + $this->getAllSalesIdsN()->count()) {
+            $this->selectAll = true;
+            $this->dispatchBrowserEvent('checkall-indeterminate-false');
+            $this->dispatchBrowserEvent('checkall-checked');
+        } elseif (count($this->selected) + count($this->selectedN) === 0) {
+            $this->selectAll = false;
+            $this->dispatchBrowserEvent('checkall-indeterminate-false');
+            $this->dispatchBrowserEvent('checkall-checked-false');
+        } else {
+            $this->dispatchBrowserEvent('checkall-indeterminate');
+        }
+    }
+
+    private function getAllSalesIds()
+    {
+        $salesTax = TrInvoice::whereNotNull('approved_at')->where('is_receive', '0')->where('approved_at', '!=', null)->pluck('id');
+        return $salesTax;
+    }
+
+    private function getAllSalesIdsN()
+    {
+        $salesNonTax = TrInvoicesNon::whereNotNull('approved_at')->where('is_receive', '0')->where('approved_at', '!=', null)->pluck('id');
+        return $salesNonTax;
+    }
+
+    public function receiveMultiple()
+    {
+        if (count($this->selected) <= 0 && count($this->selectedN) <= 0) {
+            session()->flash('error', 'Please select at least one invoices');
+            $this->closeModal();
+        }
+
+        $sales = TrInvoice::whereIn('id', $this->selected)
+            ->select('id', 'sales_id', 'number', 'total', 'payment', 'rest', 'rest as amount')
+            ->addSelect(DB::raw('"Tax" as type'))
+            ->addSelect(DB::raw('CURDATE() as date'))
+            ->addSelect(DB::raw('"1" as payment_method_id'))
+            ->addSelect(DB::raw('"" as notes'))
+            ->get()
+            ->toArray();
+        $salesN = TrInvoicesNon::whereIn('id', $this->selectedN)
+            ->select('id', 'sales_non_id as sales_id', 'number', 'total', 'payment', 'rest', 'rest as amount')
+            ->addSelect(DB::raw('"Non" as type'))
+            ->addSelect(DB::raw('CURDATE() as date'))
+            ->addSelect(DB::raw('"1" as payment_method_id'))
+            ->addSelect(DB::raw('"" as notes'))
+            ->get()
+            ->toArray();
+
+        $this->invReceiveMultiple = array_merge($sales, $salesN);
+    }
+
+    public function closeModal()
+    {
+        $this->resetErrorBag();
+        $this->resetValidation();
+        $this->dispatchBrowserEvent('close-modal');
+    }
+
+    public function formReset()
+    {
+        $this->selected = [];
+        $this->selectedN = [];
+        $this->selectAll = false;
+        $this->invReceiveMultiple = [];
+
+        $this->closeModal();
+        $this->dispatchBrowserEvent('checkall-indeterminate-false');
+    }
+
+    public function store()
+    {
+        foreach ($this->invReceiveMultiple as $key => $val) {
+
+            $salesType = '1';
+            if ($val['type'] == 'Non') {
+                $salesType = '2';
+            }
+
+            $dataReceive = [
+                'sales_id' => $val['sales_id'],
+                'sales_type' => $salesType,
+                'date' => $val['date'],
+                'payment_method_id' => $val['payment_method_id'],
+                'amount' => $val['amount'],
+                'notes' => $val['notes'],
+                'created_by' => Auth::user()->id,
+                'updated_by' => Auth::user()->id,
+            ];
+
+            TrReceives::create($dataReceive);
+
+            $receive = $val['payment'] + $val['amount'];
+            $balance = $val['total'] - $receive;
+
+            $dataSales = [
+                'payment' => $receive,
+                'rest' => $balance,
+                'is_payed' => '0',
+                'updated_by' => Auth::user()->id,
+            ];
+
+            if ($balance <= 0) {
+                $dataSales['is_receive'] = '1';
+            }
+
+            if ($val['type'] == 'Tax') {
+                $invoices = TrInvoice::find($val['id']);
+                $invoices->update($dataSales);
+                TrSales::find($invoices->sales_id)->update($dataSales);
+            } else if ($val['type'] == 'Non') {
+                $invoices = TrInvoicesNon::find($val['id']);
+                $invoices->update($dataSales);
+                TrSalesNon::find($invoices->sales_non_id)->update($dataSales);
+            }
+        }
+
+        $this->formReset();
+        session()->flash('success', 'Saved');
     }
 }
