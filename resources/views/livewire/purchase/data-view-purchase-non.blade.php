@@ -44,7 +44,7 @@
                 <td width="20px" class="px-2" style="border: 1px solid #000;">
                     <b>No</b>
                 </td>
-                <td class="px-2" style="border: 1px solid #000;"><b>Nama Barang</b></td>
+                <td class="px-2" style="border: 1px solid #000;"><b>NamaBarang</b></td>
                 <td class="px-2" style="border: 1px solid #000;"><b>Qty</b></td>
                 <td class="px-2" style="border: 1px solid #000;"><b>UoM</b></td>
                 <td class="px-2" style="border: 1px solid #000;"><b>Harga (Rp)</b></td>
