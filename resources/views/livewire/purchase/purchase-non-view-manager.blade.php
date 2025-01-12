@@ -32,14 +32,11 @@
         <div class="card-header d-flex align-items-center justify-content-between">
             <button type="button" class="btn btn-label-secondary" wire:click="backRedirect"><span
                     class="bx bx-arrow-back me-2"></span> Back</button>
-            @if (isset($purchase->approved_at))
-                <button type="button" wire:click="printDocument" class="btn btn-primary"><span
-                        class="bx bx-printer me-2"></span> Print</button>
-            @else
-                @if ($userRoles->is_approved === '1')
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#ApproveModal"
-                        class="btn btn-success"><span class="bx bx-check me-2"></span> Approve Purchase</button>
-                @endif
+            <button type="button" wire:click="printDocument" class="btn btn-primary"><span
+                    class="bx bx-printer me-2"></span> Print</button>
+            @if ($userRoles->is_approved === '1')
+                <button type="button" data-bs-toggle="modal" data-bs-target="#ApproveModal"
+                    class="btn btn-success"><span class="bx bx-check me-2"></span> Approve Purchase</button>
             @endif
         </div>
         <div class="card-body" id="print-document">
