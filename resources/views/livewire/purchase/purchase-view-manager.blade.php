@@ -35,7 +35,7 @@
             <div>
                 <button type="button" wire:click="printDocument" class="btn btn-primary"><span
                         class="bx bx-printer me-2"></span> Print</button>
-                @if ($userRoles->is_approved === '1')
+                @if ($userRoles->is_approved === '1' && $purchase->approved_at == null)
                     <button type="button" data-bs-toggle="modal" data-bs-target="#ApproveModal"
                         class="btn btn-success"><span class="bx bx-check me-2"></span> Approve Purchase</button>
                 @endif
