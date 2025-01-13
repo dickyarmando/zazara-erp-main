@@ -329,6 +329,22 @@ class DatabaseSeeder extends Seeder
             'is_update' => 1,
             'is_delete' => 1,
         ]);
+
+        PrmMenus::create([
+            'id' => 33,
+            'parent_id' => 4,
+            'name' => 'Post Purchase',
+            'action' => 'expanse/post/purchase',
+            'seq' => 3,
+        ]);
+
+        PrmMenus::create([
+            'id' => 34,
+            'parent_id' => 4,
+            'name' => 'Post Sales',
+            'action' => 'expanse/post/sales',
+            'seq' => 3,
+        ]);
         //End Menus
 
         // Role Menus Added
@@ -511,6 +527,20 @@ class DatabaseSeeder extends Seeder
             'is_update' => 1,
             'is_delete' => 1,
         ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 33,
+            'is_create' => 1,
+            'is_update' => 1,
+            'is_delete' => 1,
+        ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 34,
+            'is_create' => 1,
+            'is_update' => 1,
+            'is_delete' => 1,
+        ]);
         // End Role Menus
 
         // Company Added
@@ -542,6 +572,99 @@ class DatabaseSeeder extends Seeder
             'name' => 'SO Sign',
             'type' => 'varchar',
             'value' => 'PT. ELLIA SUKSES BERSAMA',
+        ]);
+
+        PrmConfig::create([
+            'id' => 4,
+            'code' => 'sotc',
+            'name' => 'SO Term & Condition',
+            'type' => 'text',
+            'value' => '<ol>
+                        <li>
+                            Harga franco on Truck Jabodetabek
+                        </li>
+                        <li>Lead Time Delivery<br>
+                            3-5 Hari Kerja item dari Jakarta.<br>
+                            7-14 Hari Kerja apabila stock dari Surabaya.
+                        </li>
+                        <li>
+                            Payment Term : <b>Cash Before Delivery</b>
+                        </li>
+                        <li>
+                            Pembayaran dapat di transfer ke rekening :<br>
+                            <ul>
+                                <li><b>5455.67.8797 / BCA Cab. WTC Sudirman A/N. ELLIA SUKSES BERSAMA, PT</b></li>
+                                <li><b>01058.01.30.000.0069 / BTN Cab. Asemka A/N. PT. ELLIA SUKSES BERSAMA</b></li>
+                            </ul>
+                        </li>
+                    </ol>',
+        ]);
+
+        PrmConfig::create([
+            'id' => 5,
+            'code' => 'invsn',
+            'name' => 'Invoice Sign Name',
+            'type' => 'varchar',
+            'value' => 'S. Amelia',
+        ]);
+
+        PrmConfig::create([
+            'id' => 6,
+            'code' => 'invsp',
+            'name' => 'Invoice Sign Position',
+            'type' => 'varchar',
+            'value' => 'Direktur',
+        ]);
+
+        PrmConfig::create([
+            'id' => 7,
+            'code' => 'invtc',
+            'name' => 'Invoice Term & Condition',
+            'type' => 'text',
+            'value' => '<b>Pembayaran dengan giro, cek atau transfer (Full Amount) atas nama :</b><br>
+        <div class="row">
+            <div class="col-4">
+                <b>BANK CENTRAL ASIA</b>
+            </div>
+            <div class="col-8">
+                <b>: 5455 67 8797</b>
+            </div>
+            <div class="col-4">
+                <b>BANK TABUNGAN NEGARA</b>
+            </div>
+            <div class="col-8">
+                <b>: 01058-01-30-000006-9</b>
+            </div>
+            <div class="col-4">
+                <b>Nama Rekening</b>
+            </div>
+            <div class="col-8">
+                <b>: ELLIA SUKSES BERSAMA PT</b>
+            </div>
+        </div><br>
+        <b>Bukti Pembayaran mohon diinformasikan dan di email ke</b><br>
+        <a href="javascript:void(0);">elliasuksesbersama@gmail.com</a>',
+        ]);
+
+        PrmConfig::create([
+            'id' => 8,
+            'code' => 'coap',
+            'name' => 'Account Purchase',
+            'type' => 'select_coa',
+        ]);
+
+        PrmConfig::create([
+            'id' => 9,
+            'code' => 'coapa',
+            'name' => 'Account Payable',
+            'type' => 'select_coa',
+        ]);
+
+        PrmConfig::create([
+            'id' => 10,
+            'code' => 'coapp',
+            'name' => 'Account PPN Purchase',
+            'type' => 'select_coa',
         ]);
         // End Config
 

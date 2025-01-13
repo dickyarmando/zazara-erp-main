@@ -12,6 +12,8 @@ use App\Http\Livewire\Expanse\ExpanseCreateManager;
 use App\Http\Livewire\Expanse\ExpanseManager;
 use App\Http\Livewire\Expanse\ExpanseViewManager;
 use App\Http\Livewire\Expanse\ExpanseViewPrintManager;
+use App\Http\Livewire\Expanse\PostPurchaseManager;
+use App\Http\Livewire\Expanse\PostSalesManager;
 use App\Http\Livewire\Invoice\InvoiceCreateManager;
 use App\Http\Livewire\Invoice\InvoiceNonCreateManager;
 use App\Http\Livewire\Invoice\InvoiceNonViewManager;
@@ -174,6 +176,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', ExpanseCreateManager::class)->name('expanse.create');
         Route::get('/view/{id}', ExpanseViewManager::class)->name('expanse.view');
         Route::get('/view/print/{id}', [ExpanseViewPrintManager::class, 'index'])->name('expanse.view.print');
+        Route::prefix('/post')->group(function () {
+            Route::get('/purchase', PostPurchaseManager::class)->name('expanse.post.purchase');
+            Route::get('/sales', PostSalesManager::class)->name('expanse.post.sales');
+        });
     });
 
     //Pay Payment
