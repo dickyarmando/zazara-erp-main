@@ -666,6 +666,27 @@ class DatabaseSeeder extends Seeder
             'name' => 'Account PPN Purchase',
             'type' => 'select_coa',
         ]);
+
+        PrmConfig::create([
+            'id' => 11,
+            'code' => 'coas',
+            'name' => 'Account Sales',
+            'type' => 'select_coa',
+        ]);
+
+        PrmConfig::create([
+            'id' => 9,
+            'code' => 'coasr',
+            'name' => 'Account Receivables',
+            'type' => 'select_coa',
+        ]);
+
+        PrmConfig::create([
+            'id' => 10,
+            'code' => 'coasp',
+            'name' => 'Account PPN Sales',
+            'type' => 'select_coa',
+        ]);
         // End Config
 
         // Category Account Added
