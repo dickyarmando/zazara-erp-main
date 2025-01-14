@@ -6,7 +6,6 @@ use App\Models\PrmConfig;
 use App\Models\TrGeneralLedger;
 use App\Models\TrGeneralLedgerDetails;
 use App\Models\TrPurchase;
-use App\Models\TrPurchaseNon;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -36,13 +35,14 @@ class PostPurchaseManager extends Component
             ->select('tr_purchase.id', 'tr_purchase.number', 'tr_purchase.date', 'tr_purchase.supplier_id', 'ms_suppliers.company_name as supplier_name', 'tr_purchase.reference', 'tr_purchase.total', 'tr_purchase.payment', 'tr_purchase.rest', 'tr_purchase.notes', 'tr_purchase.is_payed', 'tr_purchase.is_status', 'tr_purchase.approved_at')
             ->addSelect(DB::raw('"Tax" as type'))
             ->whereNotNull('tr_purchase.approved_at')
-            ->where('is_posting', '0');
+            ->where('tr_purchase.is_posting', '0')
+            ->where('tr_purchase.is_status', '1');
 
         if (!empty($this->searchKeyword)) {
-            $purchaseTax->orWhere('number', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('is_posting', '0');
-            $purchaseTax->orWhere('ms_suppliers.company_name', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('is_posting', '0');
-            $purchaseTax->orWhere('total', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('is_posting', '0');
-            $purchaseTax->orWhere('approved_at', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('is_posting', '0');
+            $purchaseTax->orWhere('number', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('tr_purchase.is_posting', '0')->where('tr_purchase.is_status', '1');
+            $purchaseTax->orWhere('ms_suppliers.company_name', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('tr_purchase.is_posting', '0')->where('tr_purchase.is_status', '1');
+            $purchaseTax->orWhere('total', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('tr_purchase.is_posting', '0')->where('tr_purchase.is_status', '1');
+            $purchaseTax->orWhere('approved_at', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('tr_purchase.is_posting', '0')->where('tr_purchase.is_status', '1');
         }
 
         $purchases = $purchaseTax->paginate($this->perPage);
@@ -90,7 +90,7 @@ class PostPurchaseManager extends Component
 
     private function getAllPurchaseIds()
     {
-        $purchaseTax = TrPurchase::whereNotNull('approved_at')->where('is_posting', '0')->pluck('id');
+        $purchaseTax = TrPurchase::whereNotNull('approved_at')->where('is_posting', '0')->where('is_status', '1')->pluck('id');
         return $purchaseTax;
     }
 

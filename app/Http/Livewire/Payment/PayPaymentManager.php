@@ -34,26 +34,28 @@ class PayPaymentManager extends Component
             ->select('tr_purchase.id', 'tr_purchase.number', 'tr_purchase.date', 'tr_purchase.supplier_id', 'ms_suppliers.company_name as supplier_name', 'tr_purchase.reference', 'tr_purchase.total', 'tr_purchase.payment', 'tr_purchase.rest', 'tr_purchase.notes', 'tr_purchase.is_payed', 'tr_purchase.is_status')
             ->addSelect(DB::raw('"Tax" as type'))
             ->whereNotNull('tr_purchase.approved_at')
-            ->where('is_payed', '0');
+            ->where('tr_purchase.is_payed', '0')
+            ->where('tr_purchase.is_status', '1');
 
         $purchaseNonTax = TrPurchaseNon::leftJoin('ms_suppliers', 'ms_suppliers.id', '=', 'tr_purchase_non.supplier_id')
             ->select('tr_purchase_non.id', 'tr_purchase_non.number', 'tr_purchase_non.date', 'tr_purchase_non.supplier_id', 'ms_suppliers.company_name as supplier_name', 'tr_purchase_non.reference', 'tr_purchase_non.total', 'tr_purchase_non.payment', 'tr_purchase_non.rest', 'tr_purchase_non.notes', 'tr_purchase_non.is_payed', 'tr_purchase_non.is_status')
             ->addSelect(DB::raw('"Non" as type'))
             ->whereNotNull('tr_purchase_non.approved_at')
-            ->where('is_payed', '0');
+            ->where('tr_purchase_non.is_payed', '0')
+            ->where('tr_purchase_non.is_status', '1');
 
         if (!empty($this->searchKeyword)) {
-            $purchaseTax->orWhere('number', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('is_payed', '0');
-            $purchaseTax->orWhere('ms_suppliers.company_name', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('is_payed', '0');
-            $purchaseTax->orWhere('total', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('is_payed', '0');
-            $purchaseTax->orWhere('payment', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('is_payed', '0');
-            $purchaseTax->orWhere('rest', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('is_payed', '0');
+            $purchaseTax->orWhere('number', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('tr_purchase.is_payed', '0')->where('tr_purchase.is_status', '1');
+            $purchaseTax->orWhere('ms_suppliers.company_name', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('tr_purchase.is_payed', '0')->where('tr_purchase.is_status', '1');
+            $purchaseTax->orWhere('total', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('tr_purchase.is_payed', '0')->where('tr_purchase.is_status', '1');
+            $purchaseTax->orWhere('payment', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('tr_purchase.is_payed', '0')->where('tr_purchase.is_status', '1');
+            $purchaseTax->orWhere('rest', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase.approved_at')->where('tr_purchase.is_payed', '0')->where('tr_purchase.is_status', '1');
 
-            $purchaseNonTax->orWhere('number', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase_non.approved_at')->where('is_payed', '0');
-            $purchaseNonTax->orWhere('ms_suppliers.company_name', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase_non.approved_at')->where('is_payed', '0');
-            $purchaseNonTax->orWhere('total', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase_non.approved_at')->where('is_payed', '0');
-            $purchaseNonTax->orWhere('payment', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase_non.approved_at')->where('is_payed', '0');
-            $purchaseNonTax->orWhere('rest', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase_non.approved_at')->where('is_payed', '0');
+            $purchaseNonTax->orWhere('number', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase_non.approved_at')->where('tr_purchase_non.is_payed', '0')->where('tr_purchase_non.is_status', '1');
+            $purchaseNonTax->orWhere('ms_suppliers.company_name', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase_non.approved_at')->where('tr_purchase_non.is_payed', '0')->where('tr_purchase_non.is_status', '1');
+            $purchaseNonTax->orWhere('total', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase_non.approved_at')->where('tr_purchase_non.is_payed', '0')->where('tr_purchase_non.is_status', '1');
+            $purchaseNonTax->orWhere('payment', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase_non.approved_at')->where('tr_purchase_non.is_payed', '0')->where('tr_purchase_non.is_status', '1');
+            $purchaseNonTax->orWhere('rest', 'like', "%" . $this->searchKeyword . "%")->whereNotNull('tr_purchase_non.approved_at')->where('tr_purchase_non.is_payed', '0')->where('tr_purchase_non.is_status', '1');
         }
 
         $purchases = $purchaseTax->union($purchaseNonTax)->orderBy($this->sortColumn, $this->sortOrder);
@@ -124,13 +126,13 @@ class PayPaymentManager extends Component
 
     private function getAllPurchaseIds()
     {
-        $purchaseTax = TrPurchase::whereNotNull('approved_at')->where('is_payed', '0')->pluck('id');
+        $purchaseTax = TrPurchase::whereNotNull('approved_at')->where('is_payed', '0')->where('is_status', '1')->pluck('id');
         return $purchaseTax;
     }
 
     private function getAllPurchaseIdsN()
     {
-        $purchaseNonTax = TrPurchaseNon::whereNotNull('approved_at')->where('is_payed', '0')->pluck('id');
+        $purchaseNonTax = TrPurchaseNon::whereNotNull('approved_at')->where('is_payed', '0')->where('is_status', '1')->pluck('id');
         return $purchaseNonTax;
     }
 

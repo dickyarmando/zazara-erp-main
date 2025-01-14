@@ -49,17 +49,21 @@
                         @endif
                     </td>
                     <td class="border-start text-center unset">
-                        @if (isset($purchase->approved_at))
-                            <span class="badge bg-label-success" text-capitalized> Approved </span>
+                        @if ($purchase->is_status == '0')
+                            <span class="badge bg-label-danger" text-capitalized> Canceled </span>
                         @else
-                            <span class="badge bg-label-warning" text-capitalized> Waiting Approve </span>
+                            @if (isset($purchase->approved_at))
+                                <span class="badge bg-label-success" text-capitalized> Approved </span>
+                            @else
+                                <span class="badge bg-label-warning" text-capitalized> Waiting Approve </span>
+                            @endif
                         @endif
                     </td>
                     <td class="border-start text-center">
                         <button type="button" wire:click="view('{{ $purchase->id }}')" class="btn btn-xs btn-success"
                             title="Open Data"><span class="bx bx-folder-open"></span></button>
                         @if (!isset($purchase->approved_at))
-                            @if ($userRoles->is_update == '1')
+                            @if ($userRoles->is_update == '1' && $purchase->is_status == '1')
                                 <button type="button" wire:click="edit('{{ $purchase->id }}')"
                                     class="btn btn-xs btn-secondary" title="Edit User"><span
                                         class="bx bxs-edit"></span></button>

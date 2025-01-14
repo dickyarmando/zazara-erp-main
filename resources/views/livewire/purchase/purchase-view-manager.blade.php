@@ -18,14 +18,24 @@
 
     <x-flash-alert />
 
-    @if (isset($purchase->approved_at))
-        <div class="alert alert-success alert-dismissible" role="alert">
+    @if ($purchase->is_status == '0')
+        <div class="alert alert-danger alert-dismissible" role="alert">
             @inject('user', 'App\Models\User')
             @php
-                $userApproved = $user->where('id', $purchase->approved_by)->first();
+                $userCanceled = $user->where('id', $purchase->deleted_by)->first();
             @endphp
-            Approved by {{ $userApproved->name }} at {{ $purchase->approved_at }}
+            Canceled by {{ $userCanceled->name }} at {{ $purchase->deleted_at }}
         </div>
+    @else
+        @if (isset($purchase->approved_at))
+            <div class="alert alert-success alert-dismissible" role="alert">
+                @inject('user', 'App\Models\User')
+                @php
+                    $userApproved = $user->where('id', $purchase->approved_by)->first();
+                @endphp
+                Approved by {{ $userApproved->name }} at {{ $purchase->approved_at }}
+            </div>
+        @endif
     @endif
 
     <div class="card">
@@ -33,11 +43,21 @@
             <button type="button" class="btn btn-label-secondary" wire:click="backRedirect"><span
                     class="bx bx-arrow-back me-2"></span> Back</button>
             <div>
-                <button type="button" wire:click="printDocument" class="btn btn-primary"><span
-                        class="bx bx-printer me-2"></span> Print</button>
+                @if ($purchase->is_status == '1')
+                    <button type="button" wire:click="printDocument" class="btn btn-primary"><span
+                            class="bx bx-printer me-2"></span> Print</button>
+                @endif
                 @if ($userRoles->is_approved === '1' && $purchase->approved_at == null)
                     <button type="button" data-bs-toggle="modal" data-bs-target="#ApproveModal"
                         class="btn btn-success"><span class="bx bx-check me-2"></span> Approve Purchase</button>
+                @endif
+                @if (
+                    $purchase->approved_at != null &&
+                        $purchase->is_status == '1' &&
+                        $purchase->is_payed == '0' &&
+                        $purchase->is_posting == '0')
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#CancelModal"
+                        class="btn btn-danger"><span class="bx bx-x me-2"></span> Cancel Purchase</button>
                 @endif
             </div>
         </div>
@@ -65,6 +85,25 @@
         </div>
     </div>
 
+    {{-- Cancel --}}
+    <div wire:ignore.self class="modal fade" id="CancelModal" tabindex="-1" product="dialog">
+        <div class="modal-dialog" product="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Cancel</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to cancel this purchase?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" wire:click.prevent="destroy()" class="btn btn-danger close-modal"
+                        data-bs-dismiss="modal">Yes, Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
         <script>
             window.addEventListener('print', function() {
@@ -74,6 +113,7 @@
 
             window.addEventListener('close-modal', event => {
                 $('#ApproveModal').modal('hide');
+                $('#CancelModal').modal('hide');
             });
         </script>
     @endpush

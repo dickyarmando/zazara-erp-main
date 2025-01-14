@@ -62,4 +62,19 @@ class PurchaseViewManager extends Component
         session()->flash('success', 'Approved');
         $this->dispatchBrowserEvent('close-modal');
     }
+
+    public function destroy()
+    {
+        $valid = [
+            'is_status' => '0',
+            'deleted_at' => Carbon::now()->toDateTimeString(),
+            'deleted_by' => Auth::user()->id
+        ];
+
+        $tp = TrPurchase::find($this->set_id);
+        $tp->update($valid);
+
+        session()->flash('success', 'Canceled Purchase');
+        $this->dispatchBrowserEvent('close-modal');
+    }
 }
