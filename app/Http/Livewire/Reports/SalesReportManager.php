@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Reports;
 
 use App\Models\TrSales;
 use App\Models\TrSalesNon;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -21,57 +22,25 @@ class SalesReportManager extends Component
     public $roleFilter = '';
     public $set_id;
 
+    public $start_date;
+    public $end_date;
+    public $number;
+    public $customer;
+    public $product;
+    public $approved;
+    public $payment;
+
+    public function mount()
+    {
+        $this->start_date = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $this->end_date = Carbon::now()->format('Y-m-d');
+    }
+
     public function render()
     {
-        $salesTax = TrSales::leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales.customer_id')
-            ->select('tr_sales.id', 'tr_sales.number', 'tr_sales.date', 'tr_sales.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales.reference', 'tr_sales.total', 'tr_sales.payment', 'tr_sales.rest', 'tr_sales.notes', 'tr_sales.is_receive', 'tr_sales.is_status')
-            ->addSelect(DB::raw('"Tax" as type'));
+        $saless = $this->dataSales()->paginate($this->perPage);
 
-        $salesNonTax = TrSalesNon::leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales_non.customer_id')
-            ->select('tr_sales_non.id', 'tr_sales_non.number', 'tr_sales_non.date', 'tr_sales_non.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales_non.reference', 'tr_sales_non.total', 'tr_sales_non.payment', 'tr_sales_non.rest', 'tr_sales_non.notes', 'tr_sales_non.is_receive', 'tr_sales_non.is_status')
-            ->addSelect(DB::raw('"Non" as type'));
-
-        // Query summary
-        $salesTaxSummary = TrSales::leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales.customer_id')
-            ->selectRaw('SUM(total) as total_payment, SUM(payment) as paid, SUM(rest) as unpaid');
-        $salesNonTaxSummary = TrSalesNon::leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales_non.customer_id')
-            ->selectRaw('SUM(total) as total_payment, SUM(payment) as paid, SUM(rest) as unpaid');
-
-        if (!empty($this->searchKeyword)) {
-            $salesTax->orWhere('number', 'like', "%" . $this->searchKeyword . "%");
-            $salesTax->orWhere('ms_customers.company_name', 'like', "%" . $this->searchKeyword . "%");
-            $salesTax->orWhere('total', 'like', "%" . $this->searchKeyword . "%");
-            $salesTax->orWhere('payment', 'like', "%" . $this->searchKeyword . "%");
-            $salesTax->orWhere('rest', 'like', "%" . $this->searchKeyword . "%");
-
-            $salesNonTax->orWhere('number', 'like', "%" . $this->searchKeyword . "%");
-            $salesNonTax->orWhere('ms_customers.company_name', 'like', "%" . $this->searchKeyword . "%");
-            $salesNonTax->orWhere('total', 'like', "%" . $this->searchKeyword . "%");
-            $salesNonTax->orWhere('payment', 'like', "%" . $this->searchKeyword . "%");
-            $salesNonTax->orWhere('rest', 'like', "%" . $this->searchKeyword . "%");
-
-            $salesTaxSummary->orWhere('tr_sales.number', 'like', "%" . $this->searchKeyword . "%");
-            $salesTaxSummary->orWhere('ms_customers.company_name', 'like', "%" . $this->searchKeyword . "%");
-            $salesTaxSummary->orWhere('tr_sales.total', 'like', "%" . $this->searchKeyword . "%");
-            $salesTaxSummary->orWhere('tr_sales.payment', 'like', "%" . $this->searchKeyword . "%");
-            $salesTaxSummary->orWhere('tr_sales.rest', 'like', "%" . $this->searchKeyword . "%");
-
-            $salesNonTaxSummary->orWhere('tr_sales_non.number', 'like', "%" . $this->searchKeyword . "%");
-            $salesNonTaxSummary->orWhere('ms_customers.company_name', 'like', "%" . $this->searchKeyword . "%");
-            $salesNonTaxSummary->orWhere('tr_sales_non.total', 'like', "%" . $this->searchKeyword . "%");
-            $salesNonTaxSummary->orWhere('tr_sales_non.payment', 'like', "%" . $this->searchKeyword . "%");
-            $salesNonTaxSummary->orWhere('tr_sales_non.rest', 'like', "%" . $this->searchKeyword . "%");
-        }
-
-        $salesSummary = DB::query()
-            ->selectRaw('SUM(total_payment) as total_payment, SUM(paid) as paid, SUM(unpaid) as unpaid')
-            ->fromSub($salesTaxSummary->unionAll($salesNonTaxSummary), 'combined_summary')
-            ->first();
-
-        $unionSales = $salesTax->union($salesNonTax)->orderBy($this->sortColumn, $this->sortOrder);
-        $saless = $unionSales->paginate($this->perPage);
-
-        return view('livewire.reports.sales-report-manager', compact('saless', 'salesSummary'));
+        return view('livewire.reports.sales-report-manager', compact('saless'));
     }
 
     public function sortOrder($columnName = "")
@@ -86,5 +55,56 @@ class SalesReportManager extends Component
         }
         $this->sortLink = '<i class="sorticon fa-solid fa-caret-' . $caretOrder . '"></i>';
         $this->sortColumn = $columnName;
+    }
+
+    public function dataSales()
+    {
+        $salesTax = TrSales::leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales.customer_id')
+            ->join('tr_sales_details', 'tr_sales.id', '=', 'tr_sales_details.sales_id')
+            ->select('tr_sales.id', 'tr_sales.number', 'tr_sales.date', 'ms_customers.company_name as customer_name', 'tr_sales.approved_at', 'tr_sales.approved_by', 'tr_sales.is_invoice', 'tr_sales.payment', 'tr_sales.is_receive', 'tr_sales.is_status', 'tr_sales_details.product_code', 'tr_sales_details.product_name', 'tr_sales_details.unit_name', 'tr_sales_details.qty', 'tr_sales_details.rate', 'tr_sales_details.amount')
+            ->addSelect(DB::raw('"Tax" as type'))
+            ->whereBetween('tr_sales.date', [$this->start_date, $this->end_date]);
+
+        $salesNonTax = TrSalesNon::leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales_non.customer_id')
+            ->join('tr_sales_non_details', 'tr_sales_non.id', '=', 'tr_sales_non_details.sales_non_id')
+            ->select('tr_sales_non.id', 'tr_sales_non.number', 'tr_sales_non.date', 'ms_customers.company_name as customer_name', 'tr_sales_non.approved_at', 'tr_sales_non.approved_by', 'tr_sales_non.is_invoice', 'tr_sales_non.payment', 'tr_sales_non.is_receive', 'tr_sales_non.is_status', 'tr_sales_non_details.product_code', 'tr_sales_non_details.product_name', 'tr_sales_non_details.unit_name', 'tr_sales_non_details.qty', 'tr_sales_non_details.rate', 'tr_sales_non_details.amount')
+            ->addSelect(DB::raw('"Non" as type'))
+            ->whereBetween('tr_sales_non.date', [$this->start_date, $this->end_date]);
+
+        if (!empty($this->number)) {
+            $salesTax->where('tr_sales.number', 'like', "%" . $this->number . "%");
+
+            $salesNonTax->where('tr_sales_non.number', 'like', "%" . $this->number . "%");
+        }
+
+        if (!empty($this->customer)) {
+            $salesTax->where('ms_customers.company_name', 'like', "%" . $this->customer . "%");
+
+            $salesNonTax->where('ms_customers.company_name', 'like', "%" . $this->customer . "%");
+        }
+
+        if (!empty($this->product)) {
+            $salesTax->where('tr_sales_details.product_name', 'like', "%" . $this->product . "%");
+
+            $salesNonTax->where('tr_sales_non_details.product_name', 'like', "%" . $this->product . "%");
+        }
+
+        $unionSales = $salesTax->union($salesNonTax)->orderBy($this->sortColumn, $this->sortOrder);
+
+        return $unionSales;
+    }
+
+    public function printTable()
+    {
+        $responseData = [
+            'sd' => $this->start_date,
+            'ed' => $this->end_date,
+            'n' => $this->number,
+            'c' => $this->customer,
+            'p' => $this->product,
+        ];
+
+        $url = route('print.sales', $responseData);
+        $this->dispatchBrowserEvent('openTab', ['url' => $url]);
     }
 }

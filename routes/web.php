@@ -6,7 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LivewireController;
 use App\Http\Controllers\MenuApiController;
 use App\Http\Controllers\Auth\LoginController;
-
+use App\Http\Controllers\Exports\SalesTableReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Livewire\Expanse\ExpanseCreateManager;
 use App\Http\Livewire\Expanse\ExpanseManager;
@@ -54,8 +54,10 @@ use App\Http\Livewire\Purchase\PurchaseViewManager;
 use App\Http\Livewire\Purchase\PurchaseViewPrintManager;
 use App\Http\Livewire\Reports\DayBookReportManager;
 use App\Http\Livewire\Reports\ExpanseReportManager;
+use App\Http\Livewire\Reports\PayReportManager;
 use App\Http\Livewire\Reports\ProfitLossReportManager;
 use App\Http\Livewire\Reports\PurchaseReportManager;
+use App\Http\Livewire\Reports\ReceiveReportManager;
 use App\Http\Livewire\Reports\SalesReportManager;
 use App\Http\Livewire\Sales\SalesCreateManager;
 use App\Http\Livewire\Sales\SalesManager;
@@ -201,6 +203,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/expanse', ExpanseReportManager::class)->name('reports.expanse');
         Route::get('/profit-loss', ProfitLossReportManager::class)->name('reports.profit-loss');
         Route::get('/day-books', DayBookReportManager::class)->name('reports.day-books');
+        Route::get('/receive', ReceiveReportManager::class)->name('reports.receive');
+        Route::get('/pay', PayReportManager::class)->name('reports.pay');
     });
 
     //Pengaturan
@@ -208,6 +212,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/profile', [ProfileManager::class, 'index'])->name('pengaturan.profile');
         Route::get('/user', UsersManager::class)->name('pengaturan.users');
         Route::get('/roles', RolesManager::class)->name('pengaturan.roles');
+    });
+
+    Route::prefix('/print')->group(function () {
+        Route::get('/sales', [SalesTableReportController::class, 'index'])->name('print.sales');
     });
 
     Route::post('/menu-save-order', [MenuApiController::class, 'save_order']);
