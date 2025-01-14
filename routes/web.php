@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LivewireController;
 use App\Http\Controllers\MenuApiController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Exports\PurchaseTableReportController;
 use App\Http\Controllers\Exports\SalesTableReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Livewire\Expanse\ExpanseCreateManager;
@@ -216,6 +217,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('/print')->group(function () {
         Route::get('/sales', [SalesTableReportController::class, 'index'])->name('print.sales');
+        Route::get('/purchase', [PurchaseTableReportController::class, 'index'])->name('print.purchase');
     });
 
     Route::post('/menu-save-order', [MenuApiController::class, 'save_order']);

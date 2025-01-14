@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Order Reports</title>
+    <title>Purchase Order Reports</title>
     <style>
         table {
             width: 100%;
@@ -36,38 +36,38 @@
 </head>
 
 <body>
-    <h2 class="text-center" style="margin-bottom: 5px;text-transform: uppercase;text-decoration: underline;">Sales Order
-        Reports</h2>
+    <h2 class="text-center" style="margin-bottom: 5px;text-transform: uppercase;text-decoration: underline;">Purchase
+        Order Reports</h2>
     <h4 class="text-center" style="margin-top:0px;">Period : {{ $start_date }} s/d {{ $end_date }}</h4>
     <table>
         <thead>
             <tr>
                 <th>No</th>
-                <th>Sales Number</th>
+                <th>Purchase Number</th>
                 <th>Date</th>
-                <th>Customer</th>
+                <th>Supplier</th>
                 <th>Product</th>
                 <th>UoM</th>
                 <th>Qty</th>
                 <th>Rate</th>
                 <th>Status</th>
-                <th>Received</th>
+                <th>Payment</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($saless as $index => $sales)
+            @foreach ($purchases as $index => $purchase)
                 <tr>
                     <td class="text-center no-wrap">{{ $index + 1 }}</td>
-                    <td class="text-center no-wrap">{{ $sales->number }}</td>
-                    <td class="text-center no-wrap">{{ $sales->date }}</td>
-                    <td>{{ $sales->customer_name }}</td>
-                    <td>{{ $sales->product_name }}</td>
-                    <td class="text-center no-wrap">{{ $sales->unit_name }}</td>
-                    <td class="text-center no-wrap">{{ number_format($sales->qty, 0) }}</td>
-                    <td class="no-wrap">{{ number_format($sales->rate, 2) }}</td>
+                    <td class="text-center no-wrap">{{ $purchase->number }}</td>
+                    <td class="text-center no-wrap">{{ $purchase->date }}</td>
+                    <td>{{ $purchase->supplier_name }}</td>
+                    <td>{{ $purchase->product_name }}</td>
+                    <td class="text-center no-wrap">{{ $purchase->unit_name }}</td>
+                    <td class="text-center no-wrap">{{ number_format($purchase->qty, 0) }}</td>
+                    <td class="no-wrap">{{ number_format($purchase->rate, 2) }}</td>
                     <td class="text-center no-wrap">
-                        @if ($sales->is_status == '1')
-                            @if (isset($sales->approved_at))
+                        @if ($purchase->is_status == '1')
+                            @if (isset($purchase->approved_at))
                                 Approved
                             @else
                                 Waiting Approve
@@ -77,10 +77,10 @@
                         @endif
                     </td>
                     <td class="text-center no-wrap">
-                        @if ($sales->is_payed == '1')
+                        @if ($purchase->is_payed == '1')
                             Paid
                         @else
-                            @if ($sales->payment > 0)
+                            @if ($purchase->payment > 0)
                                 Being Paid
                             @else
                                 Unpaid
