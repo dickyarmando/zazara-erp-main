@@ -145,9 +145,13 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Reference</label>
-                                <input type="text" wire:model="reference"
-                                    class="form-control @error('reference') is-invalid @enderror"
-                                    placeholder="Reference">
+                                <div class="input-group">
+                                    <input type="text"
+                                        class="form-control @error('reference') is-invalid @enderror"
+                                        wire:model="reference" placeholder="Reference">
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                        data-bs-target="#ChooseModalReference"><i class="fa fa-search"></i></button>
+                                </div>
                                 @error('reference')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -402,6 +406,68 @@
         </div>
     </div>
 
+    {{-- Sales --}}
+    <div wire:ignore.self class="modal fade" id="ChooseModalReference" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Choose Sales</h5>
+                    <button type="button" class="btn-close" wire:click="closeModal"></button>
+                </div>
+                <div class="modal-body position-relative">
+
+                    <div class="d-md-flex align-items-center justify-content-end mb-3">
+                        <input type="text" class="form-control shadow-sm" placeholder="Search"
+                            style="width: 250px;" wire:model="searchKeywordSales">
+                    </div>
+                    <div wire:loading class="position-absolute fs-1 top-50 start-50 z-3 text-info">
+                        <i class="fa fa-spin fa-spinner"></i>
+                    </div>
+                    <table class="table card-table table-hover table-striped table-sm table-bordered">
+                        <thead>
+                            <tr class="border-top">
+                                <th class="w-px-75">No</th>
+                                <th class="sort" wire:click="sortOrderSales('date')">Date
+                                    {!! $sortLinkSales !!}</th>
+                                <th class="sort" wire:click="sortOrderSales('number')">Sales Number
+                                    {!! $sortLinkSales !!}</th>
+                                <th class="sort" wire:click="sortOrderSales('customer_name')">Customer
+                                    {!! $sortLinkSales !!}</th>
+                                <th class="w-px-150">#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($saless as $sales)
+                                <tr>
+                                    <td class="text-center">
+                                        {{ ($saless->currentPage() - 1) * $saless->perPage() + $loop->index + 1 }}
+                                    </td>
+                                    <td class="no-wrap">{{ $sales->date }}</td>
+                                    <td class="no-wrap">{{ $sales->number }}</td>
+                                    <td>{{ $sales->customer_name }}</td>
+                                    <td><button class="btn btn-xs btn-outline-danger w-100"
+                                            wire:click.prevent="chooseSales('{{ $sales->number }}')"><i
+                                                class="fa fa-plus me-2"></i> Select</button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td class="text-center py-2" colspan="5">No Products
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <div class="mt-3">
+                        {{ $saless->links('admin.custom-pagination') }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Delete --}}
     <div wire:ignore.self class="modal fade" id="FileDeleteModal" tabindex="-1" product="dialog">
         <div class="modal-dialog" file="document">
@@ -427,6 +493,7 @@
             window.addEventListener('close-modal', event => {
                 $('#ChooseModalSuppliers').modal('hide');
                 $('#ChooseModalProducts').modal('hide');
+                $('#ChooseModalReference').modal('hide');
                 $('#FileDeleteModal').modal('hide');
             });
         </script>

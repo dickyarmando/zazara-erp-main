@@ -9,6 +9,8 @@ use App\Models\PrmRoleMenus;
 use App\Models\TrPurchase;
 use App\Models\TrPurchaseDetails;
 use App\Models\TrPurchaseFiles;
+use App\Models\TrSales;
+use App\Models\TrSalesNon;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +36,11 @@ class PurchaseCreateManager extends Component
     public $sortOrderItem = "asc";
     public $sortLinkItem = '<i class="sorticon fa-solid fa-caret-up"></i>';
     public $searchKeywordItem = '';
+
+    public $sortColumnSales = "date";
+    public $sortOrderSales = "desc";
+    public $sortLinkSales = '<i class="sorticon fa-solid fa-caret-up"></i>';
+    public $searchKeywordSales = '';
 
     public $month;
     public $year;
@@ -141,7 +148,28 @@ class PurchaseCreateManager extends Component
 
         $products = $products->where('is_status', '1')->paginate(10);
 
-        return view('livewire.purchase.purchase-create-manager', compact('suppliers', 'products'));
+        $salesTax = TrSales::leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales.customer_id')
+            ->select('tr_sales.id', 'tr_sales.number', 'tr_sales.date', 'tr_sales.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales.is_receive', 'tr_sales.is_status')
+            ->where('tr_sales.approved_at', '!=', null)
+            ->where('tr_sales.is_status', '1');
+
+        $salesNonTax = TrSalesNon::leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales_non.customer_id')
+            ->select('tr_sales_non.id', 'tr_sales_non.number', 'tr_sales_non.date', 'tr_sales_non.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales_non.is_receive', 'tr_sales_non.is_status')
+            ->where('tr_sales_non.approved_at', '!=', null)
+            ->where('tr_sales_non.is_status', '1');
+
+        if (!empty($this->searchKeywordSales)) {
+            $salesTax->orWhere('tr_sales.number', 'like', "%" . $this->searchKeywordSales . "%")->where('tr_sales.approved_at', '!=', null)->where('tr_sales.is_status', '1');
+            $salesTax->orWhere('ms_customers.company_name', 'like', "%" . $this->searchKeywordSales . "%")->where('tr_sales.approved_at', '!=', null)->where('tr_sales.is_status', '1');
+
+            $salesNonTax->orWhere('tr_sales_non.number', 'like', "%" . $this->searchKeywordSales . "%")->where('tr_sales_non.approved_at', '!=', null)->where('tr_sales_non.is_status', '1');
+            $salesNonTax->orWhere('ms_customers.company_name', 'like', "%" . $this->searchKeywordSales . "%")->where('tr_sales_non.approved_at', '!=', null)->where('tr_sales_non.is_status', '1');
+        }
+
+        $sales = $salesTax->union($salesNonTax)->orderBy($this->sortColumnSales, $this->sortOrderSales);
+        $saless = $sales->paginate(10);
+
+        return view('livewire.purchase.purchase-create-manager', compact('suppliers', 'products', 'saless'));
     }
 
     public function sortOrder($columnName = "")
@@ -170,6 +198,20 @@ class PurchaseCreateManager extends Component
         }
         $this->sortLinkItem = '<i class="sorticon fa-solid fa-caret-' . $caretOrder . '"></i>';
         $this->sortColumnItem = $columnName;
+    }
+
+    public function sortOrderSales($columnName = "")
+    {
+        $caretOrder = "up";
+        if ($this->sortOrderSales == 'asc') {
+            $this->sortOrderSales = 'desc';
+            $caretOrder = "down";
+        } else {
+            $this->sortOrderSales = 'asc';
+            $caretOrder = "up";
+        }
+        $this->sortLinkSales = '<i class="sorticon fa-solid fa-caret-' . $caretOrder . '"></i>';
+        $this->sortColumnSales = $columnName;
     }
 
     public function add()
@@ -408,6 +450,13 @@ class PurchaseCreateManager extends Component
     {
         $product = MsProducts::find($id);
         $this->items[$this->set_index]['name'] = $product->name;
+
+        $this->dispatchBrowserEvent('close-modal');
+    }
+
+    public function chooseSales($number)
+    {
+        $this->reference = $number;
 
         $this->dispatchBrowserEvent('close-modal');
     }
