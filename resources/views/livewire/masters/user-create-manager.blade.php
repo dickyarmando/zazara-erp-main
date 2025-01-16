@@ -48,7 +48,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Email <span class="text-danger">*</span></label>
                                 <input type="email" wire:model="email"
@@ -60,7 +60,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Phone Number <span class="text-danger">*</span></label>
                                 <div class="input-group">
@@ -76,7 +76,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 @inject('roles', 'App\Models\PrmRoles')
                                 <label class="form-label">Role <span class="text-danger">*</span></label>
@@ -87,6 +87,45 @@
                                     @endforeach
                                 </select>
                                 @error('role_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Amount Target</label>
+                                <input type="text" wire:model="target_amount"
+                                    class="form-control @error('target_amount') is-invalid @enderror"
+                                    placeholder="Amount Target" maxlength="30" onclick="this.select()">
+                                @error('target_amount')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Up</label>
+                                <input type="number" wire:model="up"
+                                    class="form-control @error('up') is-invalid @enderror" placeholder="Up"
+                                    onclick="this.select()">
+                                @error('up')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Down</label>
+                                <input type="number" wire:model="down"
+                                    class="form-control @error('down') is-invalid @enderror" placeholder="Down"
+                                    onclick="this.select()">
+                                @error('down')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
