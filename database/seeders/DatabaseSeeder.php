@@ -153,21 +153,21 @@ class DatabaseSeeder extends Seeder
             'id' => 15,
             'parent_id' => 12,
             'name' => 'Expanse Report',
-            'seq' => 3,
+            'seq' => 5,
         ]);
 
         PrmMenus::create([
             'id' => 16,
             'parent_id' => 12,
             'name' => 'Profit Loss Report',
-            'seq' => 4,
+            'seq' => 6,
         ]);
 
         PrmMenus::create([
             'id' => 17,
             'parent_id' => 12,
             'name' => 'Day Book',
-            'seq' => 5,
+            'seq' => 7,
         ]);
 
         PrmMenus::create([
@@ -344,6 +344,22 @@ class DatabaseSeeder extends Seeder
             'name' => 'Post Sales',
             'action' => 'expanse/post/sales',
             'seq' => 3,
+        ]);
+
+        PrmMenus::create([
+            'id' => 35,
+            'parent_id' => 12,
+            'name' => 'Payment Report',
+            'action' => 'reports/pay',
+            'seq' => 4,
+        ]);
+
+        PrmMenus::create([
+            'id' => 36,
+            'parent_id' => 12,
+            'name' => 'Receive Report',
+            'action' => 'reports/receive',
+            'seq' => 5,
         ]);
         //End Menus
 
@@ -530,16 +546,18 @@ class DatabaseSeeder extends Seeder
         PrmRoleMenus::create([
             'role_id' => 1,
             'menu_id' => 33,
-            'is_create' => 1,
-            'is_update' => 1,
-            'is_delete' => 1,
         ]);
         PrmRoleMenus::create([
             'role_id' => 1,
             'menu_id' => 34,
-            'is_create' => 1,
-            'is_update' => 1,
-            'is_delete' => 1,
+        ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 35,
+        ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 36,
         ]);
         // End Role Menus
 

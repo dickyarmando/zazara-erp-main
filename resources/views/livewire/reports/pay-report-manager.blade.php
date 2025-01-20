@@ -1,5 +1,5 @@
 <div>
-    @section('title', 'Purchase Reports')
+    @section('title', 'Payment Report')
 
     <div class="d-md-flex justify-content-between">
         <h2 class="mb-3"><span class="text-muted fw-light">Data @yield('title')</span></h2>
@@ -81,6 +81,45 @@
         </div>
     </div>
 
+    <div class="card card-action mb-4">
+        <div class="card-header">
+            <h5 class="card-action-title mb-0">Filter</h5>
+            <div class="card-action-element">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item">
+                        <a href="javascript:void(0);" class="card-collapsible"><i
+                                class="tf-icons bx bx-chevron-up"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="collapse show">
+            <div class="card-body pt-0">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" wire:model="start_date" class="form-control" placeholder="Start Date">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="date" wire:model="end_date" class="form-control" placeholder="End Date">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Search</label>
+                            <input type="text" wire:model.debounce.500ms="searchKeyword" class="form-control"
+                                placeholder="Search" maxlength="20">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="col-md-offset-1 col-md-12">
         <div class="panel">
             <div class="panel-heading">
@@ -92,8 +131,12 @@
                                     {{ $val }}</option>
                             @endforeach
                         </select>
-                        <input type="text" class="form-control w-100" placeholder="Search"
-                            wire:model.debounce.500ms="searchKeyword">
+                    </div>
+                    <div class="col-sm-8 col-xs-12 text-right">
+                        <div class="d-md-flex justify-content-end">
+                            <button class="btn btn-success btn-sm" wire:click="printTable" target="_blank"><i
+                                    class="bx bxs-printer me-2"></i>Print</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -154,6 +197,10 @@
     </div>
 
     @push('scripts')
-        <script></script>
+        <script>
+            window.addEventListener('openTab', event => {
+                window.open(event.detail.url, '_blank');
+            });
+        </script>
     @endpush
 </div>

@@ -6,8 +6,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LivewireController;
 use App\Http\Controllers\MenuApiController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ExpanseTableReportController;
 use App\Http\Controllers\Exports\PurchaseTableReportController;
 use App\Http\Controllers\Exports\SalesTableReportController;
+use App\Http\Controllers\PayTableReportController;
+use App\Http\Controllers\ReceiveTableReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Livewire\Expanse\ExpanseCreateManager;
 use App\Http\Livewire\Expanse\ExpanseManager;
@@ -218,6 +221,9 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/print')->group(function () {
         Route::get('/sales', [SalesTableReportController::class, 'index'])->name('print.sales');
         Route::get('/purchase', [PurchaseTableReportController::class, 'index'])->name('print.purchase');
+        Route::get('/pay', [PayTableReportController::class, 'index'])->name('print.pay');
+        Route::get('/receive', [ReceiveTableReportController::class, 'index'])->name('print.receive');
+        Route::get('/expanse', [ExpanseTableReportController::class, 'index'])->name('print.expanse');
     });
 
     Route::post('/menu-save-order', [MenuApiController::class, 'save_order']);
