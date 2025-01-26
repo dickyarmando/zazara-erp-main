@@ -112,7 +112,12 @@
     </div>
     <div class="col-md-12 mt-4">
         Hormat Kami,</br>
-        <div style="height: 60px;">&nbsp;</div></br>
+        <div style="height: 60px;">
+            @if (!empty($poSignImg->value))
+                <img src="{{ asset('assets/img/config/' . $poSignImg->value) }}" class="img-fluid mt-2"
+                    style="height: 60px;">
+            @endif
+        </div></br>
         <b>{{ $poSign->value }}</b>
     </div>
 </div>

@@ -32,8 +32,9 @@ class PurchaseNonViewManager extends Component
             ->get()->toArray();
         $suppliers = MsSuppliers::find($purchase->supplier_id);
         $poSign = PrmConfig::find(2);
+        $poSignImg = PrmConfig::find(14);
 
-        return view('livewire.purchase.purchase-non-view-manager', ['purchase' => $purchase, 'items' => $purchaseDetails, 'companies' => $company, 'suppliers' => $suppliers, 'poSign' => $poSign]);
+        return view('livewire.purchase.purchase-non-view-manager', ['purchase' => $purchase, 'items' => $purchaseDetails, 'companies' => $company, 'suppliers' => $suppliers, 'poSign' => $poSign, 'poSignImg' => $poSignImg]);
     }
 
     public function backRedirect()

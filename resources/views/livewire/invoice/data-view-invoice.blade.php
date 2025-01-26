@@ -149,7 +149,12 @@
     </div>
     <div class="col-4 mt-4 text-center">
         Diketahui Oleh</br>
-        <div style="height: 100px;">&nbsp;</div></br>
+        <div style="height: 100px;">
+            @if (!empty($invSignImg->value))
+                <img src="{{ asset('assets/img/config/' . $invSignImg->value) }}" class="img-fluid mt-2"
+                    style="height: 100px;">
+            @endif
+        </div></br>
         <b>Nama : {{ $invSignName->value }}</b><br>
         <b>Jabatan : {{ $invSignPosition->value }}</b>
     </div>

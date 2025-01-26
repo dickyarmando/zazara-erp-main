@@ -101,7 +101,12 @@
     </div>
     <div class="col-md-12 mt-4">
         Hormat Kami,</br>
-        <div style="height: 100px;">&nbsp;</div></br>
+        <div style="height: 100px;">
+            @if (!empty($soSignImg->value))
+                <img src="{{ asset('assets/img/config/' . $soSignImg->value) }}" class="img-fluid mt-2"
+                    style="height: 100px;">
+            @endif
+        </div></br>
         <b>{{ $soSign->value }}</b>
     </div>
 </div>

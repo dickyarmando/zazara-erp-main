@@ -693,17 +693,38 @@ class DatabaseSeeder extends Seeder
         ]);
 
         PrmConfig::create([
-            'id' => 9,
+            'id' => 12,
             'code' => 'coasr',
             'name' => 'Account Receivables',
             'type' => 'select_coa',
         ]);
 
         PrmConfig::create([
-            'id' => 10,
+            'id' => 13,
             'code' => 'coasp',
             'name' => 'Account PPN Sales',
             'type' => 'select_coa',
+        ]);
+
+        PrmConfig::create([
+            'id' => 14,
+            'code' => 'posi',
+            'name' => 'PO Sign Image',
+            'type' => 'file',
+        ]);
+
+        PrmConfig::create([
+            'id' => 15,
+            'code' => 'sosi',
+            'name' => 'SO Sign Image',
+            'type' => 'file',
+        ]);
+
+        PrmConfig::create([
+            'id' => 16,
+            'code' => 'insi',
+            'name' => 'Invoice Sign Image',
+            'type' => 'file',
         ]);
         // End Config
 

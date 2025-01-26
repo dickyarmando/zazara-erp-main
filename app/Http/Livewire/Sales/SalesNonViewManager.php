@@ -35,8 +35,9 @@ class SalesNonViewManager extends Component
         $customers = MsCustomers::find($sales->customer_id);
         $soSign = PrmConfig::find(3);
         $soTC = PrmConfig::find(4);
+        $soSignImg = PrmConfig::find(15);
 
-        return view('livewire.sales.sales-non-view-manager', compact('companies', 'sales', 'items', 'customers', 'soSign', 'soTC'));
+        return view('livewire.sales.sales-non-view-manager', compact('companies', 'sales', 'items', 'customers', 'soSign', 'soTC', 'soSignImg'));
     }
 
     public function backRedirect()
