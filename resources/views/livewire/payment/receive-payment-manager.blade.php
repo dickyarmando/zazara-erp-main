@@ -79,8 +79,6 @@
                             <tr>
                             @endif
                                 <td class="text-center">
-                                    {{-- {{ $invoiceTerminColor['itd']->value }} --}}
-                                    {{-- {{ $sales->due_termin }} --}}
                                     @if ($sales->type == 'Tax')
                                         <input class="form-check-input" type="checkbox" value="{{ $sales->invoice_id }}"
                                             wire:model="selected">

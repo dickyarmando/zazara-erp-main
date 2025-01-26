@@ -210,7 +210,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/receive', ReceiveReportManager::class)->name('reports.receive');
         Route::get('/pay', PayReportManager::class)->name('reports.pay');
         Route::get('/sales/incentive', SalesIncentiveManager::class)->name('reports.sales.incentive');
-        // Route::get('/sales/incentive/xlsx', [SalesIncentiveManager::class, 'exportExcel'])->name('reports.sales.incentive.xlsx');
     });
 
     //Pengaturan

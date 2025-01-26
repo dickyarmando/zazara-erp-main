@@ -675,14 +675,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         PrmConfig::create([
-            'id' => 12,
+            'id' => 9,
             'code' => 'coasr',
             'name' => 'Account Receivables',
             'type' => 'select_coa',
         ]);
 
         PrmConfig::create([
-            'id' => 13,
+            'id' => 10,
             'code' => 'coasp',
             'name' => 'Account PPN Sales',
             'type' => 'select_coa',
