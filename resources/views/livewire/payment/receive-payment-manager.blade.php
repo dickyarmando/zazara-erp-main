@@ -71,16 +71,8 @@
                     </thead>
                     <tbody>
                         @foreach ($saless as $sales)
-                            @if(isset($invoiceTerminColor['itd']->value) && $invoiceTerminColor['itd']->value == $sales->due_termin)
-                            <tr class="bg-danger">
-                            @elseif(isset($invoiceTerminColor['itw']) && $invoiceTerminColor['itw']->value == $sales->due_termin)
-                            <tr class="bg-warning">
-                            @else
                             <tr>
-                            @endif
                                 <td class="text-center">
-                                    {{-- {{ $invoiceTerminColor['itd']->value }} --}}
-                                    {{-- {{ $sales->due_termin }} --}}
                                     @if ($sales->type == 'Tax')
                                         <input class="form-check-input" type="checkbox" value="{{ $sales->invoice_id }}"
                                             wire:model="selected">

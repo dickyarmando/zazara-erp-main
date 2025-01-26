@@ -7,8 +7,6 @@ use App\Http\Controllers\LivewireController;
 use App\Http\Controllers\MenuApiController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Exports\PurchaseTableReportController;
-use App\Http\Controllers\Exports\ReportSalesIncentive;
-use App\Http\Controllers\Exports\ReportSalesIncentiveXlsx;
 use App\Http\Controllers\Exports\SalesTableReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Livewire\Expanse\ExpanseCreateManager;
@@ -62,7 +60,6 @@ use App\Http\Livewire\Reports\ProfitLossReportManager;
 use App\Http\Livewire\Reports\PurchaseReportManager;
 use App\Http\Livewire\Reports\ReceiveReportManager;
 use App\Http\Livewire\Reports\SalesReportManager;
-use App\Http\Livewire\Reports\SalesIncentiveManager;
 use App\Http\Livewire\Sales\SalesCreateManager;
 use App\Http\Livewire\Sales\SalesManager;
 use App\Http\Livewire\Sales\SalesNonCreateManager;
@@ -209,8 +206,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/day-books', DayBookReportManager::class)->name('reports.day-books');
         Route::get('/receive', ReceiveReportManager::class)->name('reports.receive');
         Route::get('/pay', PayReportManager::class)->name('reports.pay');
-        Route::get('/sales/incentive', SalesIncentiveManager::class)->name('reports.sales.incentive');
-        // Route::get('/sales/incentive/xlsx', [SalesIncentiveManager::class, 'exportExcel'])->name('reports.sales.incentive.xlsx');
     });
 
     //Pengaturan
@@ -223,13 +218,6 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/print')->group(function () {
         Route::get('/sales', [SalesTableReportController::class, 'index'])->name('print.sales');
         Route::get('/purchase', [PurchaseTableReportController::class, 'index'])->name('print.purchase');
-        Route::get('/reports/sales/incentive', [ReportSalesIncentive::class, 'index'])->name('print.reports.sales.incentive');
-    });
-
-    Route::prefix('/export')->group(function () {
-        Route::prefix('/xlsx')->group(function () {
-            Route::get('/reports/sales/incentive', [ReportSalesIncentiveXlsx::class, 'index'])->name('export.xlsx.reports.sales.incentive');
-        });
     });
 
     Route::post('/menu-save-order', [MenuApiController::class, 'save_order']);
