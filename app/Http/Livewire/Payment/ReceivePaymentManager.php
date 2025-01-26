@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Payment;
 
+use App\Models\PrmConfig;
 use App\Models\TrInvoice;
 use App\Models\TrInvoicesNon;
 use App\Models\TrReceives;
@@ -65,7 +66,9 @@ class ReceivePaymentManager extends Component
         $saless = $salesTax->union($salesNonTax)->orderBy($this->sortColumn, $this->sortOrder);
         $saless = $saless->paginate($this->perPage);
 
-        return view('livewire.payment.receive-payment-manager', compact('saless'));
+        $invoiceTerminColor = PrmConfig::where('is_status', '1')->whereIn('code', ['itd', 'itw'])->get()->keyBy('code');;
+
+        return view('livewire.payment.receive-payment-manager', compact('saless', 'invoiceTerminColor'));
     }
 
     public function sortOrder($columnName = "")
