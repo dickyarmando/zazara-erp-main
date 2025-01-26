@@ -3,7 +3,9 @@
 /public/build
 /public/hot
 /public/storage
-/public
+/public/sales_files
+/public/purchase_files
+/public/sales_non_files
 /storage/*.key
 /vendor
 .env
