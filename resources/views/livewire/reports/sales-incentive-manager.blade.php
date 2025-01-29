@@ -99,8 +99,12 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="form-label">Sales Username</label>
-                                    <input type="text" wire:model="sales_username" class="form-control" placeholder="Sales Username"
-                                        maxlength="20">
+                                    <select class="form-control" wire:model="sales_username" placeholder="Sales Username">
+                                        @foreach ($listSales as $sales)
+                                            <option value="{{ $sales->username }}">
+                                                {{ $sales->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             @endif
@@ -126,7 +130,7 @@
                     <div class="col-sm-8 col-xs-12 text-right">
                         <div class="d-md-flex justify-content-end gap-3">
                             <button class="btn btn-success btn-sm" wire:click="exportExcel" target="_blank"><i
-                                    class="bx bxs-printer me-2"></i>Download</button>
+                                    class='bx bxs-file-export me-2'></i>Download</button>
 
                             <button class="btn btn-success btn-sm" wire:click="printTable" target="_blank"><i
                                     class="bx bxs-printer me-2"></i>Print</button>

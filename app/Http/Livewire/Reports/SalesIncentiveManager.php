@@ -29,22 +29,26 @@ class SalesIncentiveManager extends Component
     public $invoice_start_date;
     public $invoice_end_date;
     public $sales_username;
+    public $sales_role_id;
+    public $user;
 
     public function mount()
     {
         $this->invoice_start_date = Carbon::now()->startOfMonth()->format('Y-m-d');
         $this->invoice_end_date = Carbon::now()->format('Y-m-d');
         
-        $user = Auth()->user();
+        $this->user = Auth()->user();
         $querySalesRoleId = PrmConfig::where('is_status', '1')->where('code', 'sri')->value('value');
-        $salesRoleId = $querySalesRoleId ?: null;
+        $this->sales_role_id = $querySalesRoleId ?: null;
 
-        $this->sales_username = $user->username;
-        $this->filterSales = $user->role_id != (int) $salesRoleId;
+        $this->sales_username = $this->user->username;
+        $this->filterSales = $this->user->role_id != (int) $this->sales_role_id;
     }
 
     public function render()
     {
+        $listSales = $this->listSales();
+
         if(!$this->sales_username){
             $incentiveDetails = new stdClass();
             $incentiveDetails->target_amount = 0;
@@ -67,6 +71,7 @@ class SalesIncentiveManager extends Component
             'summaryIncentiveSales' => $incentiveData['summaryIncentiveSales'],
             'incentiveAmount' => $incentiveData['incentiveAmount'],
             'incentiveDetails' => $incentiveData['incentiveDetails'],
+            'listSales' => $listSales,
         ]);
     }
 
@@ -82,6 +87,19 @@ class SalesIncentiveManager extends Component
         }
         $this->sortLink = '<i class="sorticon fa-solid fa-caret-' . $caretOrder . '"></i>';
         $this->sortColumn = $columnName;
+    }
+
+    private function listSales()
+    {
+        $self_user = new stdClass();
+        $self_user->name = $this->user->name;
+        $self_user->username = $this->user->username;
+
+        $query = User::where('is_status', '1')
+            ->where('role_id', $this->sales_role_id)
+            ->select('username', 'name');
+
+        return array_merge(array($self_user), $query->get()->all());
     }
 
     private function calculateIncentives()
