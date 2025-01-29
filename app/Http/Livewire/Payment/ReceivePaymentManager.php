@@ -36,6 +36,7 @@ class ReceivePaymentManager extends Component
         $salesTax = TrInvoice::leftJoin('tr_sales', 'tr_invoices.sales_id', '=', 'tr_sales.id')
             ->leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales.customer_id')
             ->select('tr_sales.id', 'tr_sales.number', 'tr_invoices.id as invoice_id', 'tr_invoices.number as invoice_number', 'tr_invoices.date as invoice_date', 'tr_invoices.due_termin', 'tr_invoices.due_date', 'tr_sales.date', 'tr_sales.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales.reference', 'tr_invoices.total', 'tr_invoices.payment', 'tr_invoices.rest', 'tr_invoices.notes', 'tr_invoices.is_receive', 'tr_invoices.is_status')
+            ->selectRaw('datediff(tr_invoices.due_date, now()) as date_diff')
             ->addSelect(DB::raw('"Tax" as type'))
             ->where('tr_invoices.is_receive', '0')
             ->where('tr_invoices.approved_at', '!=', null);
@@ -43,6 +44,7 @@ class ReceivePaymentManager extends Component
         $salesNonTax = TrInvoicesNon::leftJoin('tr_sales_non', 'tr_invoices_nons.sales_non_id', '=', 'tr_sales_non.id')
             ->leftJoin('ms_customers', 'ms_customers.id', '=', 'tr_sales_non.customer_id')
             ->select('tr_sales_non.id', 'tr_sales_non.number', 'tr_invoices_nons.id as invoice_id', 'tr_invoices_nons.number as invoice_number', 'tr_invoices_nons.date as invoice_date', 'tr_invoices_nons.due_termin', 'tr_invoices_nons.due_date', 'tr_sales_non.date', 'tr_sales_non.customer_id', 'ms_customers.company_name as customer_name', 'tr_sales_non.reference', 'tr_invoices_nons.total', 'tr_invoices_nons.payment', 'tr_invoices_nons.rest', 'tr_invoices_nons.notes', 'tr_invoices_nons.is_receive', 'tr_invoices_nons.is_status')
+            ->selectRaw('datediff(tr_invoices_nons.due_date, now()) as date_diff')
             ->addSelect(DB::raw('"Non" as type'))
             ->where('tr_invoices_nons.is_receive', '0')
             ->where('tr_invoices_nons.approved_at', '!=', null);
