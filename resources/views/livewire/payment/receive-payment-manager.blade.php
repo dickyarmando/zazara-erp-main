@@ -82,7 +82,6 @@
                     </thead>
                     <tbody>
                         @foreach ($saless as $sales)
-                            {{ $sales->date_diff }}
                             @if(isset($invoiceTerminColor['itd']->value) && $invoiceTerminColor['itd']->value > $sales->date_diff)
                             <tr class="bg-red">
                             @elseif(isset($invoiceTerminColor['itw']) && $invoiceTerminColor['itw']->value > $sales->date_diff)
