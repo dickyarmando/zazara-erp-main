@@ -15,7 +15,7 @@ class GeneralConfigComponent extends Component
 
     public function mount()
     {
-        $idGeneral = ['1'];
+        $idGeneral = ['1', '20'];
         $configs = PrmConfig::where('is_status', '1')
             ->whereIn('id', $idGeneral)
             ->select('id', 'code', 'name', 'type', 'value')

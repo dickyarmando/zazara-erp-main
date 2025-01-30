@@ -153,6 +153,13 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2">&nbsp;</td>
+                                            <td colspan="2" class="text-right">DPP Lainnya</td>
+                                            <td><input type="text" class="form-control text-end"
+                                                    wire:model="dpp_amount" readonly>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">&nbsp;</td>
                                             <td colspan="2" class="text-right">PPN ({{ $ppn }} %)</td>
                                             <td><input type="text" class="form-control text-end"
                                                     wire:model="ppn_amount" readonly>

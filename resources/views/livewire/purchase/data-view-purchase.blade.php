@@ -73,11 +73,17 @@
                     $terbilang = $terbilang->format(round($purchase->total, 0));
                     $terbilang = str_replace('juts', 'juta', $terbilang);
                 @endphp
-                <td colspan="4" rowspan="5"><b>Terbilang : <span
+                <td colspan="4" rowspan="6"><b>Terbilang : <span
                             class="text-capitalize">{{ $terbilang }}</span></b></td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">SUBTOTAL</td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">
                     {{ number_format($purchase->subtotal, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td class="px-2 text-right" style="border: 1px solid #000;">DPP Lainnya
+                </td>
+                <td class="px-2 text-right" style="border: 1px solid #000;">
+                    {{ number_format($purchase->dpp_amount, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td class="px-2 text-right" style="border: 1px solid #000;">PPN

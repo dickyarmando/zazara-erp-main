@@ -361,6 +361,15 @@ class DatabaseSeeder extends Seeder
             'action' => 'reports/receive',
             'seq' => 5,
         ]);
+
+        PrmMenus::create([
+            'id' => 37,
+            'parent_id' => 12,
+            'name' => 'Sales Incentive',
+            'action' => 'reports/sales/incentive',
+            'seq' => 8,
+            'is_sales' => 1,
+        ]);
         //End Menus
 
         // Role Menus Added
@@ -559,6 +568,10 @@ class DatabaseSeeder extends Seeder
             'role_id' => 1,
             'menu_id' => 36,
         ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 37,
+        ]);
         // End Role Menus
 
         // Company Added
@@ -749,6 +762,14 @@ class DatabaseSeeder extends Seeder
             'code' => 'insi',
             'name' => 'Invoice Sign Image',
             'type' => 'file',
+        ]);
+
+        PrmConfig::create([
+            'id' => 20,
+            'code' => 'dpp',
+            'name' => 'Others DPP',
+            'type' => 'varchar',
+            'value' => '0.92',
         ]);
         // End Config
 
