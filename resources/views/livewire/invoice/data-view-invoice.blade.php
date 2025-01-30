@@ -111,7 +111,12 @@
                     <td class="px-2 text-right" style="border: 1px solid #000;">DPP Lainnya
                     </td>
                     <td class="px-2 text-right" style="border: 1px solid #000;">
-                        {{ number_format($sales->dpp_amount, 0, ',', '.') }}</td>
+                        @if ($purchase->dpp_amount == 0)
+                            {{ number_format($sales->dpp_amount, 0, ',', '.') }}
+                        @else
+                            {{ number_format($sales->subtotal, 0, ',', '.') }}
+                        @endif
+                    </td>
                 </tr>
                 <tr>
                     <td class="px-2 text-right" style="border: 1px solid #000;">PPN
