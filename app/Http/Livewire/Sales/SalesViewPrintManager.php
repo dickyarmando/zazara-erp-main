@@ -21,7 +21,7 @@ class SalesViewPrintManager extends Controller
         $customers = MsCustomers::find($sales->customer_id);
         $soSign = PrmConfig::find(3);
         $soTC = PrmConfig::find(4);
-        $soSignImg = PrmConfig::find(15);
+        $soSignImg = PrmConfig::find(18);
 
         return view('livewire.sales.sales-view-print-manager', compact('companies', 'sales', 'items', 'customers', 'soSign', 'soTC', 'soSignImg'));
     }

@@ -32,7 +32,7 @@ class PurchaseViewManager extends Component
             ->get()->toArray();
         $suppliers = MsSuppliers::find($purchase->supplier_id);
         $poSign = PrmConfig::find(2);
-        $poSignImg = PrmConfig::find(14);
+        $poSignImg = PrmConfig::find(17);
 
         return view('livewire.purchase.purchase-view-manager', ['purchase' => $purchase, 'items' => $purchaseDetails, 'companies' => $company, 'suppliers' => $suppliers, 'poSign' => $poSign, 'poSignImg' => $poSignImg]);
     }

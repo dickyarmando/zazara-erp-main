@@ -24,7 +24,7 @@ class InvoiceNonViewPrintManager extends Controller
         $invSignName = PrmConfig::find(5);
         $invSignPosition = PrmConfig::find(6);
         $invTC = PrmConfig::find(7);
-        $invSignImg = PrmConfig::find(16);
+        $invSignImg = PrmConfig::find(19);
 
         return view('livewire.invoice.invoice-non-view-print-manager', compact('companies', 'invoices', 'sales', 'items', 'customers', 'invSignName', 'invSignPosition', 'invTC', 'invSignImg'));
     }

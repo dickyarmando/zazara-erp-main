@@ -20,7 +20,7 @@ class PurchaseNonViewPrintManager extends Controller
             ->get()->toArray();
         $suppliers = MsSuppliers::find($purchase->supplier_id);
         $poSign = PrmConfig::find(2);
-        $poSignImg = PrmConfig::find(14);
+        $poSignImg = PrmConfig::find(17);
 
         return view('livewire.purchase.purchase-non-view-print-manager', ['purchase' => $purchase, 'items' => $purchaseDetails, 'companies' => $company, 'suppliers' => $suppliers, 'poSign' => $poSign, 'poSignImg' => $poSignImg]);
     }

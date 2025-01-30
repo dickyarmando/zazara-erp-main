@@ -15,7 +15,7 @@ class InvoiceConfigComponent extends Component
 
     public function mount()
     {
-        $idGeneral = ['5', '6', '7', '16'];
+        $idGeneral = ['5', '6', '7', '15', '16', '19'];
         $configs = PrmConfig::where('is_status', '1')
             ->whereIn('id', $idGeneral)
             ->select('id', 'code', 'name', 'type', 'value')

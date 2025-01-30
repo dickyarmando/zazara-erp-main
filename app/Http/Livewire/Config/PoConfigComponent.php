@@ -15,7 +15,7 @@ class PoConfigComponent extends Component
 
     public function mount()
     {
-        $idGeneral = ['2', '14'];
+        $idGeneral = ['2', '17'];
         $configs = PrmConfig::where('is_status', '1')
             ->whereIn('id', $idGeneral)
             ->select('id', 'code', 'name', 'type', 'value')

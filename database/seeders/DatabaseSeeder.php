@@ -708,20 +708,44 @@ class DatabaseSeeder extends Seeder
 
         PrmConfig::create([
             'id' => 14,
+            'code' => 'sri',
+            'name' => 'Sales Role ID',
+            'type' => 'integer',
+            'value' => '2',
+        ]);
+
+        PrmConfig::create([
+            'id' => 15,
+            'code' => 'itd',
+            'name' => 'Invoice Termin Danger',
+            'type' => 'integer',
+            'value' => '-1',
+        ]);
+
+        PrmConfig::create([
+            'id' => 16,
+            'code' => 'itw',
+            'name' => 'Invoice Termin Warning',
+            'type' => 'integer',
+            'value' => '7',
+        ]);
+
+        PrmConfig::create([
+            'id' => 17,
             'code' => 'posi',
             'name' => 'PO Sign Image',
             'type' => 'file',
         ]);
 
         PrmConfig::create([
-            'id' => 15,
+            'id' => 18,
             'code' => 'sosi',
             'name' => 'SO Sign Image',
             'type' => 'file',
         ]);
 
         PrmConfig::create([
-            'id' => 16,
+            'id' => 19,
             'code' => 'insi',
             'name' => 'Invoice Sign Image',
             'type' => 'file',

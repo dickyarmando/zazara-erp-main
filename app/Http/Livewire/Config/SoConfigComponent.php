@@ -15,7 +15,7 @@ class SoConfigComponent extends Component
 
     public function mount()
     {
-        $idGeneral = ['3', '4', '15'];
+        $idGeneral = ['3', '4', '14', '18'];
         $configs = PrmConfig::where('is_status', '1')
             ->whereIn('id', $idGeneral)
             ->select('id', 'code', 'name', 'type', 'value')
