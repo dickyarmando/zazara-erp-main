@@ -95,7 +95,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 company-logo-container">
                             @livewire('auth.change-images')
                         </div>
                         <div class="col-md-9">

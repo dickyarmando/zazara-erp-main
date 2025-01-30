@@ -1,6 +1,17 @@
 <div>
     @section('title', 'Receive Payments')
 
+    @push('head')
+        <style>
+            .bg-red {
+                background-color: #FF4500 !important;
+            }
+            .bg-gold {
+                background-color: #FFD700 !important;
+            }
+        </style>
+    @endpush
+
     <div class="d-md-flex justify-content-between">
         <h2 class="mb-3"><span class="text-muted fw-light">Data @yield('title')</span></h2>
         <nav aria-label="breadcrumb">
@@ -71,7 +82,13 @@
                     </thead>
                     <tbody>
                         @foreach ($saless as $sales)
+                            @if(isset($invoiceTerminColor['itd']->value) && $invoiceTerminColor['itd']->value > $sales->date_diff)
+                            <tr class="bg-red">
+                            @elseif(isset($invoiceTerminColor['itw']) && $invoiceTerminColor['itw']->value > $sales->date_diff)
+                            <tr class="bg-gold">
+                            @else
                             <tr>
+                            @endif
                                 <td class="text-center">
                                     @if ($sales->type == 'Tax')
                                         <input class="form-check-input" type="checkbox" value="{{ $sales->invoice_id }}"
