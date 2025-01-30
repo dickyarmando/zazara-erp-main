@@ -80,10 +80,9 @@
                     {{ number_format($purchase->subtotal, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td class="px-2 text-right" style="border: 1px solid #000;">DPP Lainnya
-                </td>
+                <td class="px-2 text-right" style="border: 1px solid #000;">DPP Lainnya</td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">
-                    @if ($purchase->dpp_amount <= 0)
+                    @if (floatval($purchase->dpp_amount) === 0)
                         {{ number_format($purchase->dpp_amount, 0, ',', '.') }}
                     @else
                         {{ number_format($purchase->subtotal, 0, ',', '.') }}
