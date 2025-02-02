@@ -91,15 +91,27 @@ class SalesIncentiveManager extends Component
 
     private function listSales()
     {
-        $self_user = new stdClass();
-        $self_user->name = $this->user->name;
-        $self_user->username = $this->user->username;
+        $queryInvoices = TrInvoice::select(
+            'users.name AS name',
+            'users.username AS username'
+        )
+            ->join('tr_sales', 'tr_sales.id', '=', 'tr_invoices.sales_id')
+            ->join('users', 'users.id', '=', 'tr_sales.sales_id')
+            ->where('tr_invoices.is_status', 1)
+            ->where('tr_invoices.approved_at', '!=', null);
 
-        $query = User::where('is_status', '1')
-            ->where('role_id', $this->sales_role_id)
-            ->select('username', 'name');
+        $queryInvoicesNon = TrInvoicesNon::select(
+            'users.name AS name',
+            'users.username AS username'
+        )
+            ->join('tr_sales_non', 'tr_sales_non.id', '=', 'tr_invoices_nons.sales_non_id')
+            ->join('users', 'users.id', '=', 'tr_sales_non.sales_id')
+            ->where('tr_invoices_nons.is_status', 1)
+            ->where('tr_invoices_nons.approved_at', '!=', null);
+        
+        $queryInvoices->union($queryInvoicesNon);
 
-        return array_merge(array($self_user), $query->get()->all());
+        return $queryInvoices->get()->all();
     }
 
     private function calculateIncentives()
