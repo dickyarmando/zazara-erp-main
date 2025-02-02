@@ -100,6 +100,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Sales Username</label>
                                     <select class="form-control" wire:model="sales_username" placeholder="Sales Username">
+                                        <option value="">Pilih Sales</option>
                                         @foreach ($listSales as $sales)
                                             <option value="{{ $sales->username }}">
                                                 {{ $sales->name }}</option>
