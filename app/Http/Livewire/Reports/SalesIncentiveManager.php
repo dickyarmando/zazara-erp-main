@@ -91,10 +91,6 @@ class SalesIncentiveManager extends Component
 
     private function listSales()
     {
-        $self_user = new stdClass();
-        $self_user->name = $this->user->name;
-        $self_user->username = $this->user->username;
-
         $queryInvoices = TrInvoice::select(
             'users.name AS name',
             'users.username AS username'
@@ -115,7 +111,7 @@ class SalesIncentiveManager extends Component
         
         $queryInvoices->union($queryInvoicesNon);
 
-        return array_merge(array($self_user), $queryInvoices->get()->all());
+        return $queryInvoices->get()->all();
     }
 
     private function calculateIncentives()
