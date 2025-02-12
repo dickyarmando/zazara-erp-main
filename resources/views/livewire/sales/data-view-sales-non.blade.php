@@ -93,7 +93,26 @@
     </div>
     <div class="col-md-12 mt-4">
         <u><b>Terms & Conditions</b></u>
-        {!! $soTC->value !!}
+        <!-- {!! $soTC->value !!} -->
+         <!-- -------------------HARDCODE PRINT TNC SO NON TAX------------------------------ -->
+        <ol>
+            <li>
+                Harga franco on Truck Jabodetabek
+            </li>
+            <li>Lead Time Delivery<br>
+                3-5 Hari Kerja item dari Jakarta.<br>
+                7-14 Hari Kerja apabila stock dari Surabaya.
+            </li>
+            <li>
+                Pembayaran dapat di transfer ke rekening :<br>
+            <ul>
+            <li><b>BCA 8015.28.1380 A/N. Santi Amelia</b></li>
+            </ul>
+            <li>
+                Barang yang sudah diterima tidak dapat <b>dikembalikan</b> atau <b>ditukar</b>.
+            </li>
+            </li>
+        </ol>
     </div>
     <div class="col-md-12 mt-2">
         Demikian Penawaran harga ini kami ajukan. Atas perhatian dan kerja sama nya kami ucapkan terima
