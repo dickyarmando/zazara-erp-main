@@ -57,12 +57,12 @@ class ReceivePaymentManager extends Component
             $salesTax->orWhere('tr_invoices.payment', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices.is_receive', '0')->where('tr_invoices.approved_at', '!=', null);
             $salesTax->orWhere('tr_invoices.rest', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices.is_receive', '0')->where('tr_invoices.approved_at', '!=', null);
 
-            $salesNonTax->orWhere('tr_sales.number', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices_nons.is_receive', '0')->where('tr_invoices_nons.approved_at', '!=', null);
-            $salesNonTax->orWhere('tr_invoices.number', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices_nons.is_receive', '0')->where('tr_invoices_nons.approved_at', '!=', null);
+            $salesNonTax->orWhere('tr_sales_non.number', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices_nons.is_receive', '0')->where('tr_invoices_nons.approved_at', '!=', null);
+            $salesNonTax->orWhere('tr_invoices_nons.number', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices_nons.is_receive', '0')->where('tr_invoices_nons.approved_at', '!=', null);
             $salesNonTax->orWhere('ms_customers.company_name', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices_nons.is_receive', '0')->where('tr_invoices_nons.approved_at', '!=', null);
-            $salesNonTax->orWhere('tr_invoices.total', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices_nons.is_receive', '0')->where('tr_invoices_nons.approved_at', '!=', null);
-            $salesNonTax->orWhere('tr_invoices.payment', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices_nons.is_receive', '0')->where('tr_invoices_nons.approved_at', '!=', null);
-            $salesNonTax->orWhere('tr_invoices.rest', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices_nons.is_receive', '0')->where('tr_invoices_nons.approved_at', '!=', null);
+            $salesNonTax->orWhere('tr_invoices_nons.total', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices_nons.is_receive', '0')->where('tr_invoices_nons.approved_at', '!=', null);
+            $salesNonTax->orWhere('tr_invoices_nons.payment', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices_nons.is_receive', '0')->where('tr_invoices_nons.approved_at', '!=', null);
+            $salesNonTax->orWhere('tr_invoices_nons.rest', 'like', "%" . $this->searchKeyword . "%")->where('tr_invoices_nons.is_receive', '0')->where('tr_invoices_nons.approved_at', '!=', null);
         }
 
         $saless = $salesTax->union($salesNonTax)->orderBy($this->sortColumn, $this->sortOrder);
