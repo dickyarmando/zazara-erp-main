@@ -175,7 +175,7 @@ class ExpanseCreateManager extends Component
 
         foreach ($this->items as $item) {
             if (empty($item['account_id'])) {
-                $this->dispatchBrowserEvent('error', ['message' => 'Please select account!']);
+                $this->dispatchBrowserEvent('error', ['message' => 'Please select account balance!']);
                 return false;
             }
         }
