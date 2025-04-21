@@ -6,21 +6,24 @@
         <thead>
             <tr>
                 <th class="w-px-75">No</th>
-                <th class="sort" wire:click="sortOrder('tr_purchase.number')">Purchase Number
+                <th class="sort no-wrap" wire:click="sortOrder('tr_purchase.number')">Purchase Number
                     {!! $sortLink !!}
                 </th>
-                <th class="sort" wire:click="sortOrder('tr_purchase.date')">Date {!! $sortLink !!}
-                </th>
-                <th class="sort" wire:click="sortOrder('ms_suppliers.company_name')">Supplier
-                    {!! $sortLink !!}</th>
-                <th class="sort" wire:click="sortOrder('tr_purchase.notes')">Summary
-                    {!! $sortLink !!}</th>
-                <th class="sort" wire:click="sortOrder('tr_purchase.total')">Total {!! $sortLink !!}
-                </th>
-                <th class="sort" wire:click="sortOrder('tr_purchase.is_payed')">Payment
+                <th class="sort no-wrap" wire:click="sortOrder('tr_purchase.reference')">Reference
                     {!! $sortLink !!}
                 </th>
-                <th class="sort" wire:click="sortOrder('tr_purchase.approved_at')">Status
+                <th class="sort no-wrap" wire:click="sortOrder('tr_purchase.date')">Date {!! $sortLink !!}
+                </th>
+                <th class="sort no-wrap" wire:click="sortOrder('ms_suppliers.company_name')">Supplier
+                    {!! $sortLink !!}</th>
+                <th class="sort no-wrap" wire:click="sortOrder('tr_purchase.notes')">Summary
+                    {!! $sortLink !!}</th>
+                <th class="sort no-wrap" wire:click="sortOrder('tr_purchase.total')">Total {!! $sortLink !!}
+                </th>
+                <th class="sort no-wrap" wire:click="sortOrder('tr_purchase.is_payed')">Payment
+                    {!! $sortLink !!}
+                </th>
+                <th class="sort no-wrap" wire:click="sortOrder('tr_purchase.approved_at')">Status
                     {!! $sortLink !!}
                 </th>
                 <th class="w-px-150">Action</th>
@@ -33,6 +36,7 @@
                         {{ ($purchases->currentPage() - 1) * $purchases->perPage() + $loop->index + 1 }}
                     </td>
                     <td class="border-start text-center">{{ $purchase->number }}</td>
+                    <td class="border-start text-center">{{ $purchase->reference }}</td>
                     <td class="border-start text-center no-wrap">{{ $purchase->date }}</td>
                     <td class="border-start">{{ $purchase->supplier_name }}</td>
                     <td class="border-start unset">{{ $purchase->notes }}</td>

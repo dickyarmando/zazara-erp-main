@@ -67,4 +67,16 @@ class ExpanseReportManager extends Component
         $this->sortLink = '<i class="sorticon fa-solid fa-caret-' . $caretOrder . '"></i>';
         $this->sortColumn = $columnName;
     }
+
+    public function printTable()
+    {
+        $responseData = [
+            'sd' => $this->start_date,
+            'ed' => $this->end_date,
+            's' => $this->searchKeyword,
+        ];
+
+        $url = route('print.expanse', $responseData);
+        $this->dispatchBrowserEvent('openTab', ['url' => $url]);
+    }
 }
