@@ -109,6 +109,14 @@ return [
             'throw' => false,
         ],
 
+        'config_disk' => [
+            'driver' => 'local',
+            'root' => public_path('/assets/img/config'),
+            'url' => env('APP_URL') . '/assets/img/config',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
     /*

@@ -43,6 +43,7 @@ class PurchaseManager extends Component
 
         if (!empty($this->searchKeyword)) {
             $queryPurchase->orWhere('tr_purchase.number', 'like', "%" . $this->searchKeyword . "%");
+            $queryPurchase->orWhere('tr_purchase.reference', 'like', "%" . $this->searchKeyword . "%");
             $queryPurchase->orWhere('ms_suppliers.company_name', 'like', "%" . $this->searchKeyword . "%");
             $queryPurchase->orWhere('tr_purchase.notes', 'like', "%" . $this->searchKeyword . "%");
             $queryPurchase->orWhere('tr_purchase.total', 'like', "%" . $this->searchKeyword . "%");

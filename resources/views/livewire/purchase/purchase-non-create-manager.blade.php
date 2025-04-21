@@ -148,7 +148,7 @@
                                 <div class="input-group">
                                     <input type="text"
                                         class="form-control @error('reference') is-invalid @enderror"
-                                        wire:model="reference" placeholder="Reference">
+                                        wire:model="reference" placeholder="Reference" maxlength="50">
                                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                                         data-bs-target="#ChooseModalReference"><i class="fa fa-search"></i></button>
                                 </div>
@@ -245,7 +245,7 @@
                                                     <div class="input-group">
                                                         <input type="text" class="form-control"
                                                             wire:model="items.{{ $index }}.name"
-                                                            placeholder="Description">
+                                                            placeholder="Description" maxlength="50">
                                                         <button type="button" class="btn btn-outline-primary"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#ChooseModalProducts"
@@ -254,7 +254,8 @@
                                                     </div>
                                                 </td>
                                                 <td><input type="text" class="form-control"
-                                                        wire:model="items.{{ $index }}.unit"></td>
+                                                        wire:model="items.{{ $index }}.unit" maxlength="50">
+                                                </td>
                                                 <td><input type="text" class="form-control"
                                                         wire:model="items.{{ $index }}.qty"
                                                         wire:blur.debounce.250ms="calculate({{ $index }})"

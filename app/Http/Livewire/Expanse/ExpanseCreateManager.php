@@ -173,6 +173,13 @@ class ExpanseCreateManager extends Component
 
         $numberOrder = 'EX/ESB/' . $this->month . $this->year . '/' . $this->number;
 
+        foreach ($this->items as $item) {
+            if (empty($item['account_id'])) {
+                $this->dispatchBrowserEvent('error', ['message' => 'Please select account balance!']);
+                return false;
+            }
+        }
+
         if (empty($this->set_id)) {
 
             $countNumber = TrGeneralLedger::where('number', $numberOrder)->count();

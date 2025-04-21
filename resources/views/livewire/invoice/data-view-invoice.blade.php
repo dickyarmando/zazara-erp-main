@@ -100,13 +100,20 @@
                     $terbilang = $terbilang->format(round($sales->total, 0));
                     $terbilang = str_replace('juts', 'juta', $terbilang);
                 @endphp
-                <td colspan="4" rowspan="5"><b>Terbilang : <span
+                <td colspan="4" rowspan="6"><b>Terbilang : <span
                             class="text-capitalize">{{ $terbilang }}</span></b></td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">SUBTOTAL</td>
                 <td class="px-2 text-right" style="border: 1px solid #000;">
                     {{ number_format($sales->subtotal, 0, ',', '.') }}</td>
             </tr>
             @if (isset($sales->ppn))
+                <tr>
+                    <td class="px-2 text-right" style="border: 1px solid #000;">DPP Lainnya
+                    </td>
+                    <td class="px-2 text-right" style="border: 1px solid #000;">
+                        {{ number_format($sales->dpp_amount, 0, ',', '.') }}
+                    </td>
+                </tr>
                 <tr>
                     <td class="px-2 text-right" style="border: 1px solid #000;">PPN
                     </td>
@@ -149,7 +156,12 @@
     </div>
     <div class="col-4 mt-4 text-center">
         Diketahui Oleh</br>
-        <div style="height: 100px;">&nbsp;</div></br>
+        <div style="height: 100px;">
+            @if (!empty($invSignImg->value))
+                <img src="{{ asset('assets/img/config/' . $invSignImg->value) }}" class="img-fluid mt-2"
+                    style="height: 100px;">
+            @endif
+        </div></br>
         <b>Nama : {{ $invSignName->value }}</b><br>
         <b>Jabatan : {{ $invSignPosition->value }}</b>
     </div>

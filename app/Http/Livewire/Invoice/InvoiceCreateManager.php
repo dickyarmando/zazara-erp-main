@@ -28,6 +28,8 @@ class InvoiceCreateManager extends Component
     public $due_termin;
     public $notes;
     public $subtotal;
+    public $dpp;
+    public $dpp_amount;
     public $ppn;
     public $ppn_amount;
     public $discount;
@@ -62,6 +64,8 @@ class InvoiceCreateManager extends Component
         $this->customer_name = $customer->company_name;
         $this->due_termin = 0;
         $this->subtotal = number_format($sales->subtotal, 0, '.', '');
+        $this->dpp = number_format($sales->dpp, 0, '.', '');
+        $this->dpp_amount = number_format($sales->dpp_amount, 0, '.', '');
         $this->ppn = number_format($sales->ppn, 0, '.', '');
         $this->ppn_amount = number_format($sales->ppn_amount, 0, '.', '');
         $this->delivery_fee = number_format($sales->delivery_fee, 0, '.', '');
@@ -91,6 +95,8 @@ class InvoiceCreateManager extends Component
                 'due_termin' => 'required',
                 'notes' => '',
                 'subtotal' => '',
+                'dpp' => '',
+                'dpp_amount' => '',
                 'delivery_fee' => '',
                 'discount' => '',
                 'ppn' => '',

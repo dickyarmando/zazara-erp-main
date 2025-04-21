@@ -6,6 +6,7 @@
             .bg-red {
                 background-color: #FF4500 !important;
             }
+
             .bg-gold {
                 background-color: #FFD700 !important;
             }
@@ -71,7 +72,7 @@
                                 {!! $sortLink !!}</th>
                             <th class="sort" wire:click="sortOrder('total')">Total {!! $sortLink !!}
                             </th>
-                            <th class="sort" wire:click="sortOrder('payment')">Paid {!! $sortLink !!}
+                            <th class="sort no-wrap" wire:click="sortOrder('payment')">Paid {!! $sortLink !!}
                             </th>
                             <th class="sort" wire:click="sortOrder('rest')">Rest {!! $sortLink !!}
                             </th>
@@ -82,40 +83,40 @@
                     </thead>
                     <tbody>
                         @foreach ($saless as $sales)
-                            @if(isset($invoiceTerminColor['itd']->value) && $invoiceTerminColor['itd']->value > $sales->date_diff)
-                            <tr class="bg-red">
-                            @elseif(isset($invoiceTerminColor['itw']) && $invoiceTerminColor['itw']->value > $sales->date_diff)
-                            <tr class="bg-gold">
-                            @else
-                            <tr>
-                            @endif
-                                <td class="text-center">
-                                    @if ($sales->type == 'Tax')
-                                        <input class="form-check-input" type="checkbox" value="{{ $sales->invoice_id }}"
-                                            wire:model="selected">
-                                    @else
-                                        <input class="form-check-input" type="checkbox" value="{{ $sales->invoice_id }}"
-                                            wire:model="selectedN">
-                                    @endif
-                                </td>
-                                <td class="border-start text-center">{{ $sales->invoice_number }}</td>
-                                <td class="border-start text-center">{{ $sales->number }}</td>
-                                <td class="border-start text-center no-wrap">{{ $sales->invoice_date }}</td>
-                                <td class="border-start">{{ $sales->customer_name }}</td>
-                                <td class="border-start text-right">{{ number_format($sales->total, 2) }}</td>
-                                <td class="border-start text-right">{{ number_format($sales->payment, 2) }}</td>
-                                @if ($sales->payment == 0)
-                                    <td class="border-start text-right">{{ number_format($sales->total, 2) }}</td>
+                            @if (isset($invoiceTerminColor['itd']->value) && $invoiceTerminColor['itd']->value > $sales->date_diff)
+                                <tr class="bg-red">
+                                @elseif(isset($invoiceTerminColor['itw']) && $invoiceTerminColor['itw']->value > $sales->date_diff)
+                                <tr class="bg-gold">
                                 @else
-                                    <td class="border-start text-right">{{ number_format($sales->rest, 2) }}</td>
+                                <tr>
+                            @endif
+                            <td class="text-center">
+                                @if ($sales->type == 'Tax')
+                                    <input class="form-check-input" type="checkbox" value="{{ $sales->invoice_id }}"
+                                        wire:model="selected">
+                                @else
+                                    <input class="form-check-input" type="checkbox" value="{{ $sales->invoice_id }}"
+                                        wire:model="selectedN">
                                 @endif
-                                <td class="border-start text-center">{{ $sales->due_date }}</td>
-                                <td class="border-start text-center">
-                                    <button type="button"
-                                        wire:click="view('{{ $sales->invoice_id }}','{{ $sales->type }}')"
-                                        class="btn btn-xs btn-success" title="Open Data"><span
-                                            class="bx bx-folder-open"></span></button>
-                                </td>
+                            </td>
+                            <td class="border-start text-center">{{ $sales->invoice_number }}</td>
+                            <td class="border-start text-center">{{ $sales->number }}</td>
+                            <td class="border-start text-center no-wrap">{{ $sales->invoice_date }}</td>
+                            <td class="border-start">{{ $sales->customer_name }}</td>
+                            <td class="border-start text-right">{{ number_format($sales->total, 2) }}</td>
+                            <td class="border-start text-right">{{ number_format($sales->payment, 2) }}</td>
+                            @if ($sales->payment == 0)
+                                <td class="border-start text-right">{{ number_format($sales->total, 2) }}</td>
+                            @else
+                                <td class="border-start text-right">{{ number_format($sales->rest, 2) }}</td>
+                            @endif
+                            <td class="border-start text-center">{{ $sales->due_date }}</td>
+                            <td class="border-start text-center">
+                                <button type="button"
+                                    wire:click="view('{{ $sales->invoice_id }}','{{ $sales->type }}')"
+                                    class="btn btn-xs btn-success" title="Open Data"><span
+                                        class="bx bx-folder-open"></span></button>
+                            </td>
                             </tr>
                         @endforeach
 

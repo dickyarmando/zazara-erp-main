@@ -147,7 +147,8 @@
                                 <label class="form-label">Reference</label>
                                 <input type="text" wire:model="reference"
                                     class="form-control @error('reference') is-invalid @enderror"
-                                    placeholder="Reference" {{ empty($is_approved) ? '' : 'readonly' }}>
+                                    placeholder="Reference" {{ empty($is_approved) ? '' : 'readonly' }}
+                                    maxlength="50">
                                 @error('reference')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -254,14 +255,15 @@
                                                     <input type="text" class="form-control"
                                                         wire:model="items.{{ $index }}.code"
                                                         placeholder="Code Product"
-                                                        {{ empty($is_approved) ? '' : 'readonly' }}>
+                                                        {{ empty($is_approved) ? '' : 'readonly' }} maxlength="50">
                                                 </td>
                                                 <td>
                                                     <div class="input-group">
                                                         <input type="text" class="form-control"
                                                             wire:model="items.{{ $index }}.name"
                                                             placeholder="Description"
-                                                            {{ empty($is_approved) ? '' : 'readonly' }}>
+                                                            {{ empty($is_approved) ? '' : 'readonly' }}
+                                                            maxlength="50">
                                                         <button type="button" class="btn btn-outline-primary"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#ChooseModalProducts"
@@ -272,7 +274,8 @@
                                                 </td>
                                                 <td><input type="text" class="form-control"
                                                         wire:model="items.{{ $index }}.unit"
-                                                        {{ empty($is_approved) ? '' : 'readonly' }}></td>
+                                                        {{ empty($is_approved) ? '' : 'readonly' }} maxlength="50">
+                                                </td>
                                                 <td><input type="text" class="form-control"
                                                         wire:model="items.{{ $index }}.qty"
                                                         wire:blur.debounce.250ms="calculate({{ $index }})"
