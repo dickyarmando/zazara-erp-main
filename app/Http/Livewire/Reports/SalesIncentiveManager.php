@@ -119,7 +119,7 @@ class SalesIncentiveManager extends Component
         $queryInvoices = TrInvoice::select(
             'tr_invoices.date AS invoice_date',
             'tr_invoices.number AS invoice_no',
-            'ms_customers.name AS customer_name',
+            'ms_customers.company_name AS customer_name',
             'tr_invoices.notes',
             DB::raw('COALESCE(tr_invoices.total - tr_invoices.ppn_amount, 0) AS total_selling_price'),
             DB::raw('COALESCE(SUM(combined_purchases.total), 0) AS total_capital_price'),
@@ -149,13 +149,13 @@ class SalesIncentiveManager extends Component
             ->where('tr_invoices.approved_at', '!=', null)
             ->where('users.username', $this->sales_username)
             ->whereBetween('tr_invoices.date', [$this->invoice_start_date, $this->invoice_end_date])
-            ->groupBy('tr_invoices.number', 'tr_invoices.date', 'tr_invoices.total', 'tr_invoices.ppn_amount', 'ms_customers.name', 'tr_invoices.notes')
+            ->groupBy('tr_invoices.number', 'tr_invoices.date', 'tr_invoices.total', 'tr_invoices.ppn_amount', 'ms_customers.company_name', 'tr_invoices.notes')
             ->havingRaw('COALESCE(tr_invoices.total - SUM(combined_purchases.total), 0) > 0');
 
         $queryInvoicesNon = TrInvoicesNon::select(
             'tr_invoices_nons.date AS invoice_date',
             'tr_invoices_nons.number AS invoice_no',
-            'ms_customers.name AS customer_name',
+            'ms_customers.company_name AS customer_name',
             'tr_invoices_nons.notes',
             DB::raw('COALESCE(tr_invoices_nons.total, 0) AS total_selling_price'),
             DB::raw('COALESCE(SUM(combined_purchases.total), 0) AS total_capital_price'),
@@ -185,7 +185,7 @@ class SalesIncentiveManager extends Component
             ->where('tr_invoices_nons.approved_at', '!=', null)
             ->where('users.username', '=', $this->sales_username)
             ->whereBetween('tr_invoices_nons.date', [$this->invoice_start_date, $this->invoice_end_date])
-            ->groupBy('tr_invoices_nons.number', 'tr_invoices_nons.date', 'tr_invoices_nons.total', 'ms_customers.name', 'tr_invoices_nons.notes')
+            ->groupBy('tr_invoices_nons.number', 'tr_invoices_nons.date', 'tr_invoices_nons.total', 'ms_customers.company_name', 'tr_invoices_nons.notes')
             ->havingRaw('COALESCE(tr_invoices_nons.total - SUM(combined_purchases.total), 0) > 0');
         
         $queryInvoices->union($queryInvoicesNon)->orderBy($this->sortColumn, $this->sortOrder);
