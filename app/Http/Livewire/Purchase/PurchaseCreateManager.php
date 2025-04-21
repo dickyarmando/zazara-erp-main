@@ -55,6 +55,8 @@ class PurchaseCreateManager extends Component
     public $sales_name;
     public $notes;
     public $subtotal;
+    public $dpp;
+    public $dpp_amount;
     public $ppn;
     public $ppn_amount;
     public $discount;
@@ -82,6 +84,8 @@ class PurchaseCreateManager extends Component
             $this->purchaseFiles = TrPurchaseFiles::where('purchase_id', $purchase->id)->get();
             $sequence = explode("/", $purchase->number);
             $sales = User::find($purchase->sales_id);
+            $configPPN = PrmConfig::where('code', 'ppn')->first();
+            $configDPP = PrmConfig::where('code', 'dpp')->first();
 
             $this->set_id = $purchase->id;
             $this->month = $purchase->created_at->format('m');
@@ -95,7 +99,9 @@ class PurchaseCreateManager extends Component
             $this->sales_name = isset($sales->name) ? $sales->name : "";
             $this->notes = $purchase->notes;
             $this->subtotal = number_format($purchase->subtotal, 0, '.', '');
-            $this->ppn = number_format($purchase->ppn, 0, '.', '');
+            $this->dpp = $configDPP->value;
+            $this->dpp_amount = number_format($purchase->dpp_amount, 0, '.', '');
+            $this->ppn = $configPPN->value;
             $this->ppn_amount = number_format($purchase->ppn_amount, 0, '.', '');
             $this->delivery_fee = number_format($purchase->delivery_fee, 0, '.', '');
             $this->discount = number_format($purchase->discount, 0, '.', '');
@@ -114,7 +120,10 @@ class PurchaseCreateManager extends Component
             $this->sales_name = Auth::user()->name;
 
             $configPPN = PrmConfig::where('code', 'ppn')->first();
+            $configDPP = PrmConfig::where('code', 'dpp')->first();
             $this->subtotal = 0;
+            $this->dpp = $configDPP->value;
+            $this->dpp_amount = 0;
             $this->ppn = $configPPN->value;
             $this->ppn_amount = 0;
             $this->delivery_fee = 0;
@@ -168,6 +177,7 @@ class PurchaseCreateManager extends Component
 
         $sales = $salesTax->union($salesNonTax)->orderBy($this->sortColumnSales, $this->sortOrderSales);
         $saless = $sales->paginate(10);
+        $this->calculateTotal();
 
         return view('livewire.purchase.purchase-create-manager', compact('suppliers', 'products', 'saless'));
     }
@@ -258,8 +268,9 @@ class PurchaseCreateManager extends Component
     public function calculateTotal()
     {
         $this->subtotal = number_format(array_sum(array_column($this->items, 'total')), 0, '.', '');
+        $this->dpp_amount = number_format(floor($this->subtotal * $this->dpp), 0, '.', '');
 
-        $ppnValue = $this->subtotal * $this->ppn / 100;
+        $ppnValue = $this->dpp_amount * $this->ppn / 100;
 
         $this->ppn_amount = number_format(floor($ppnValue), 0, '.', '');
         $this->total = number_format(($this->subtotal - $this->discount) + $this->ppn_amount + $this->delivery_fee, 0, '.', '');
@@ -289,6 +300,8 @@ class PurchaseCreateManager extends Component
                 'reference' => '',
                 'notes' => '',
                 'subtotal' => '',
+                'dpp' => '',
+                'dpp_amount' => '',
                 'delivery_fee' => '',
                 'discount' => '',
                 'ppn' => '',
@@ -357,6 +370,8 @@ class PurchaseCreateManager extends Component
                 'reference' => '',
                 'notes' => '',
                 'subtotal' => '',
+                'dpp' => '',
+                'dpp_amount' => '',
                 'delivery_fee' => '',
                 'discount' => '',
                 'ppn' => '',

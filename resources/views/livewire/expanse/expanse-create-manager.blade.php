@@ -244,6 +244,15 @@
                 $('#notifBalance').show();
                 $('#btnSave').prop("disabled", true);
             })
+
+            window.addEventListener('error', event => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: event.detail.message,
+                    timer: 1500
+                });
+            })
         </script>
     @endpush
 </div>

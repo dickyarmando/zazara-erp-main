@@ -153,21 +153,21 @@ class DatabaseSeeder extends Seeder
             'id' => 15,
             'parent_id' => 12,
             'name' => 'Expanse Report',
-            'seq' => 3,
+            'seq' => 5,
         ]);
 
         PrmMenus::create([
             'id' => 16,
             'parent_id' => 12,
             'name' => 'Profit Loss Report',
-            'seq' => 4,
+            'seq' => 6,
         ]);
 
         PrmMenus::create([
             'id' => 17,
             'parent_id' => 12,
             'name' => 'Day Book',
-            'seq' => 5,
+            'seq' => 7,
         ]);
 
         PrmMenus::create([
@@ -344,6 +344,31 @@ class DatabaseSeeder extends Seeder
             'name' => 'Post Sales',
             'action' => 'expanse/post/sales',
             'seq' => 3,
+        ]);
+
+        PrmMenus::create([
+            'id' => 35,
+            'parent_id' => 12,
+            'name' => 'Payment Report',
+            'action' => 'reports/pay',
+            'seq' => 4,
+        ]);
+
+        PrmMenus::create([
+            'id' => 36,
+            'parent_id' => 12,
+            'name' => 'Receive Report',
+            'action' => 'reports/receive',
+            'seq' => 5,
+        ]);
+
+        PrmMenus::create([
+            'id' => 37,
+            'parent_id' => 12,
+            'name' => 'Sales Incentive',
+            'action' => 'reports/sales/incentive',
+            'seq' => 8,
+            'is_sales' => 1,
         ]);
         //End Menus
 
@@ -530,16 +555,22 @@ class DatabaseSeeder extends Seeder
         PrmRoleMenus::create([
             'role_id' => 1,
             'menu_id' => 33,
-            'is_create' => 1,
-            'is_update' => 1,
-            'is_delete' => 1,
         ]);
         PrmRoleMenus::create([
             'role_id' => 1,
             'menu_id' => 34,
-            'is_create' => 1,
-            'is_update' => 1,
-            'is_delete' => 1,
+        ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 35,
+        ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 36,
+        ]);
+        PrmRoleMenus::create([
+            'role_id' => 1,
+            'menu_id' => 37,
         ]);
         // End Role Menus
 
@@ -675,17 +706,70 @@ class DatabaseSeeder extends Seeder
         ]);
 
         PrmConfig::create([
-            'id' => 9,
+            'id' => 12,
             'code' => 'coasr',
             'name' => 'Account Receivables',
             'type' => 'select_coa',
         ]);
 
         PrmConfig::create([
-            'id' => 10,
+            'id' => 13,
             'code' => 'coasp',
             'name' => 'Account PPN Sales',
             'type' => 'select_coa',
+        ]);
+
+        PrmConfig::create([
+            'id' => 14,
+            'code' => 'sri',
+            'name' => 'Sales Role ID',
+            'type' => 'integer',
+            'value' => '2',
+        ]);
+
+        PrmConfig::create([
+            'id' => 15,
+            'code' => 'itd',
+            'name' => 'Invoice Termin Danger',
+            'type' => 'integer',
+            'value' => '-1',
+        ]);
+
+        PrmConfig::create([
+            'id' => 16,
+            'code' => 'itw',
+            'name' => 'Invoice Termin Warning',
+            'type' => 'integer',
+            'value' => '7',
+        ]);
+
+        PrmConfig::create([
+            'id' => 17,
+            'code' => 'posi',
+            'name' => 'PO Sign Image',
+            'type' => 'file',
+        ]);
+
+        PrmConfig::create([
+            'id' => 18,
+            'code' => 'sosi',
+            'name' => 'SO Sign Image',
+            'type' => 'file',
+        ]);
+
+        PrmConfig::create([
+            'id' => 19,
+            'code' => 'insi',
+            'name' => 'Invoice Sign Image',
+            'type' => 'file',
+        ]);
+
+        PrmConfig::create([
+            'id' => 20,
+            'code' => 'dpp',
+            'name' => 'Others DPP',
+            'type' => 'varchar',
+            'value' => '0.92',
         ]);
         // End Config
 

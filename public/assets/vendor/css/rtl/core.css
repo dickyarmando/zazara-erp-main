@@ -23339,3 +23339,10 @@ a.bg-vimeo:hover, a.bg-vimeo:focus {
 .footer.bg-lighter hr {
   border-color: rgba(105, 122, 141, 0.076604902);
 }
+.company-logo-container img {
+  max-width: 100%;  /* Agar tidak melebihi container */
+  height: auto;     /* Menjaga proporsi */
+  display: block;   /* Menghindari spasi ekstra */
+  margin: 0 auto;   /* Memusatkan gambar */
+  object-fit: contain; /* Menyesuaikan tanpa terdistorsi */
+}

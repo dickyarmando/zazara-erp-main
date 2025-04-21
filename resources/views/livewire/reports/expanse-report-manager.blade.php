@@ -107,6 +107,12 @@
                         <input type="text" class="form-control w-100" placeholder="Search"
                             wire:model.debounce.500ms="searchKeyword">
                     </div>
+                    <div class="col-sm-8 col-xs-12 text-right">
+                        <div class="d-md-flex justify-content-end">
+                            <button class="btn btn-success btn-sm" wire:click="printTable" target="_blank"><i
+                                    class="bx bxs-printer me-2"></i>Print</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="panel-body table-responsive position-relative">
@@ -158,6 +164,10 @@
     </div>
 
     @push('scripts')
-        <script></script>
+        <script>
+            window.addEventListener('openTab', event => {
+                window.open(event.detail.url, '_blank');
+            });
+        </script>
     @endpush
 </div>
