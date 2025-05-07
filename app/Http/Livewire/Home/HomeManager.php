@@ -4,13 +4,21 @@ namespace App\Http\Livewire\Home;
 
 use App\Models\TrSales;
 use App\Models\TrSalesNon;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class HomeManager extends Component
 {
-    public $top_customer_year = 2025;
-    public $credit_customer_year = 2025;
+    public $top_customer_year;
+    public $credit_customer_year;
+
+    public function mount()
+    {
+        $now = Carbon::now();
+        $this->top_customer_year = $now->year;
+        $this->credit_customer_year = $now->year;
+    }
 
     public function render()
     {
