@@ -11,8 +11,8 @@
             <table class="table">
             <thead>
                 <tr>
-                <th class="text-center">Bulan</th>
-                <th class="text-center">Penjualan</th>
+                  <th class="text-center" width="70%">Bulan</th>
+                  <th class="text-center" width="30%">Penjualan</th>
                 </tr>
             </thead>
             <tbody id="monthly-sales-table">
@@ -29,8 +29,8 @@
             <table class="table">
             <thead>
                 <tr>
-                <th class="text-center">Tahun</th>
-                <th class="text-center">Penjualan</th>
+                <th class="text-center" width="70%">Tahun</th>
+                <th class="text-center" width="30%">Penjualan</th>
                 </tr>
             </thead>
             <tbody id="yearly-sales-table">
@@ -55,9 +55,9 @@
                 </th>
             </tr>
             <tr>
-                <th class="text-center">No</th>
-                <th class="text-center">Company</th>
-                <th class="text-center">Total</th>
+                <th class="text-center" width="5%">No</th>
+                <th class="text-center" width="65%">Company</th>
+                <th class="text-center" width="30%">Total</th>
             </tr>
             </thead>
             <tbody>
@@ -93,9 +93,9 @@
                 </th>
             </tr>
             <tr>
-                <th class="text-center">No</th>
-                <th class="text-center">Company</th>
-                <th class="text-center">Total</th>
+              <th class="text-center" width="5%">No</th>
+              <th class="text-center" width="65%">Company</th>
+              <th class="text-center" width="30%">Total</th>
             </tr>
             </thead>
             <tbody>
