@@ -8,7 +8,7 @@
         <div class="card p-3 h-100">
         <canvas id="monthly-sales-chart"></canvas>
         <div class="overflow-auto mt-3">
-            <table class="table">
+            <table class="table table-responsive">
             <thead>
                 <tr>
                   <th class="text-center" width="70%">Bulan</th>
@@ -26,11 +26,11 @@
         <div class="card p-3 h-100">
         <canvas id="yearly-sales-chart"></canvas>
         <div class="overflow-auto mt-3">
-            <table class="table">
+            <table class="table table-responsive">
             <thead>
                 <tr>
-                <th class="text-center" width="70%">Tahun</th>
-                <th class="text-center" width="30%">Penjualan</th>
+                  <th class="text-center" width="70%">Tahun</th>
+                  <th class="text-center" width="30%">Penjualan</th>
                 </tr>
             </thead>
             <tbody id="yearly-sales-table">
@@ -42,16 +42,16 @@
 
     <div class="col-12 col-md-6">
         <div class="card p-3 overflow-auto" style="height: 38.5em">
-        <table class="table">
+        <table class="table table-responsive">
             <thead>
             <tr>
-                <th colspan="2">Top 10 Customer</th>
-                <th class="text-center">
-                <select class="form-control" wire:model="top_customer_year">
-                    @foreach ($allSalesYear as $sales)
-                        <option value="{{ $sales->year }}">{{ $sales->year }}</option>
-                    @endforeach
-                </select>
+                <th class="text-start fs-5 align-middle fw-bold" colspan="2">Top 10 Customer</th>
+                <th class="text-center align-middle">
+                  <select class="form-control" wire:model="top_customer_year">
+                      @foreach ($allSalesYear as $sales)
+                          <option value="{{ $sales->year }}">{{ $sales->year }}</option>
+                      @endforeach
+                  </select>
                 </th>
             </tr>
             <tr>
@@ -68,7 +68,7 @@
                 <td>
                 <div class="d-flex justify-content-between">
                     <span>Rp</span>
-                    <span>{{ number_format($customer->total, 0) }}</span>
+                    <span class="font-tabular-nums" class="font-tabular-nums">{{ number_format($customer->total, 0) }}</span>
                 </div>
                 </td>
             </tr>
@@ -80,16 +80,16 @@
 
     <div class="col-12 col-md-6">
         <div class="card p-3 overflow-auto" style="height: 38.5em">
-        <table class="table">
+        <table class="table table-responsive">
             <thead>
             <tr>
-                <th colspan="2">Piutang</th>
-                <th class="text-center">
-                <select class="form-control" wire:model="credit_customer_year">
-                    @foreach ($allSalesYear as $sales)
-                        <option value="{{ $sales->year }}">{{ $sales->year }}</option>
-                    @endforeach
-                </select>
+                <th class="text-start fs-5 align-middle fw-bold" colspan="2">List Piutang</th>
+                <th class="text-center align-middle">
+                  <select class="form-control" wire:model="credit_customer_year">
+                      @foreach ($allSalesYear as $sales)
+                          <option value="{{ $sales->year }}">{{ $sales->year }}</option>
+                      @endforeach
+                  </select>
                 </th>
             </tr>
             <tr>
@@ -106,7 +106,7 @@
                 <td>
                 <div class="d-flex justify-content-between">
                     <span>Rp</span>
-                    <span>{{ number_format($customer->rest, 0) }}</span>
+                    <span class="font-tabular-nums">{{ number_format($customer->rest, 0) }}</span>
                 </div>
                 </td>
             </tr>
@@ -141,7 +141,7 @@
           <td>
             <div class="d-flex justify-content-between">
               <span>Rp</span>
-              <span>${ total.toLocaleString() }</span>
+              <span class="font-tabular-nums">${ total.toLocaleString() }</span>
             </div>
           </td>
         </tr>
@@ -198,7 +198,7 @@
           <td>
             <div class="d-flex justify-content-between">
               <span>Rp</span>
-              <span>${ total.toLocaleString() }</span>
+              <span class="font-tabular-nums">${ total.toLocaleString() }</span>
             </div>
           </td>
         </tr>
