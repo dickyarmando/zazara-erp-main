@@ -20,6 +20,7 @@ use App\Http\Livewire\Expanse\ExpanseViewManager;
 use App\Http\Livewire\Expanse\ExpanseViewPrintManager;
 use App\Http\Livewire\Expanse\PostPurchaseManager;
 use App\Http\Livewire\Expanse\PostSalesManager;
+use App\Http\Livewire\Home\HomeManager;
 use App\Http\Livewire\Invoice\InvoiceCreateManager;
 use App\Http\Livewire\Invoice\InvoiceNonCreateManager;
 use App\Http\Livewire\Invoice\InvoiceNonViewManager;
@@ -93,10 +94,11 @@ Route::get('/logout', [LoginController::class, 'logout']);
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/', [HomeController::class, 'index'])->name('home.index');
+    Route::get('/', HomeManager::class)->name('home.index');
+    // Route::get('/', [HomeController::class, 'index'])->name('home.index');
     Route::get('/livewire', [LivewireController::class, 'index'])->name('livewire.index');
     Route::prefix('/admin')->group(function () {
-        Route::get('/', [HomeController::class, 'index'])->name('admin.index');
+        Route::get('/', HomeManager::class)->name('admin.index');
 
         // system
         Route::get('/user', [UserController::class, 'index'])->name('system.user');
