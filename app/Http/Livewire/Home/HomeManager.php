@@ -129,7 +129,7 @@ class HomeManager extends Component
         )
         ->join('ms_customers', 'ms_customers.id', '=', 'tr_sales.customer_id')
         ->where('tr_sales.is_invoice', '=', 1)
-        ->where('tr_sales.rest', '<', 0)
+        ->where('tr_sales.rest', '!=', 0)
         ->where(DB::raw('YEAR(tr_sales.date)'), '=', $this->credit_customer_year)
         ->groupBy('ms_customers.company_name');
 
@@ -139,7 +139,7 @@ class HomeManager extends Component
         )
         ->join('ms_customers', 'ms_customers.id', '=', 'tr_sales_non.customer_id')
         ->where('tr_sales_non.is_invoice', '=', 1)
-        ->where('tr_sales_non.rest', '<', 0)
+        ->where('tr_sales_non.rest', '!=', 0)
         ->where(DB::raw('YEAR(tr_sales_non.date)'), '=', $this->credit_customer_year)
         ->groupBy('ms_customers.company_name');
 
@@ -149,7 +149,7 @@ class HomeManager extends Component
             ->mergeBindings($unionQuery->getQuery())
             ->select('customer', DB::raw('SUM(rest) as rest'))
             ->groupBy('customer')
-            ->orderBy('rest');
+            ->orderBy('rest', 'desc');
 
         return $results->get();
     }
