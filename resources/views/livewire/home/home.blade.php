@@ -11,7 +11,7 @@
             <table class="table table-responsive">
             <thead>
                 <tr>
-                  <th class="text-center" width="70%">Bulan</th>
+                  <th class="text-start" width="70%">Bulan</th>
                   <th class="text-center" width="30%">Penjualan</th>
                 </tr>
             </thead>
@@ -29,7 +29,7 @@
             <table class="table table-responsive">
             <thead>
                 <tr>
-                  <th class="text-center" width="70%">Tahun</th>
+                  <th class="text-start" width="70%">Tahun</th>
                   <th class="text-center" width="30%">Penjualan</th>
                 </tr>
             </thead>
@@ -137,7 +137,7 @@
   
         monthlySalesTable.innerHTML += `
         <tr>
-          <td class="text-center">${ new Intl.DateTimeFormat('id', { month: 'long' }).format(new Date(2000, i)) }</td>
+          <td class="text-start">${ new Intl.DateTimeFormat('id', { month: 'long' }).format(new Date(2000, i)) }</td>
           <td>
             <div class="d-flex justify-content-between">
               <span>Rp</span>
@@ -194,7 +194,7 @@
   
         yearlySalesTable.innerHTML += `
         <tr>
-          <td class="text-center">${ year }</td>
+          <td class="text-start">${ year }</td>
           <td>
             <div class="d-flex justify-content-between">
               <span>Rp</span>
